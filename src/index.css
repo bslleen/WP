@@ -45,17 +45,6 @@ body::before {
   opacity: 1;
 }
 
-/* Warm lamp glow from upper-right */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 55% 45% at 82% 4%, rgba(201,168,76,0.28) 0%, rgba(180,130,40,0.06) 55%, transparent 72%),
-    radial-gradient(ellipse 25% 20% at 82% 4%, rgba(255,220,120,0.15) 0%, transparent 38%);
-  pointer-events: none;
-  z-index: 9998;
-}
 
 /* ─── Scrollbar ─────────────────────────────────────────────────────────────── */
 
