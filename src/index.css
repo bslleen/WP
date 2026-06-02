@@ -95,17 +95,8 @@ h1, h2, h3, h4 {
 /* ─── Animations ────────────────────────────────────────────────────────────── */
 
 @keyframes flicker {
-  0%   { opacity: 1;    transform: scaleY(1)    scaleX(1)    rotate(-1deg); filter: brightness(1); }
-  25%  { opacity: 0.92; transform: scaleY(0.97) scaleX(1.02) rotate(1deg);  filter: brightness(1.1); }
-  50%  { opacity: 1;    transform: scaleY(1.03) scaleX(0.98) rotate(-2deg); filter: brightness(0.95); }
-  75%  { opacity: 0.95; transform: scaleY(0.98) scaleX(1.01) rotate(1deg);  filter: brightness(1.05); }
-  100% { opacity: 1;    transform: scaleY(1)    scaleX(1)    rotate(-1deg); filter: brightness(1); }
-}
-
-.candle-flame {
-  animation: flicker 1.8s ease-in-out infinite;
-  transform-origin: 12px 12px;
-  transform-box: fill-box;
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.85; }
 }
 
 @keyframes flickerGlow {

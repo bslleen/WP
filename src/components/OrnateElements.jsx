@@ -112,10 +112,8 @@ export function CandleIcon({ onClick, className = '' }) {
       style={{ background: 'none', border: 'none' }}
     >
       <svg viewBox="0 0 24 48" className="w-5 h-10" fill="none">
-        <g className="candle-flame" style={{ transformOrigin: '12px 12px' }}>
-          <ellipse cx="12" cy="7" rx="3.5" ry="5" fill="#f59e0b" opacity="0.9" />
-          <ellipse cx="12" cy="8" rx="2" ry="3" fill="#fde68a" opacity="0.7" />
-        </g>
+        <ellipse cx="12" cy="7" rx="3.5" ry="5" fill="#f59e0b" opacity="0.9" />
+        <ellipse cx="12" cy="8" rx="2" ry="3" fill="#fde68a" opacity="0.7" />
         <line x1="12" y1="12" x2="12" y2="16" stroke="#1a1209" strokeWidth="0.8" />
         <rect x="8" y="16" width="8" height="26" rx="1" fill="#f0e6c8" opacity="0.9" />
         <rect x="8" y="16" width="2" height="26" rx="0" fill="#d4c49a" opacity="0.4" />
