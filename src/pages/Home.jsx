@@ -333,10 +333,10 @@ export default function Home() {
 
   useEffect(() => {
     fetchWorks({ status: 'published' })
-      .then(data => setWorks(data.map(normalizeWork)))
+      .then(data => { if (data.length > 0) setWorks(data.map(normalizeWork)) })
       .catch(() => {})
     fetchJournal()
-      .then(data => setJournal(data.map(normalizeJournal)))
+      .then(data => { if (data.length > 0) setJournal(data.map(normalizeJournal)) })
       .catch(() => {})
   }, [])
 

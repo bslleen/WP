@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import heroImg from '../assets/hero.png'
 import { fetchWorks } from '../data/api'
 import { normalizeWork } from '../data/normalize'
 import { works as mockWorks } from '../data/content'
@@ -135,7 +134,7 @@ export default function WorksAll() {
 
   useEffect(() => {
     fetchWorks()
-      .then(data => setWorks(data.map(normalizeWork)))
+      .then(data => { if (data.length > 0) setWorks(data.map(normalizeWork)) })
       .catch(() => {})
   }, [])
 

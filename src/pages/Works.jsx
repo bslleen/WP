@@ -217,7 +217,7 @@ export default function Works() {
 
   useEffect(() => {
     fetchWorks({ status: 'published' })
-      .then(data => setFeatured(data.slice(0, 4).map(normalizeWork)))
+      .then(data => { if (data.length > 0) setFeatured(data.slice(0, 4).map(normalizeWork)) })
       .catch(() => {})
   }, [])
 
