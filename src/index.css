@@ -104,10 +104,8 @@ h1, h2, h3, h4 {
 
 .candle-flame {
   animation: flicker 1.8s ease-in-out infinite;
-  transform-origin: bottom center;
-  display: inline-block;
-  color: #c9a85c;
-  font-size: 18px;
+  transform-origin: 12px 12px;
+  transform-box: fill-box;
 }
 
 @keyframes flickerGlow {
