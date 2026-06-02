@@ -4,7 +4,21 @@ import { OrnateDivider, OrnateFrame, SectionTitle } from '../components/OrnateEl
 import { fetchWorks, fetchJournal } from '../data/api'
 import { normalizeWork, normalizeJournal } from '../data/normalize'
 import { featuredWorks as mockWorks, journalEntries as mockJournal } from '../data/content'
-import heroBg from '../assets/study.jpg'
+import heroBg        from '../assets/study.jpg'
+import parchmentBg   from '../assets/parchment.jpg'
+import cardQuill     from '../assets/card-quill.jpg'
+import cardManuscripts from '../assets/card-manuscripts.jpg'
+import cardBooks     from '../assets/card-books.jpg'
+import cardBooksAlt  from '../assets/books.jpg'
+
+const CARD_PHOTOS = {
+  'Novel':       cardManuscripts,
+  'novel':       cardManuscripts,
+  'Poetry':      cardQuill,
+  'poetry':      cardQuill,
+  'Short Story': cardBooks,
+  'short story': cardBooks,
+}
 
 function HeroSection() {
   return (
@@ -215,6 +229,128 @@ function HeroSection() {
   )
 }
 
+function WorkCard({ work }) {
+  const photo = work.cover_image || CARD_PHOTOS[work.category] || cardBooksAlt
+  return (
+    <Link
+      to="/works"
+      style={{
+        flex: '0 0 300px',
+        scrollSnapAlign: 'start',
+        display: 'block',
+        textDecoration: 'none',
+        cursor: 'pointer',
+      }}
+    >
+      <div
+        style={{
+          border: '1px solid #b8a98e',
+          background: '#1c140a',
+          transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.transform = 'translateY(-4px)'
+          e.currentTarget.style.boxShadow = '0 16px 40px rgba(0,0,0,0.35)'
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.transform = 'translateY(0)'
+          e.currentTarget.style.boxShadow = 'none'
+        }}
+      >
+        {/* Photo — 3:4 */}
+        <div style={{ position: 'relative', aspectRatio: '3/4', overflow: 'hidden' }}>
+          <img
+            src={photo}
+            alt={work.title}
+            style={{
+              width: '100%', height: '100%',
+              objectFit: 'cover', objectPosition: 'center',
+              filter: 'brightness(0.82) sepia(0.15) saturate(1.1)',
+              display: 'block',
+              transition: 'transform 0.5s ease',
+            }}
+            onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.04)'}
+            onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+          />
+          {/* Category ribbon top-left */}
+          <div style={{
+            position: 'absolute', top: '12px', left: '12px',
+            background: 'rgba(10,7,3,0.72)',
+            color: '#c9a84c',
+            fontSize: '0.5rem', letterSpacing: '0.3em',
+            textTransform: 'uppercase',
+            fontFamily: "'Playfair Display', serif",
+            padding: '4px 10px',
+            border: '1px solid rgba(201,168,76,0.3)',
+          }}>
+            {work.category}
+          </div>
+          {/* + expand button */}
+          <button
+            onClick={e => e.preventDefault()}
+            style={{
+              position: 'absolute', top: '10px', right: '10px',
+              width: '28px', height: '28px',
+              background: 'rgba(240,230,200,0.15)',
+              border: '1px solid rgba(240,230,200,0.4)',
+              color: '#f0e6c8',
+              fontSize: '1.1rem', lineHeight: 1,
+              cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              backdropFilter: 'blur(4px)',
+            }}
+          >+</button>
+        </div>
+
+        {/* Info block — parchment coloured */}
+        <div style={{
+          padding: '16px 18px 20px',
+          borderTop: '1px solid #c8b89a',
+          background: '#f0e8d8',
+        }}>
+          <p style={{
+            fontFamily: "'Playfair Display', serif",
+            color: '#1c140a',
+            fontSize: '1rem',
+            fontWeight: 400,
+            lineHeight: 1.3,
+            marginBottom: '4px',
+          }}>
+            {work.title}
+          </p>
+          <p style={{
+            fontFamily: "'Crimson Text', serif",
+            fontStyle: 'italic',
+            color: '#7a6548',
+            fontSize: '0.88rem',
+            marginBottom: '6px',
+            lineHeight: 1.4,
+          }}>
+            {work.description.substring(0, 60)}…
+          </p>
+          <p style={{
+            fontFamily: "'Crimson Text', serif",
+            fontStyle: 'italic',
+            color: '#4a3820',
+            fontSize: '0.82rem',
+            marginBottom: '10px',
+          }}>
+            "{work.excerpt.substring(0, 55)}…"
+          </p>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontFamily: "'Playfair Display', serif", color: '#1c140a', fontSize: '0.75rem' }}>
+              {work.year}
+            </span>
+            <span style={{ fontFamily: "'Crimson Text', serif", color: '#7a6548', fontSize: '0.75rem', fontStyle: 'italic' }}>
+              {work.pages > 0 ? `${work.pages} pp.` : 'In progress'}
+            </span>
+          </div>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
 function BookCoverSVG({ work }) {
   const initial = work.category ? work.category.charAt(0).toUpperCase() : '✦'
   const c = work.accentColor || '#c9a84c'
@@ -287,88 +423,93 @@ function BookCoverSVG({ work }) {
 
 function FeaturedWorks({ works }) {
   return (
-    <section className="py-24 px-6" style={{ background: '#0d0a05' }}>
-      <div className="max-w-6xl mx-auto">
-        <SectionTitle subtitle="Selected Works">The Collection</SectionTitle>
+    <section style={{
+      position: 'relative',
+      padding: '5rem 3rem 5.5rem',
+      overflow: 'hidden',
+    }}>
+      {/* Parchment background photo */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        backgroundImage: `url(${parchmentBg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        filter: 'brightness(0.92) saturate(0.85)',
+      }} />
+      {/* Subtle dark vignette on edges */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'radial-gradient(ellipse 110% 100% at 50% 50%, transparent 55%, rgba(0,0,0,0.25) 100%)',
+      }} />
 
-        <div
-          className="grid md:grid-cols-3 gap-6 mb-16"
-          style={{ maxWidth: '900px', margin: '0 auto', marginTop: '4rem' }}
-        >
-          {works.map((work, i) => (
-            <Link key={work.id} to="/works" className="group" style={{ display: 'block' }}>
-              <div
-                className="relative overflow-hidden"
-                style={{
-                  background: `linear-gradient(170deg, ${work.coverColor || '#1a1209'} 0%, #0d0a05 100%)`,
-                  border: '1px solid rgba(201,168,76,0.2)',
-                  boxShadow: '0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.08)',
-                  padding: 0,
-                  transition: 'transform 0.4s ease, box-shadow 0.4s ease',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.transform = 'translateY(-6px)'
-                  e.currentTarget.style.boxShadow = '0 20px 60px rgba(0,0,0,0.85), 0 0 30px rgba(201,168,76,0.1)'
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.transform = 'translateY(0)'
-                  e.currentTarget.style.boxShadow = '0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.08)'
-                }}
-              >
-                {/* Full-width book cover SVG — 3:4 aspect ratio */}
-                <div style={{ width: '100%', aspectRatio: '3/4' }}>
-                  <BookCoverSVG work={work} />
-                </div>
+      <div style={{ position: 'relative', zIndex: 1, maxWidth: '1200px', margin: '0 auto' }}>
 
-                {/* Text block */}
-                <div style={{ padding: '20px 20px 24px' }}>
-                  {/* Category */}
-                  <p
-                    className="text-xs uppercase mb-2"
-                    style={{ letterSpacing: '0.35em', color: work.accentColor || '#c9a84c' }}
-                  >
-                    {work.category}
-                  </p>
+        {/* ── Section header — Old Harbor style ── */}
+        <div style={{ marginBottom: '2.5rem' }}>
+          <div style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
+            <p style={{
+              fontFamily: "'Playfair Display', serif",
+              color: '#1c140a',
+              fontSize: '0.65rem',
+              letterSpacing: '0.45em',
+              textTransform: 'uppercase',
+              fontWeight: 400,
+              marginBottom: '6px',
+            }}>
+              THE COLLECTION
+            </p>
+            {/* Ornament */}
+            <svg viewBox="0 0 140 12" style={{ width: '90px', height: '10px', display: 'block', margin: '0 auto 8px' }} fill="none">
+              <line x1="0" y1="6" x2="50" y2="6" stroke="#8a7a65" strokeWidth="0.6" />
+              <path d="M55 6 L60 2.5 L65 6 L60 9.5 Z" fill="none" stroke="#8a7a65" strokeWidth="0.9" />
+              <circle cx="70" cy="6" r="2" fill="#8a7a65" />
+              <path d="M75 6 L80 2.5 L85 6 L80 9.5 Z" fill="none" stroke="#8a7a65" strokeWidth="0.9" />
+              <line x1="90" y1="6" x2="140" y2="6" stroke="#8a7a65" strokeWidth="0.6" />
+            </svg>
+            <p style={{
+              fontFamily: "'Crimson Text', serif",
+              fontStyle: 'italic',
+              color: '#7a6548',
+              fontSize: '1rem',
+            }}>
+              Works from the current archive.
+            </p>
+          </div>
 
-                  {/* Title */}
-                  <h3
-                    className="text-xl italic mb-2"
-                    style={{ fontFamily: "'Playfair Display', serif", color: '#f0e6c8', lineHeight: 1.25 }}
-                  >
-                    {work.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-sm mb-3" style={{ color: '#6b5a3e', lineHeight: 1.5 }}>
-                    {work.description.substring(0, 85)}…
-                  </p>
-
-                  {/* Excerpt */}
-                  <p
-                    className="text-sm italic mb-4"
-                    style={{ color: '#a89060', fontFamily: "'IM Fell English', serif", lineHeight: 1.6 }}
-                  >
-                    “{work.excerpt.substring(0, 65)}…”
-                  </p>
-
-                  {/* Year / Pages */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span className="text-xs" style={{ color: '#3d2b14' }}>{work.year}</span>
-                    <span className="text-xs" style={{ color: '#3d2b14' }}>
-                      {work.pages > 0 ? `${work.pages} pp.` : 'In progress'}
-                    </span>
-                  </div>
-                </div>
-              </div>
+          {/* View all — right aligned */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Link to="/works" style={{
+              fontFamily: "'Playfair Display', serif",
+              color: '#1c140a',
+              fontSize: '0.65rem',
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              textDecoration: 'underline',
+              textUnderlineOffset: '3px',
+              display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
+            }}>
+              VIEW ALL WORKS →
             </Link>
+          </div>
+        </div>
+
+        {/* ── Horizontally scrollable card track ── */}
+        <div style={{
+          display: 'flex',
+          gap: '1.5rem',
+          overflowX: 'auto',
+          scrollSnapType: 'x mandatory',
+          WebkitOverflowScrolling: 'touch',
+          paddingBottom: '1rem',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+        }}>
+          {works.map(work => (
+            <WorkCard key={work.id} work={work} />
           ))}
         </div>
 
-        <div className="mt-10 flex justify-center">
-          <Link to="/works">
-            <button className="btn-gold">View All Works</button>
-          </Link>
-        </div>
+        <style>{`.works-scroll::-webkit-scrollbar { display: none; }`}</style>
       </div>
     </section>
   )
