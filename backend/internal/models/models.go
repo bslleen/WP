@@ -87,3 +87,22 @@ type UploadResponse struct {
 type ChangePasswordRequest struct {
 	NewPassword string `json:"new_password" binding:"required"`
 }
+
+type AboutBioSection struct {
+	Heading string `json:"heading"`
+	Text    string `json:"text"`
+}
+
+type AboutStat struct {
+	Num   string `json:"num"`
+	Label string `json:"label"`
+}
+
+type About struct {
+	Name     string            `json:"name"`
+	Tagline  string            `json:"tagline"`
+	Email    string            `json:"email"`
+	PhotoURL string            `json:"photo_url"`
+	Bio      []AboutBioSection `json:"bio"`
+	Stats    []AboutStat       `json:"stats"`
+}

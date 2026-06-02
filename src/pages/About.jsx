@@ -1,20 +1,48 @@
+import { useState, useEffect } from 'react'
 import { OrnateDivider, OrnateFrame, SectionTitle } from '../components/OrnateElements'
+import { fetchAbout } from '../data/api'
+
+const DEFAULT_BIO = [
+  { heading: 'The Beginning', text: `Eleanor Ashworth grew up in a house that held more books than furniture, in a town where winters lasted six months and stories lasted longer. She wrote her first poem at nine, about the death of a crow she found in the garden. Her mother kept it in a bureau drawer for twenty years.` },
+  { heading: 'The Work', text: `Her debut novel, The Amber Meridian, was called "a lighthouse of a book — disorienting and, in the end, necessary" by the Times Literary Supplement. Her poetry collection Salt & Silence won the Calvert Prize for voice and was shortlisted for the Forward.` },
+  { heading: 'The Process', text: `She writes by hand, in the morning, before light if possible. She keeps a research archive of found objects: postcards, newspaper clippings, photographs of strangers, maps torn from old atlases. Every book begins with an object and a question.` },
+  { heading: 'The Life', text: `She has been writer-in-residence on the Orkney Islands and a visiting fellow at Pembroke College, Oxford. She divides her time between a house with unreliable heating and a manuscript that requires her full attention.` },
+]
+const DEFAULT_STATS = [
+  { num: '6', label: 'Published Works' },
+  { num: '2', label: 'Awards' },
+  { num: '1', label: 'Residency' },
+  { num: '3', label: 'Countries Written In' },
+]
 
 export default function About() {
+  const [about, setAbout] = useState(null)
+
+  useEffect(() => {
+    fetchAbout().then(data => { if (data) setAbout(data) }).catch(() => {})
+  }, [])
+
+  const name    = about?.name    || 'Eleanor Ashworth'
+  const email   = about?.email   || 'eleanor@ashworthwrites.com'
+  const photo   = about?.photo_url || ''
+  const bio     = about?.bio?.length   ? about.bio   : DEFAULT_BIO
+  const stats   = about?.stats?.length ? about.stats : DEFAULT_STATS
+
   return (
-    <div className="page-enter min-h-screen pt-28 pb-24 px-6" style={{ background: '#0d0a05' }}>
+    <div className="min-h-screen pt-28 pb-24 px-6" style={{ background: '#0d0a05' }}>
       <div className="max-w-5xl mx-auto">
-        <SectionTitle subtitle="The Author">Eleanor Ashworth</SectionTitle>
+        <SectionTitle subtitle="The Author">{name}</SectionTitle>
 
         <div className="grid lg:grid-cols-5 gap-16 mt-16">
           {/* Portrait column */}
           <div className="lg:col-span-2">
-            {/* Atmospheric portrait placeholder */}
             <div
               className="relative aspect-[3/4] overflow-hidden"
               style={{ border: '1px solid #8a6d2f' }}
             >
-              {/* SVG portrait silhouette */}
+              {photo ? (
+                <img src={photo} alt={name} className="w-full h-full object-cover object-center" />
+              ) : (
               <svg viewBox="0 0 300 400" className="w-full h-full" preserveAspectRatio="xMidYMid slice">
                 <defs>
                   <radialGradient id="portraitGlow" cx="50%" cy="35%" r="50%">
@@ -81,25 +109,21 @@ export default function About() {
                 <circle cx="5" cy="395" r="2" fill="#c9a84c" opacity="0.6" />
                 <circle cx="295" cy="395" r="2" fill="#c9a84c" opacity="0.6" />
               </svg>
+              )}
 
               <div
                 className="absolute bottom-0 left-0 right-0 p-4 text-center"
                 style={{ background: 'linear-gradient(to top, #0d0a05, transparent)' }}
               >
                 <p className="text-xs tracking-widest uppercase" style={{ color: '#8a6d2f' }}>
-                  E. Ashworth, at work
+                  {name}, at work
                 </p>
               </div>
             </div>
 
             {/* Stats */}
             <div className="mt-6 grid grid-cols-2 gap-4">
-              {[
-                ['6', 'Published Works'],
-                ['2', 'Awards'],
-                ['1', 'Residency'],
-                ['3', 'Countries Written In'],
-              ].map(([num, label]) => (
+              {stats.map(({ num, label }) => (
                 <div
                   key={label}
                   className="p-4 text-center"
@@ -120,24 +144,7 @@ export default function About() {
           {/* Bio column */}
           <div className="lg:col-span-3">
             <div className="prose prose-lg max-w-none">
-              {[
-                {
-                  heading: 'The Beginning',
-                  text: `Eleanor Ashworth grew up in a house that held more books than furniture, in a town where winters lasted six months and stories lasted longer. She wrote her first poem at nine, about the death of a crow she found in the garden. Her mother kept it in a bureau drawer for twenty years.`,
-                },
-                {
-                  heading: 'The Work',
-                  text: `Her debut novel, The Amber Meridian, was called "a lighthouse of a book — disorienting and, in the end, necessary" by the Times Literary Supplement. Her poetry collection Salt & Silence won the Calvert Prize for voice and was shortlisted for the Forward. She is the author of six books and has been published in Granta, The Paris Review, and elsewhere.`,
-                },
-                {
-                  heading: 'The Process',
-                  text: `She writes by hand, in the morning, before light if possible. She keeps a research archive of found objects: postcards, newspaper clippings, photographs of strangers, maps torn from old atlases. Every book begins with an object and a question. The object is real. The question is not.`,
-                },
-                {
-                  heading: 'The Life',
-                  text: `She has been writer-in-residence on the Orkney Islands and a visiting fellow at Pembroke College, Oxford. She divides her time between a house with unreliable heating and a manuscript that requires her full attention. She has a cat named Footnote.`,
-                },
-              ].map((section, i) => (
+              {bio.map((section, i) => (
                 <div
                   key={i}
                   className="mb-8"
@@ -152,7 +159,7 @@ export default function About() {
                   <p className="leading-relaxed text-lg" style={{ color: '#a89060' }}>
                     {section.text}
                   </p>
-                  {i < 3 && <OrnateDivider className="mt-6" />}
+                  {i < bio.length - 1 && <OrnateDivider className="mt-6" />}
                 </div>
               ))}
             </div>
@@ -175,11 +182,11 @@ export default function About() {
                 For rights inquiries, speaking engagements, or letters —
               </p>
               <a
-                href="mailto:eleanor@ashworthwrites.com"
+                href={`mailto:${email}`}
                 className="text-sm tracking-widest transition-colors duration-300"
                 style={{ color: '#c9a84c', fontFamily: "'Crimson Text', serif" }}
               >
-                eleanor@ashworthwrites.com →
+                {email} →
               </a>
             </div>
           </div>

@@ -1,7 +1,9 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { works } from '../data/content'
 import heroImg from '../assets/hero.png'
+import { fetchWorks } from '../data/api'
+import { normalizeWork } from '../data/normalize'
+import { works as mockWorks } from '../data/content'
 
 const DOORS = [
   {
@@ -128,7 +130,14 @@ function Ornament({ color = '#8a7a65' }) {
 export default function WorksAll() {
   const [active, setActive] = useState('all')
   const [hoveredDoor, setHoveredDoor] = useState(null)
+  const [works, setWorks] = useState(mockWorks.map(normalizeWork))
   const gridRef = useRef(null)
+
+  useEffect(() => {
+    fetchWorks()
+      .then(data => setWorks(data.map(normalizeWork)))
+      .catch(() => {})
+  }, [])
 
   const filtered = active === 'all' ? works : works.filter(w => w.category === active)
   const activeDoor = DOORS.find(d => d.key === active)
@@ -149,7 +158,7 @@ export default function WorksAll() {
         paddingTop: '64px', // nav height
       }}>
         {DOORS.map(door => {
-          const count = door.key === 'all' ? works.length : works.filter(w => w.category === door.key).length
+          const count = door.key === 'all' ? works.length : works.filter(w => w.category?.toLowerCase() === door.key.toLowerCase()).length
           const isActive = active === door.key
           const isHovered = hoveredDoor === door.key
 

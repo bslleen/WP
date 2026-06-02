@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { SectionTitle, OrnateDivider } from '../components/OrnateElements'
-import { journalEntries } from '../data/content'
+import { fetchJournal } from '../data/api'
+import { normalizeJournal } from '../data/normalize'
+import { journalEntries as mockJournal } from '../data/content'
 
 function EntryModal({ entry, onClose }) {
   if (!entry) return null
@@ -63,9 +65,16 @@ function EntryModal({ entry, onClose }) {
 
 export default function Journal() {
   const [active, setActive] = useState(null)
+  const [entries, setEntries] = useState(mockJournal.map(normalizeJournal))
+
+  useEffect(() => {
+    fetchJournal()
+      .then(data => setEntries(data.map(normalizeJournal)))
+      .catch(() => {})
+  }, [])
 
   return (
-    <div className="page-enter min-h-screen pt-28 pb-24 px-6" style={{ background: '#0d0a05' }}>
+    <div className="min-h-screen pt-28 pb-24 px-6" style={{ background: '#0d0a05' }}>
       <div className="max-w-4xl mx-auto">
         <SectionTitle subtitle="The Journal">Writing & Observations</SectionTitle>
 
@@ -78,7 +87,7 @@ export default function Journal() {
 
         {/* Entry list — newspaper-style */}
         <div className="space-y-0">
-          {journalEntries.map((entry, i) => (
+          {entries.map((entry, i) => (
             <div key={entry.id}>
               <button
                 className="w-full text-left group py-8 transition-all duration-300"
@@ -116,7 +125,7 @@ export default function Journal() {
                 </div>
               </button>
 
-              {i < journalEntries.length - 1 && (
+              {i < entries.length - 1 && (
                 <div style={{ borderTop: '1px solid rgba(138, 109, 47, 0.15)' }} />
               )}
             </div>

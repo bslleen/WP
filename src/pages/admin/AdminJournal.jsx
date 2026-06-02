@@ -38,7 +38,7 @@ export default function AdminJournal() {
   }
 
   return (
-    <div className="page-enter">
+    <div className="">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2rem' }}>
         <div>
           <p style={{ color: '#4a3520', fontSize: '0.6rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>

@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"net/http"
 	"os"
 	"strconv"
@@ -492,4 +493,61 @@ func (h *Handler) UploadImage(c *gin.Context) {
 		URL:      result.SecureURL,
 		PublicID: result.PublicID,
 	})
+}
+
+// ─── ABOUT ───────────────────────────────────────────────────────────────────
+
+var defaultAbout = models.About{
+	Name:    "Eleanor Ashworth",
+	Tagline: "Author & Poet",
+	Email:   "eleanor@ashworthwrites.com",
+	Bio: []models.AboutBioSection{
+		{Heading: "The Beginning", Text: "Eleanor Ashworth grew up in a house that held more books than furniture, in a town where winters lasted six months and stories lasted longer. She wrote her first poem at nine, about the death of a crow she found in the garden. Her mother kept it in a bureau drawer for twenty years."},
+		{Heading: "The Work", Text: "Her debut novel, The Amber Meridian, was called \"a lighthouse of a book — disorienting and, in the end, necessary\" by the Times Literary Supplement. Her poetry collection Salt & Silence won the Calvert Prize for voice and was shortlisted for the Forward."},
+		{Heading: "The Process", Text: "She writes by hand, in the morning, before light if possible. She keeps a research archive of found objects: postcards, newspaper clippings, photographs of strangers, maps torn from old atlases. Every book begins with an object and a question."},
+		{Heading: "The Life", Text: "She has been writer-in-residence on the Orkney Islands and a visiting fellow at Pembroke College, Oxford. She divides her time between a house with unreliable heating and a manuscript that requires her full attention."},
+	},
+	Stats: []models.AboutStat{
+		{Num: "6", Label: "Published Works"},
+		{Num: "2", Label: "Awards"},
+		{Num: "1", Label: "Residency"},
+		{Num: "3", Label: "Countries Written In"},
+	},
+}
+
+// GET /api/v1/about
+func (h *Handler) GetAbout(c *gin.Context) {
+	var raw string
+	if err := h.db.QueryRowContext(c, `SELECT value FROM config WHERE key = 'about'`).Scan(&raw); err != nil {
+		c.JSON(http.StatusOK, defaultAbout)
+		return
+	}
+	var about models.About
+	if err := json.Unmarshal([]byte(raw), &about); err != nil {
+		c.JSON(http.StatusOK, defaultAbout)
+		return
+	}
+	c.JSON(http.StatusOK, about)
+}
+
+// PUT /api/v1/admin/about  (protected)
+func (h *Handler) UpdateAbout(c *gin.Context) {
+	var about models.About
+	if err := c.ShouldBindJSON(&about); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	raw, err := json.Marshal(about)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not encode"})
+		return
+	}
+	_, err = h.db.ExecContext(c,
+		`INSERT INTO config (key, value) VALUES ('about', ?) ON CONFLICT (key) DO UPDATE SET value = excluded.value`,
+		string(raw))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, about)
 }

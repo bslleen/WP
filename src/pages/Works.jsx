@@ -1,8 +1,9 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { works } from '../data/content'
 import heroImg from '../assets/hero.png'
-
-const FEATURED = works.slice(0, 4)
+import { fetchWorks } from '../data/api'
+import { normalizeWork } from '../data/normalize'
+import { works as mockWorks } from '../data/content'
 
 // ── Book cover art rendered entirely in CSS/SVG ──────────────────────────────
 function BookCoverArt({ work }) {
@@ -210,6 +211,14 @@ function Ornament({ dark = false }) {
 
 // ── Main Works page ───────────────────────────────────────────────────────────
 export default function Works() {
+  const [featured, setFeatured] = useState(mockWorks.slice(0, 4).map(normalizeWork))
+
+  useEffect(() => {
+    fetchWorks({ status: 'published' })
+      .then(data => setFeatured(data.slice(0, 4).map(normalizeWork)))
+      .catch(() => {})
+  }, [])
+
   return (
     <div style={{ background: '#0d0a05' }}>
 
@@ -362,7 +371,7 @@ export default function Works() {
             gridTemplateColumns: 'repeat(4, 1fr)',
             gap: '1.25rem',
           }}>
-            {FEATURED.map(work => <WorkCard key={work.id} work={work} />)}
+            {featured.map(work => <WorkCard key={work.id} work={work} />)}
           </div>
         </div>
       </section>

@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import { OrnateDivider, OrnateFrame, SectionTitle } from '../components/OrnateElements'
-import { featuredWorks, journalEntries } from '../data/content'
+import { fetchWorks, fetchJournal } from '../data/api'
+import { normalizeWork, normalizeJournal } from '../data/normalize'
+import { featuredWorks as mockWorks, journalEntries as mockJournal } from '../data/content'
 
 function HeroSection() {
   return (
@@ -160,14 +163,14 @@ function HeroSection() {
   )
 }
 
-function FeaturedWorks() {
+function FeaturedWorks({ works }) {
   return (
     <section className="py-24 px-6" style={{ background: '#0d0a05' }}>
       <div className="max-w-6xl mx-auto">
         <SectionTitle subtitle="Selected Works">The Collection</SectionTitle>
 
         <div className="grid md:grid-cols-3 gap-8 mt-16">
-          {featuredWorks.map((work, i) => (
+          {works.map((work, i) => (
             <Link key={work.id} to="/works" className="group">
               <div
                 className="relative overflow-hidden transition-all duration-500 group-hover:translate-y-[-4px]"
@@ -242,8 +245,8 @@ function FeaturedWorks() {
   )
 }
 
-function LatestJournal() {
-  const latest = journalEntries.slice(0, 2)
+function LatestJournal({ entries }) {
+  const latest = entries.slice(0, 2)
   return (
     <section className="py-24 px-6" style={{ background: '#0a0806' }}>
       <div className="max-w-6xl mx-auto">
@@ -325,11 +328,23 @@ function ClosingQuote() {
 }
 
 export default function Home() {
+  const [works, setWorks] = useState(mockWorks.map(normalizeWork))
+  const [journal, setJournal] = useState(mockJournal.map(normalizeJournal))
+
+  useEffect(() => {
+    fetchWorks({ status: 'published' })
+      .then(data => setWorks(data.map(normalizeWork)))
+      .catch(() => {})
+    fetchJournal()
+      .then(data => setJournal(data.map(normalizeJournal)))
+      .catch(() => {})
+  }, [])
+
   return (
-    <div className="page-enter">
+    <div className="">
       <HeroSection />
-      <FeaturedWorks />
-      <LatestJournal />
+      <FeaturedWorks works={works.slice(0, 3)} />
+      <LatestJournal entries={journal} />
       <ClosingQuote />
     </div>
   )

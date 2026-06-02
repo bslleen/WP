@@ -108,7 +108,7 @@ export default function WorkForm() {
   }
 
   return (
-    <div className="page-enter">
+    <div className="">
       <div style={{ marginBottom: '2rem' }}>
         <p style={{ color: '#4a3520', fontSize: '0.6rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
           ✦ &nbsp; {isEdit ? 'Revise Entry' : 'New Entry'} &nbsp; ✦

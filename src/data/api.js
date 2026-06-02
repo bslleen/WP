@@ -143,6 +143,17 @@ export async function changePassword(newPassword) {
   return request('PUT', '/auth/password', { new_password: newPassword })
 }
 
+// ─── About ────────────────────────────────────────────────────────────────────
+
+export async function fetchAbout() {
+  if (!BASE) return null
+  return request('GET', '/about')
+}
+
+export async function updateAbout(body) {
+  return request('PUT', '/admin/about', body)
+}
+
 // ─── Convenience: use mock data when no API is configured ────────────────────
 
 import { works as mockWorks, journalEntries as mockJournal } from './content'

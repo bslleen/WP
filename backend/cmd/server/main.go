@@ -59,6 +59,9 @@ func main() {
 		api.GET("/journal", h.GetJournalEntries)
 		api.GET("/journal/:id", h.GetJournalEntry)
 
+		// About (public read)
+		api.GET("/about", h.GetAbout)
+
 		// Protected routes (require JWT)
 		protected := api.Group("/")
 		protected.Use(middleware.AuthRequired(os.Getenv("JWT_SECRET")))
@@ -81,6 +84,7 @@ func main() {
 
 			// Admin: all content regardless of published status
 			protected.GET("/admin/journal", h.GetAllJournalEntries)
+			protected.PUT("/admin/about", h.UpdateAbout)
 		}
 	}
 

@@ -1,9 +1,11 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import Navigation from './components/Navigation'
 import Footer from './components/Footer'
 import PasswordModal from './components/PasswordModal'
 import ProtectedRoute from './components/ProtectedRoute'
+import PageTransition from './components/PageTransition'
 import { useSecretAccess } from './hooks/useSecretAccess'
 import AdminRequireAuth from './components/admin/AdminRequireAuth'
 import AdminLayout from './components/admin/AdminLayout'
@@ -22,6 +24,7 @@ import WorkForm from './pages/admin/WorkForm'
 import AdminJournal from './pages/admin/AdminJournal'
 import JournalForm from './pages/admin/JournalForm'
 import AdminSettings from './pages/admin/AdminSettings'
+import AdminAbout from './pages/admin/AdminAbout'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -47,73 +50,76 @@ function AppInner() {
     return (
       <>
         <ScrollToTop />
-        <Routes>
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route
-            path="/admin"
-            element={
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/admin/login" element={
+              <PageTransition><AdminLogin /></PageTransition>
+            } />
+            <Route path="/admin" element={
               <AdminRequireAuth>
-                <AdminLayout><AdminDashboard /></AdminLayout>
+                <PageTransition>
+                  <AdminLayout><AdminDashboard /></AdminLayout>
+                </PageTransition>
               </AdminRequireAuth>
-            }
-          />
-          <Route
-            path="/admin/works"
-            element={
+            } />
+            <Route path="/admin/works" element={
               <AdminRequireAuth>
-                <AdminLayout><AdminWorks /></AdminLayout>
+                <PageTransition>
+                  <AdminLayout><AdminWorks /></AdminLayout>
+                </PageTransition>
               </AdminRequireAuth>
-            }
-          />
-          <Route
-            path="/admin/works/new"
-            element={
+            } />
+            <Route path="/admin/works/new" element={
               <AdminRequireAuth>
-                <AdminLayout><WorkForm /></AdminLayout>
+                <PageTransition>
+                  <AdminLayout><WorkForm /></AdminLayout>
+                </PageTransition>
               </AdminRequireAuth>
-            }
-          />
-          <Route
-            path="/admin/works/:id/edit"
-            element={
+            } />
+            <Route path="/admin/works/:id/edit" element={
               <AdminRequireAuth>
-                <AdminLayout><WorkForm /></AdminLayout>
+                <PageTransition>
+                  <AdminLayout><WorkForm /></AdminLayout>
+                </PageTransition>
               </AdminRequireAuth>
-            }
-          />
-          <Route
-            path="/admin/journal"
-            element={
+            } />
+            <Route path="/admin/journal" element={
               <AdminRequireAuth>
-                <AdminLayout><AdminJournal /></AdminLayout>
+                <PageTransition>
+                  <AdminLayout><AdminJournal /></AdminLayout>
+                </PageTransition>
               </AdminRequireAuth>
-            }
-          />
-          <Route
-            path="/admin/journal/new"
-            element={
+            } />
+            <Route path="/admin/journal/new" element={
               <AdminRequireAuth>
-                <AdminLayout><JournalForm /></AdminLayout>
+                <PageTransition>
+                  <AdminLayout><JournalForm /></AdminLayout>
+                </PageTransition>
               </AdminRequireAuth>
-            }
-          />
-          <Route
-            path="/admin/journal/:id/edit"
-            element={
+            } />
+            <Route path="/admin/journal/:id/edit" element={
               <AdminRequireAuth>
-                <AdminLayout><JournalForm /></AdminLayout>
+                <PageTransition>
+                  <AdminLayout><JournalForm /></AdminLayout>
+                </PageTransition>
               </AdminRequireAuth>
-            }
-          />
-          <Route
-            path="/admin/settings"
-            element={
+            } />
+            <Route path="/admin/about" element={
               <AdminRequireAuth>
-                <AdminLayout><AdminSettings /></AdminLayout>
+                <PageTransition>
+                  <AdminLayout><AdminAbout /></AdminLayout>
+                </PageTransition>
               </AdminRequireAuth>
-            }
-          />
-        </Routes>
+            } />
+            <Route path="/admin/settings" element={
+              <AdminRequireAuth>
+                <PageTransition>
+                  <AdminLayout><AdminSettings /></AdminLayout>
+                </PageTransition>
+              </AdminRequireAuth>
+            } />
+          </Routes>
+        </AnimatePresence>
       </>
     )
   }
@@ -131,21 +137,30 @@ function AppInner() {
       />
 
       <main style={{ flex: 1 }}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/works" element={<Works />} />
-          <Route path="/works/all" element={<WorksAll />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/journal" element={<Journal />} />
-          <Route
-            path="/secret"
-            element={
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={
+              <PageTransition><Home /></PageTransition>
+            } />
+            <Route path="/works" element={
+              <PageTransition><Works /></PageTransition>
+            } />
+            <Route path="/works/all" element={
+              <PageTransition><WorksAll /></PageTransition>
+            } />
+            <Route path="/about" element={
+              <PageTransition><About /></PageTransition>
+            } />
+            <Route path="/journal" element={
+              <PageTransition><Journal /></PageTransition>
+            } />
+            <Route path="/secret" element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <Secret onLogout={logout} />
+                <PageTransition><Secret onLogout={logout} /></PageTransition>
               </ProtectedRoute>
-            }
-          />
-        </Routes>
+            } />
+          </Routes>
+        </AnimatePresence>
       </main>
 
       <Footer />

@@ -386,7 +386,7 @@ function PrivateJournal() {
 
 export default function Secret({ onLogout }) {
   return (
-    <div className="page-enter min-h-screen pt-28 pb-24 px-6" style={{ background: '#0d0a05' }}>
+    <div className="min-h-screen pt-28 pb-24 px-6" style={{ background: '#0d0a05' }}>
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
