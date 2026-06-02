@@ -95,10 +95,19 @@ h1, h2, h3, h4 {
 /* ─── Animations ────────────────────────────────────────────────────────────── */
 
 @keyframes flicker {
-  0%, 100% { opacity: 1;    filter: drop-shadow(0 0 8px rgba(245,158,11,0.65)); }
-  25%       { opacity: 0.92; filter: drop-shadow(0 0 5px rgba(245,158,11,0.4)); }
-  50%       { opacity: 0.84; filter: drop-shadow(0 0 14px rgba(245,158,11,0.85)); }
-  75%       { opacity: 0.96; filter: drop-shadow(0 0 6px rgba(245,158,11,0.5)); }
+  0%   { opacity: 1;    transform: scaleY(1)    scaleX(1)    rotate(-1deg); filter: brightness(1); }
+  25%  { opacity: 0.92; transform: scaleY(0.97) scaleX(1.02) rotate(1deg);  filter: brightness(1.1); }
+  50%  { opacity: 1;    transform: scaleY(1.03) scaleX(0.98) rotate(-2deg); filter: brightness(0.95); }
+  75%  { opacity: 0.95; transform: scaleY(0.98) scaleX(1.01) rotate(1deg);  filter: brightness(1.05); }
+  100% { opacity: 1;    transform: scaleY(1)    scaleX(1)    rotate(-1deg); filter: brightness(1); }
+}
+
+.candle-flame {
+  animation: flicker 1.8s ease-in-out infinite;
+  transform-origin: bottom center;
+  display: inline-block;
+  color: #c9a85c;
+  font-size: 18px;
 }
 
 @keyframes flickerGlow {
