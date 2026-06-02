@@ -57,7 +57,23 @@ export default function AmbientSound() {
         transition: 'all 0.2s',
       }}
     >
-      {muted ? '🔇' : '🔥'}
+      {muted ? (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <line x1="2" y1="8" x2="2" y2="8" stroke="#3a2e1a" strokeWidth="1.5" strokeLinecap="round"/>
+          <line x1="5" y1="5" x2="5" y2="11" stroke="#3a2e1a" strokeWidth="1.5" strokeLinecap="round"/>
+          <line x1="8" y1="3" x2="8" y2="13" stroke="#3a2e1a" strokeWidth="1.5" strokeLinecap="round"/>
+          <line x1="11" y1="5" x2="11" y2="11" stroke="#3a2e1a" strokeWidth="1.5" strokeLinecap="round"/>
+          <line x1="14" y1="8" x2="14" y2="8" stroke="#3a2e1a" strokeWidth="1.5" strokeLinecap="round"/>
+        </svg>
+      ) : (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <line x1="2" y1="8" x2="2" y2="8" stroke="#c9a85c" strokeWidth="1.5" strokeLinecap="round"/>
+          <line x1="5" y1="5" x2="5" y2="11" stroke="#c9a85c" strokeWidth="1.5" strokeLinecap="round"/>
+          <line x1="8" y1="3" x2="8" y2="13" stroke="#c9a85c" strokeWidth="1.5" strokeLinecap="round"/>
+          <line x1="11" y1="5" x2="11" y2="11" stroke="#c9a85c" strokeWidth="1.5" strokeLinecap="round"/>
+          <line x1="14" y1="8" x2="14" y2="8" stroke="#c9a85c" strokeWidth="1.5" strokeLinecap="round"/>
+        </svg>
+      )}
     </button>
   )
 }
