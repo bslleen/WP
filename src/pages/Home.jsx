@@ -4,161 +4,213 @@ import { OrnateDivider, OrnateFrame, SectionTitle } from '../components/OrnateEl
 import { fetchWorks, fetchJournal } from '../data/api'
 import { normalizeWork, normalizeJournal } from '../data/normalize'
 import { featuredWorks as mockWorks, journalEntries as mockJournal } from '../data/content'
+import heroBg from '../assets/hero.png'
 
 function HeroSection() {
   return (
-    <section
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
-      style={{
-        background: 'linear-gradient(180deg, #0d0a05 0%, #1a1209 40%, #0d0a05 100%)',
-      }}
-    >
-      {/* Atmospheric radial glow */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: 'radial-gradient(ellipse 70% 60% at 60% 40%, rgba(201,168,76,0.07) 0%, transparent 70%)',
-        }}
-      />
+    <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
 
-      {/* Decorative large quote marks */}
-      <div
-        className="absolute top-32 left-8 text-[200px] leading-none select-none pointer-events-none"
-        style={{ color: 'rgba(138, 109, 47, 0.08)', fontFamily: "'Playfair Display', serif" }}
-      >
-        "
-      </div>
+      {/* ── Photo background ── */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        backgroundImage: `url(${heroBg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center 35%',
+        filter: 'brightness(0.42) sepia(0.5) saturate(1.4) contrast(1.1)',
+      }} />
 
-      {/* Study desk illustration - SVG atmospheric */}
-      <div className="absolute right-0 top-0 bottom-0 w-1/2 pointer-events-none hidden lg:block">
-        <svg viewBox="0 0 500 600" className="w-full h-full" preserveAspectRatio="xMidYMid slice">
-          <defs>
-            <radialGradient id="lampGlow" cx="50%" cy="40%" r="50%">
-              <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.15" />
-              <stop offset="100%" stopColor="transparent" stopOpacity="0" />
-            </radialGradient>
-            <linearGradient id="deskGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#2a1f0e" />
-              <stop offset="100%" stopColor="#1a1209" />
-            </linearGradient>
-          </defs>
-          {/* Lamp glow */}
-          <ellipse cx="320" cy="200" rx="160" ry="120" fill="url(#lampGlow)" />
-          {/* Desk */}
-          <rect x="50" y="420" width="420" height="20" rx="2" fill="url(#deskGrad)" opacity="0.8" />
-          {/* Book stack */}
-          <rect x="80" y="370" width="60" height="50" rx="2" fill="#3d2b14" opacity="0.9" />
-          <rect x="82" y="360" width="56" height="50" rx="2" fill="#2a1f0e" opacity="0.9" />
-          <rect x="84" y="350" width="52" height="50" rx="2" fill="#4a3520" opacity="0.9" />
-          {/* Open book */}
-          <ellipse cx="250" cy="415" rx="90" ry="12" fill="#2a1f0e" opacity="0.6" />
-          <path d="M170 390 Q250 380 330 390 L330 415 Q250 410 170 415 Z" fill="#f0e6c8" opacity="0.15" />
-          <line x1="250" y1="380" x2="250" y2="415" stroke="#8a6d2f" strokeWidth="0.5" opacity="0.5" />
-          {/* Quill */}
-          <path d="M280 350 Q320 300 360 260" stroke="#f0e6c8" strokeWidth="1.5" fill="none" opacity="0.4" />
-          <path d="M280 350 Q270 340 275 330 Q285 340 280 350 Z" fill="#f0e6c8" opacity="0.4" />
-          {/* Ink bottle */}
-          <rect x="340" y="390" width="20" height="28" rx="3" fill="#1a1209" opacity="0.9" stroke="#8a6d2f" strokeWidth="0.5" />
-          <rect x="343" y="386" width="14" height="6" rx="1" fill="#2a1f0e" opacity="0.9" />
-          {/* Candle */}
-          <rect x="390" y="375" width="12" height="40" rx="1" fill="#f0e6c8" opacity="0.5" />
-          <ellipse cx="396" cy="373" rx="3" ry="4" fill="#f59e0b" opacity="0.7" />
-          <ellipse cx="396" cy="374" rx="1.5" ry="2" fill="#fde68a" opacity="0.8" />
-          <ellipse cx="396" cy="370" rx="8" ry="8" fill="url(#lampGlow)" />
-          {/* Wall texture lines */}
-          {[...Array(12)].map((_, i) => (
-            <line key={i} x1="0" y1={i * 50} x2="500" y2={i * 50}
-              stroke="#2a1f0e" strokeWidth="0.3" opacity="0.3" />
-          ))}
-        </svg>
-      </div>
+      {/* ── Layered dark overlays ── */}
+      {/* Base darkening */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'linear-gradient(160deg, rgba(8,5,2,0.78) 0%, rgba(8,5,2,0.35) 55%, rgba(8,5,2,0.7) 100%)',
+      }} />
+      {/* Bottom fade to solid */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'linear-gradient(to bottom, transparent 55%, rgba(8,5,2,0.95) 100%)',
+      }} />
+      {/* Edge vignette */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'radial-gradient(ellipse 110% 100% at 50% 50%, transparent 38%, rgba(0,0,0,0.72) 100%)',
+      }} />
+      {/* Warm candle glow — lower right, like a lamp on a desk */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'radial-gradient(ellipse 45% 38% at 72% 68%, rgba(201,168,76,0.22) 0%, rgba(180,120,30,0.06) 55%, transparent 75%)',
+      }} />
 
-      {/* Hero content */}
-      <div className="relative z-10 max-w-6xl mx-auto px-6 pt-24 pb-16 grid lg:grid-cols-2 gap-16 items-center">
+      {/* ── Content ── */}
+      <div style={{
+        position: 'relative', zIndex: 10,
+        width: '100%', maxWidth: '1200px', margin: '0 auto',
+        padding: '0 3rem', paddingTop: '9rem', paddingBottom: '7rem',
+        display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'center',
+      }} className="hero-grid">
+
+        {/* Left — main text */}
         <div className="animate-fadeInUp">
-          <p
-            className="text-xs tracking-[0.45em] uppercase mb-6"
-            style={{ color: '#8a6d2f' }}
-          >
-            ✦ &nbsp; Author &amp; Poet &nbsp; ✦
+          {/* Eye label */}
+          <p style={{
+            fontFamily: "'Crimson Text', serif",
+            fontSize: '0.65rem', letterSpacing: '0.5em',
+            textTransform: 'uppercase', color: '#8a6d2f',
+            marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.6rem',
+          }}>
+            <span style={{ display: 'inline-block', width: '28px', height: '1px', background: '#8a6d2f', opacity: 0.6 }} />
+            Author &amp; Poet
+            <span style={{ display: 'inline-block', width: '28px', height: '1px', background: '#8a6d2f', opacity: 0.6 }} />
           </p>
 
-          <h1
-            className="text-5xl md:text-7xl leading-tight mb-6"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-          >
+          {/* Main heading */}
+          <h1 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: 'clamp(3rem, 6vw, 5.5rem)',
+            lineHeight: 1.06,
+            fontWeight: 400,
+            marginBottom: '0.2rem',
+            color: '#f0e6c8',
+            letterSpacing: '-0.01em',
+          }}>
             Words that
-            <br />
-            <em className="italic" style={{ color: '#c9a84c' }}>endure</em>
-            <br />
+          </h1>
+          <h1 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: 'clamp(3rem, 6vw, 5.5rem)',
+            lineHeight: 1.06,
+            fontWeight: 400,
+            fontStyle: 'italic',
+            color: '#c9a84c',
+            marginBottom: '0.2rem',
+            letterSpacing: '-0.01em',
+          }}>
+            endure
+          </h1>
+          <h1 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: 'clamp(3rem, 6vw, 5.5rem)',
+            lineHeight: 1.06,
+            fontWeight: 400,
+            color: '#f0e6c8',
+            marginBottom: '2rem',
+            letterSpacing: '-0.01em',
+          }}>
             the dark.
           </h1>
 
-          <p
-            className="text-lg leading-relaxed mb-10 max-w-md"
-            style={{ color: '#a89060', fontFamily: "'Crimson Text', serif" }}
-          >
+          {/* Ornament rule */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.75rem' }}>
+            <div style={{ flex: 1, maxWidth: '80px', height: '1px', background: 'linear-gradient(to right, transparent, #8a6d2f)' }} />
+            <span style={{ color: '#c9a84c', fontSize: '0.6rem' }}>✦</span>
+            <div style={{ flex: 1, maxWidth: '80px', height: '1px', background: 'linear-gradient(to left, transparent, #8a6d2f)' }} />
+          </div>
+
+          {/* Tagline */}
+          <p style={{
+            fontFamily: "'Crimson Text', serif",
+            fontSize: '1.15rem',
+            lineHeight: 1.75,
+            color: '#a89060',
+            maxWidth: '380px',
+            marginBottom: '2.5rem',
+          }}>
             Eleanor Ashworth writes novels, poems, and stories that live
             in the borderlands between the known and the haunted.
           </p>
 
-          <div className="flex flex-wrap gap-4">
+          {/* CTAs */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center' }}>
             <Link to="/works">
-              <button className="btn-gold">View the Works</button>
+              <button className="btn-gold" style={{ padding: '12px 32px' }}>View the Works</button>
             </Link>
-            <Link to="/about">
-              <button
-                className="px-7 py-3 text-xs tracking-[0.2em] uppercase transition-colors duration-300"
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: '#6b5a3e',
-                  fontFamily: "'Playfair Display', serif",
-                }}
-              >
-                About the Author →
-              </button>
+            <Link to="/about" style={{
+              fontFamily: "'Crimson Text', serif",
+              color: '#6b5a3e', fontSize: '0.85rem',
+              letterSpacing: '0.12em', textDecoration: 'none',
+              transition: 'color 0.3s',
+            }}
+              onMouseEnter={e => e.currentTarget.style.color = '#c9a84c'}
+              onMouseLeave={e => e.currentTarget.style.color = '#6b5a3e'}
+            >
+              About the Author →
             </Link>
           </div>
         </div>
 
-        {/* Pull quote */}
-        <div
-          className="hidden lg:block animate-fadeInUp delay-300 opacity-0"
-          style={{ animationFillMode: 'forwards' }}
-        >
-          <div
-            className="p-8 relative"
-            style={{ border: '1px solid rgba(138, 109, 47, 0.3)' }}
-          >
-            <div
-              className="absolute -top-4 left-6 px-3 text-xs tracking-widest uppercase"
-              style={{ background: '#1a1209', color: '#8a6d2f' }}
-            >
+        {/* Right — pull quote, framed */}
+        <div className="animate-fadeInUp delay-400" style={{ animationFillMode: 'forwards', opacity: 0 }}>
+          {/* Outer ornate frame lines */}
+          <div style={{
+            padding: '2.5rem',
+            border: '1px solid rgba(201,168,76,0.25)',
+            position: 'relative',
+            background: 'rgba(8,5,2,0.55)',
+            backdropFilter: 'blur(2px)',
+          }}>
+            {/* Corner accents */}
+            {[['top:0;left:0', 'M0 20 L0 0 L20 0'], ['top:0;right:0', 'M0 0 L20 0 L20 20'], ['bottom:0;left:0', 'M0 0 L0 20 L20 20'], ['bottom:0;right:0', 'M20 0 L20 20 L0 20']].map(([pos, d], i) => (
+              <svg key={i} viewBox="0 0 20 20" fill="none" style={{ position: 'absolute', width: '20px', height: '20px', ...Object.fromEntries(pos.split(';').map(p => p.split(':'))) }}>
+                <path d={d} stroke="#c9a84c" strokeWidth="0.8" opacity="0.7" />
+              </svg>
+            ))}
+
+            <p style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: '0.55rem', letterSpacing: '0.35em',
+              textTransform: 'uppercase', color: '#6b5a3e',
+              marginBottom: '1.25rem',
+            }}>
               From the Archive
-            </div>
-            <p
-              className="text-xl italic leading-relaxed"
-              style={{
-                fontFamily: "'IM Fell English', serif",
-                color: '#d4c49a',
-              }}
-            >
+            </p>
+            <p style={{
+              fontFamily: "'IM Fell English', serif",
+              fontSize: '1.25rem',
+              fontStyle: 'italic',
+              lineHeight: 1.7,
+              color: '#d4c49a',
+              marginBottom: '1.25rem',
+            }}>
               "The light came not from any star, but from something older —
               something that had learned, long ago, to imitate the sky."
             </p>
-            <p className="mt-4 text-xs tracking-widest uppercase" style={{ color: '#6b5a3e' }}>
-              — The Amber Meridian, 2023
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <div style={{ height: '1px', flex: 1, background: 'rgba(138,109,47,0.3)' }} />
+              <p style={{ fontSize: '0.6rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: '#4a3520', whiteSpace: 'nowrap' }}>
+                The Amber Meridian, 2023
+              </p>
+            </div>
+          </div>
+
+          {/* Study notes card below */}
+          <div style={{
+            marginTop: '1.25rem',
+            padding: '1.25rem 1.5rem',
+            background: 'rgba(201,168,76,0.04)',
+            border: '1px solid rgba(201,168,76,0.12)',
+            display: 'flex', gap: '1rem', alignItems: 'center',
+          }}>
+            <span style={{ color: '#c9a84c', fontSize: '1.2rem', opacity: 0.5 }}>✒</span>
+            <p style={{ fontFamily: "'Crimson Text', serif", fontStyle: 'italic', color: '#6b5a3e', fontSize: '0.95rem', lineHeight: 1.5 }}>
+              Study. Read. Discover. — <span style={{ color: '#4a3520' }}>The work continues.</span>
             </p>
           </div>
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-        <p className="text-xs tracking-[0.3em] uppercase" style={{ color: '#4a3520' }}>Scroll</p>
-        <div className="w-px h-12 animate-pulse" style={{ background: 'linear-gradient(to bottom, #8a6d2f, transparent)' }} />
+      {/* ── Scroll indicator ── */}
+      <div style={{ position: 'absolute', bottom: '2rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+        <p style={{ fontSize: '0.55rem', letterSpacing: '0.4em', textTransform: 'uppercase', color: '#3d2b14' }}>Scroll</p>
+        <div style={{ width: '1px', height: '48px', background: 'linear-gradient(to bottom, #8a6d2f, transparent)', animation: 'pulse 2s ease-in-out infinite' }} />
       </div>
+
+      {/* Mobile single-column fix */}
+      <style>{`
+        @media (max-width: 768px) {
+          .hero-grid { grid-template-columns: 1fr !important; gap: 2.5rem !important; padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+          .hero-grid > div:last-child { display: none; }
+        }
+      `}</style>
     </section>
   )
 }
