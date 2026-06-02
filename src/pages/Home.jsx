@@ -4,7 +4,7 @@ import { OrnateDivider, OrnateFrame, SectionTitle } from '../components/OrnateEl
 import { fetchWorks, fetchJournal } from '../data/api'
 import { normalizeWork, normalizeJournal } from '../data/normalize'
 import { featuredWorks as mockWorks, journalEntries as mockJournal } from '../data/content'
-import heroBg from '../assets/hero.png'
+import heroBg from '../assets/study.jpg'
 
 function HeroSection() {
   return (
@@ -15,8 +15,8 @@ function HeroSection() {
         position: 'absolute', inset: 0,
         backgroundImage: `url(${heroBg})`,
         backgroundSize: 'cover',
-        backgroundPosition: 'center 35%',
-        filter: 'brightness(0.42) sepia(0.5) saturate(1.4) contrast(1.1)',
+        backgroundPosition: 'center 20%',
+        filter: 'brightness(0.38) sepia(0.35) saturate(1.2) contrast(1.05)',
       }} />
 
       {/* ── Layered dark overlays ── */}
