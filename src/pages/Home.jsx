@@ -4,6 +4,7 @@ import { fetchWorks, fetchJournal } from '../data/api'
 import { normalizeWork, normalizeJournal } from '../data/normalize'
 import { featuredWorks as mockWorks, journalEntries as mockJournal } from '../data/content'
 import heroBg          from '../assets/study.jpg'
+import FadeIn          from '../components/FadeIn'
 import parchmentBg     from '../assets/parchment.jpg'
 import cardManuscripts from '../assets/card-manuscripts.jpg'
 import cardQuill       from '../assets/card-quill.jpg'
@@ -287,6 +288,7 @@ export default function Home() {
           display: 'flex', alignItems: 'flex-end',
           justifyContent: 'space-between', marginBottom: 48,
         }}>
+          <FadeIn delay={0}>
           <div>
             <p style={{
               fontFamily: "'Cinzel', serif", fontSize: 9,
@@ -309,6 +311,7 @@ export default function Home() {
               Works from the current archive.
             </p>
           </div>
+          </FadeIn>
           <Link to="/works" style={{
             fontFamily: "'Cinzel', serif", fontSize: 10,
             letterSpacing: '0.2em', color: '#5a4a2a',
@@ -321,10 +324,12 @@ export default function Home() {
 
         {/* 3-column card grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2 }}>
-          {works.map(work => (
-            <Link key={work.id} to="/works" style={{ textDecoration: 'none' }}>
-              <WorkCard work={work} loading={loading} />
-            </Link>
+          {works.map((work, index) => (
+            <FadeIn key={work.id} delay={0.1 * index}>
+              <Link to="/works" style={{ textDecoration: 'none' }}>
+                <WorkCard work={work} loading={loading} />
+              </Link>
+            </FadeIn>
           ))}
         </div>
       </section>
@@ -335,6 +340,7 @@ export default function Home() {
           display: 'flex', alignItems: 'flex-end',
           justifyContent: 'space-between', marginBottom: 48,
         }}>
+          <FadeIn delay={0}>
           <div>
             <p style={{
               fontFamily: "'Cinzel', serif", fontSize: 9,
@@ -351,6 +357,7 @@ export default function Home() {
               Recent Entries
             </h2>
           </div>
+          </FadeIn>
         </div>
 
         <Ornament />
@@ -360,7 +367,8 @@ export default function Home() {
           gap: 1, border: '0.5px solid #2a2010',
         }}>
           {journal.map((entry, i) => (
-            <div key={entry.id} style={{
+            <FadeIn key={entry.id} delay={0.15 * i}>
+            <div style={{
               padding: 32,
               borderRight: i === 0 ? '0.5px solid #2a2010' : 'none',
               display: 'flex', flexDirection: 'column', gap: 12,
@@ -392,6 +400,7 @@ export default function Home() {
                 READ
               </Link>
             </div>
+            </FadeIn>
           ))}
         </div>
 
@@ -415,6 +424,7 @@ export default function Home() {
         borderTop: '0.5px solid #1a1410',
         borderBottom: '0.5px solid #1a1410',
       }}>
+        <FadeIn delay={0}>
         <div style={{
           fontFamily: "'Cinzel', serif", fontSize: 9,
           letterSpacing: '0.35em', color: '#3a2e1a',
@@ -435,6 +445,7 @@ export default function Home() {
           "Every good sentence is a small room with light coming in from the right."
         </blockquote>
         <Ornament />
+        </FadeIn>
       </section>
 
       {/* ── FOOTER ────────────────────────────────────────────────────────── */}
