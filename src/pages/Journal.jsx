@@ -1,143 +1,230 @@
 import { useState, useEffect } from 'react'
-import { SectionTitle, OrnateDivider } from '../components/OrnateElements'
 import { fetchJournal } from '../data/api'
 import { normalizeJournal } from '../data/normalize'
 import { journalEntries as mockJournal } from '../data/content'
 
+// ─── Ornament rule ────────────────────────────────────────────────────────────
+function OrnamentRule() {
+  const s = { width: 3, height: 3, border: '0.5px solid #1a1410', transform: 'rotate(45deg)', flexShrink: 0 }
+  const d = { width: 5, height: 5, border: '0.5px solid #2a1e0a', transform: 'rotate(45deg)', flexShrink: 0 }
+  const f = { ...d, background: '#c9a85c', borderColor: '#c9a85c' }
+  return (
+    <div style={{ maxWidth: 900, margin: '48px auto 0', display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: 16, padding: '0 48px' }}>
+      <div style={{ height: '0.5px', background: '#1a1410' }} />
+      <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
+        <div style={s} /><div style={d} /><div style={s} /><div style={f} /><div style={s} /><div style={d} /><div style={s} />
+      </div>
+      <div style={{ height: '0.5px', background: '#1a1410' }} />
+    </div>
+  )
+}
+
+// ─── Modal ────────────────────────────────────────────────────────────────────
 function EntryModal({ entry, onClose }) {
   if (!entry) return null
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto py-12 px-4"
-      style={{ background: 'rgba(0,0,0,0.9)', backdropFilter: 'blur(8px)' }}
-      onClick={(e) => e.target === e.currentTarget && onClose()}
+      onClick={e => e.target === e.currentTarget && onClose()}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 50,
+        display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+        overflowY: 'auto', padding: '60px 24px',
+        background: 'rgba(0,0,0,0.92)',
+      }}
     >
-      <div
-        className="relative w-full max-w-2xl animate-fadeInUp"
-        style={{
-          background: 'linear-gradient(135deg, #1a1209, #0d0a05)',
-          border: '1px solid #8a6d2f',
-          boxShadow: '0 40px 80px rgba(0,0,0,0.8)',
-        }}
-      >
+      <div style={{
+        width: '100%', maxWidth: 640,
+        background: 'linear-gradient(160deg, #1a1209, #0d0a05)',
+        border: '0.5px solid #3a2e1a',
+        padding: '56px 56px 48px',
+        position: 'relative', margin: 'auto',
+      }}>
         {/* Close */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-5 text-xs tracking-widest transition-colors hover:text-gold"
-          style={{ color: '#6b5a3e', fontFamily: "'Crimson Text', serif" }}
+          style={{
+            position: 'absolute', top: 20, right: 24,
+            fontFamily: "'Cinzel', serif", fontSize: 9,
+            letterSpacing: '0.25em', color: '#3a2e1a',
+            cursor: 'pointer', background: 'none', border: 'none',
+            transition: 'color 0.2s',
+          }}
+          onMouseEnter={e => e.currentTarget.style.color = '#c9a85c'}
+          onMouseLeave={e => e.currentTarget.style.color = '#3a2e1a'}
         >
-          ✕ Close
+          ✕ CLOSE
         </button>
 
-        <div className="p-10 pt-12">
-          <p className="text-xs tracking-widest uppercase mb-2" style={{ color: '#8a6d2f' }}>
-            {entry.category} &nbsp;·&nbsp; {entry.date}
-          </p>
-          <h2
-            className="text-3xl italic mb-2"
-            style={{ fontFamily: "'Playfair Display', serif", color: '#f0e6c8' }}
-          >
-            {entry.title}
-          </h2>
-          <p className="text-xs mb-6" style={{ color: '#4a3520' }}>
-            {entry.readTime} read
-          </p>
+        <p style={{ fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.3em', color: '#5a4a2a', marginBottom: 6, textTransform: 'uppercase' }}>
+          {entry.category}
+        </p>
+        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 34, fontStyle: 'italic', fontWeight: 300, color: '#e8dcc0', marginBottom: 4, lineHeight: 1.2 }}>
+          {entry.title}
+        </h2>
+        <p style={{ fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.2em', color: '#2a2010', marginBottom: 32, textTransform: 'uppercase' }}>
+          {entry.date}{entry.readTime ? ` · ${entry.readTime} READ` : ''}
+        </p>
 
-          <OrnateDivider className="mb-8" />
+        <div style={{ height: '0.5px', background: '#1a1410', marginBottom: 32 }} />
 
-          <div className="space-y-5">
-            {entry.body.split('\n\n').map((paragraph, i) => (
-              <p key={i} className="text-lg leading-relaxed" style={{ color: '#a89060' }}>
-                {paragraph}
-              </p>
-            ))}
-          </div>
-
-          <OrnateDivider className="mt-10" />
-          <p className="text-center text-xs tracking-widest uppercase mt-4" style={{ color: '#4a3520' }}>
-            ✦ &nbsp; End of Entry &nbsp; ✦
-          </p>
+        <div style={{ fontSize: 17, lineHeight: 1.9, color: '#8a7a5a' }}>
+          {(entry.body || entry.excerpt || '').split('\n\n').map((p, i) => (
+            <p key={i} style={{ marginBottom: '1.4em' }}>{p}</p>
+          ))}
         </div>
+
+        <p style={{ textAlign: 'center', marginTop: 40, fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.3em', color: '#2a2010' }}>
+          ✦ &nbsp; END OF ENTRY &nbsp; ✦
+        </p>
       </div>
     </div>
   )
 }
 
+// ─── Main ─────────────────────────────────────────────────────────────────────
 export default function Journal() {
-  const [active, setActive] = useState(null)
+  const [active, setActive]   = useState(null)
   const [entries, setEntries] = useState(mockJournal.map(normalizeJournal))
 
   useEffect(() => {
     fetchJournal()
       .then(data => setEntries(data.map(normalizeJournal)))
-      .catch(() => {})
+      .catch(() => setEntries(mockJournal.map(normalizeJournal)))
   }, [])
 
   return (
-    <div className="min-h-screen pt-28 pb-24 px-6" style={{ background: '#0d0a05' }}>
-      <div className="max-w-4xl mx-auto">
-        <SectionTitle subtitle="The Journal">Writing & Observations</SectionTitle>
+    <div style={{ background: '#0d0a05', minHeight: '100vh', fontFamily: "'EB Garamond', Georgia, serif", color: '#a89060' }}>
 
-        <p
-          className="text-center max-w-md mx-auto mt-4 mb-16 text-lg"
-          style={{ color: '#6b5a3e', fontFamily: "'Crimson Text', serif" }}
-        >
+      {/* ── Header ── */}
+      <div style={{ padding: '72px 48px 0', maxWidth: 900, margin: '0 auto' }}>
+        <div style={{ fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.4em', color: '#3a2e1a', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ color: '#c9a85c', fontSize: 8 }}>✦</span>
+          THE JOURNAL
+          <span style={{ color: '#c9a85c', fontSize: 8 }}>✦</span>
+        </div>
+        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 56, fontWeight: 300, fontStyle: 'italic', color: '#e8dcc0', lineHeight: 1, marginBottom: 20 }}>
+          Writing &amp; Observations
+        </h1>
+        <p style={{ fontFamily: "'EB Garamond', serif", fontSize: 17, fontStyle: 'italic', color: '#4a3a20', lineHeight: 1.6, maxWidth: 440 }}>
           Notes on the craft. Records of the days. Moments worth keeping.
         </p>
+      </div>
 
-        {/* Entry list — newspaper-style */}
-        <div className="space-y-0">
-          {entries.map((entry, i) => (
+      <OrnamentRule />
+
+      {/* ── Entry list ── */}
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 48px 80px' }}>
+        {entries.map((entry, i) => {
+          const featured = i === 0
+          return (
             <div key={entry.id}>
-              <button
-                className="w-full text-left group py-8 transition-all duration-300"
+              {/* Entry row */}
+              <div
                 onClick={() => setActive(entry)}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: featured ? '1fr' : '140px 1fr',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={e => {
+                  const title = e.currentTarget.querySelector('.j-title')
+                  const cta   = e.currentTarget.querySelector('.j-cta')
+                  if (title) title.style.color = '#c9a85c'
+                  if (cta)   cta.style.opacity = '1'
+                  if (cta)   cta.style.color   = '#c9a85c'
+                }}
+                onMouseLeave={e => {
+                  const title = e.currentTarget.querySelector('.j-title')
+                  const cta   = e.currentTarget.querySelector('.j-cta')
+                  if (title) title.style.color = featured ? '#e8dcc0' : '#d4c4a0'
+                  if (cta)   cta.style.opacity = '0.5'
+                  if (cta)   cta.style.color   = '#3a2e1a'
+                }}
               >
-                <div className="grid md:grid-cols-4 gap-4 items-start">
-                  {/* Date column */}
-                  <div className="md:col-span-1">
-                    <p className="text-xs tracking-widest uppercase" style={{ color: '#8a6d2f' }}>
+                {/* Left column — non-featured only */}
+                {!featured && (
+                  <div style={{
+                    padding: '40px 32px 40px 0',
+                    borderRight: '0.5px solid #1a1410',
+                    display: 'flex', flexDirection: 'column',
+                    gap: 6, alignItems: 'flex-end',
+                  }}>
+                    <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.3em', color: '#5a4a2a', textAlign: 'right', textTransform: 'uppercase' }}>
                       {entry.category}
-                    </p>
-                    <p className="text-xs mt-1" style={{ color: '#4a3520' }}>
-                      {entry.date}
-                    </p>
-                  </div>
-
-                  {/* Content column */}
-                  <div className="md:col-span-3">
-                    <h3
-                      className="text-2xl italic mb-2 group-hover:text-gold transition-colors duration-300"
-                      style={{ fontFamily: "'Playfair Display', serif", color: '#f0e6c8' }}
-                    >
-                      {entry.title}
-                    </h3>
-                    <p className="text-base leading-relaxed mb-3" style={{ color: '#6b5a3e' }}>
-                      {entry.excerpt}
-                    </p>
-                    <span
-                      className="text-xs tracking-[0.25em] uppercase transition-colors group-hover:opacity-100 opacity-60"
-                      style={{ color: '#c9a84c' }}
-                    >
-                      Read entry →
                     </span>
+                    <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.15em', color: '#2a2010', textAlign: 'right', lineHeight: 1.6, textTransform: 'uppercase' }}>
+                      {entry.date}
+                    </span>
+                    {entry.readTime && (
+                      <span style={{ fontSize: 11, color: '#2a2010', fontStyle: 'italic', textAlign: 'right', marginTop: 4 }}>
+                        {entry.readTime}
+                      </span>
+                    )}
                   </div>
-                </div>
-              </button>
+                )}
 
+                {/* Right column */}
+                <div style={{ padding: featured ? '48px 0 40px' : '40px 0 40px 40px' }}>
+                  {featured && (
+                    <>
+                      <div style={{ width: 32, height: '0.5px', background: '#c9a85c', marginBottom: 20 }} />
+                      <div style={{ display: 'flex', gap: 20, alignItems: 'center', marginBottom: 14 }}>
+                        <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.3em', color: '#c9a85c', textTransform: 'uppercase' }}>{entry.category}</span>
+                        <span style={{ color: '#1a1410', fontSize: 10 }}>·</span>
+                        <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.15em', color: '#3a2e1a', textTransform: 'uppercase' }}>{entry.date}</span>
+                        {entry.readTime && <>
+                          <span style={{ color: '#1a1410', fontSize: 10 }}>·</span>
+                          <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.15em', color: '#3a2e1a', textTransform: 'uppercase' }}>{entry.readTime} READ</span>
+                        </>}
+                      </div>
+                    </>
+                  )}
+
+                  <h2
+                    className="j-title"
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: featured ? 42 : 28,
+                      fontStyle: 'italic', fontWeight: 400,
+                      color: featured ? '#e8dcc0' : '#d4c4a0',
+                      marginBottom: 10, lineHeight: 1.2,
+                      transition: 'color 0.2s',
+                    }}
+                  >
+                    {entry.title}
+                  </h2>
+
+                  <p style={{ fontSize: featured ? 17 : 15, color: '#5a4a2a', lineHeight: 1.8, marginBottom: 14, maxWidth: featured ? 600 : 520 }}>
+                    {entry.excerpt}
+                  </p>
+
+                  <span
+                    className="j-cta"
+                    style={{
+                      fontFamily: "'Cinzel', serif", fontSize: 9,
+                      letterSpacing: '0.25em', color: '#3a2e1a',
+                      opacity: 0.5, transition: 'all 0.2s',
+                    }}
+                  >
+                    READ ENTRY →
+                  </span>
+                </div>
+              </div>
+
+              {/* Divider */}
               {i < entries.length - 1 && (
-                <div style={{ borderTop: '1px solid rgba(138, 109, 47, 0.15)' }} />
+                <div style={{ height: '0.5px', background: '#1a1410' }} />
               )}
             </div>
-          ))}
-        </div>
-
-        <OrnateDivider className="mt-8" />
-
-        <p className="text-center text-xs tracking-widest" style={{ color: '#3d2b14' }}>
-          ✦ &nbsp; More entries forthcoming &nbsp; ✦
-        </p>
+          )
+        })}
       </div>
+
+      <OrnamentRule />
+
+      <p style={{ maxWidth: 900, margin: '32px auto 60px', padding: '0 48px', textAlign: 'center', fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.3em', color: '#1a1410' }}>
+        ✦ &nbsp; MORE ENTRIES FORTHCOMING &nbsp; ✦
+      </p>
 
       <EntryModal entry={active} onClose={() => setActive(null)} />
     </div>

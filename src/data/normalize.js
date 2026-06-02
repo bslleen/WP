@@ -18,7 +18,7 @@ export function normalizeWork(w) {
 export function normalizeJournal(e) {
   return {
     ...e,
-    date:     formatDate(e.created_at),
+    date:     e.created_at ? formatDate(e.created_at) : (e.date || ''),
     readTime: e.read_time || '',
     category: e.category || '',
   }
