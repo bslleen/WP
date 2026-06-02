@@ -95,19 +95,21 @@ function BookCoverArt({ work }) {
 function WorkCard({ work }) {
   return (
     <div
+      className="card-aged"
       style={{
-        border: '1px solid #b8a98e',
+        border: '1px solid rgba(201,168,76,0.25)',
         background: '#f0e8d8',
         cursor: 'pointer',
-        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+        transition: 'transform 0.4s ease, box-shadow 0.4s ease',
+        boxShadow: '0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.2), inset 0 0 30px rgba(0,0,0,0.3)',
       }}
       onMouseEnter={e => {
-        e.currentTarget.style.transform = 'translateY(-4px)'
-        e.currentTarget.style.boxShadow = '0 16px 40px rgba(0,0,0,0.18)'
+        e.currentTarget.style.transform = 'translateY(-6px)'
+        e.currentTarget.style.boxShadow = '0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(201,168,76,0.08)'
       }}
       onMouseLeave={e => {
         e.currentTarget.style.transform = 'translateY(0)'
-        e.currentTarget.style.boxShadow = 'none'
+        e.currentTarget.style.boxShadow = '0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.2), inset 0 0 30px rgba(0,0,0,0.3)'
       }}
     >
       {/* Image / cover area */}
@@ -381,10 +383,12 @@ export default function Works() {
 
         {/* About the Author */}
         <div style={{
-          background: '#1a1209',
+          background: 'linear-gradient(160deg, #1e150a 0%, #0d0a05 100%)',
           padding: '3.5rem 2.75rem',
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           gap: 0,
+          borderTop: '1px solid rgba(201,168,76,0.12)',
+          boxShadow: 'inset 0 0 60px rgba(0,0,0,0.4)',
         }}>
           <h3 style={{
             fontFamily: "'Playfair Display', serif",
@@ -443,9 +447,11 @@ export default function Works() {
 
         {/* The Journal */}
         <div style={{
-          background: '#1a1209',
+          background: 'linear-gradient(160deg, #0d1018 0%, #0d0a05 100%)',
           padding: '3.5rem 2.75rem',
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          borderTop: '1px solid rgba(201,168,76,0.12)',
+          boxShadow: 'inset 0 0 60px rgba(0,0,0,0.4)',
         }}>
           <h3 style={{
             fontFamily: "'Playfair Display', serif",

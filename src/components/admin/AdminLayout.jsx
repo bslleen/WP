@@ -19,41 +19,43 @@ export default function AdminLayout({ children }) {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: '#0d0a05' }}>
-      {/* Sidebar */}
+      {/* Sidebar — warm leather */}
       <aside style={{
         width: '220px',
         flexShrink: 0,
-        borderRight: '1px solid rgba(138,109,47,0.2)',
+        borderRight: '1px solid rgba(201,168,76,0.15)',
+        boxShadow: '2px 0 20px rgba(0,0,0,0.5)',
         display: 'flex',
         flexDirection: 'column',
         position: 'sticky',
         top: 0,
         height: '100vh',
         overflow: 'hidden',
-        background: 'linear-gradient(180deg, #1a1209 0%, #0d0a05 100%)',
+        background: 'linear-gradient(180deg, #120d06 0%, #0d0a05 100%)',
       }}>
         {/* Logotype */}
         <div style={{
           padding: '1.75rem 1.5rem',
-          borderBottom: '1px solid rgba(138,109,47,0.15)',
+          borderBottom: '1px solid rgba(201,168,76,0.12)',
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.25rem' }}>
-            <svg viewBox="0 0 20 24" style={{ width: '13px', height: '16px', flexShrink: 0 }} fill="none">
-              <path d="M10 2 Q14 6 14 12 Q14 18 10 22 Q6 18 6 12 Q6 6 10 2Z" stroke="#c9a84c" strokeWidth="0.8" fill="none" />
-              <path d="M4 8 Q8 10 10 12 Q8 14 4 16" stroke="#8a6d2f" strokeWidth="0.5" fill="none" />
-              <path d="M16 8 Q12 10 10 12 Q12 14 16 16" stroke="#8a6d2f" strokeWidth="0.5" fill="none" />
-              <circle cx="10" cy="12" r="1.5" fill="#c9a84c" opacity="0.5" />
-            </svg>
-            <p style={{
-              fontFamily: "'Playfair Display', serif",
-              color: '#f0e6c8',
-              fontSize: '1rem',
-              fontStyle: 'italic',
-            }}>
-              The Ledger
-            </p>
-          </div>
-          <p style={{ color: '#3d2b14', fontSize: '0.55rem', letterSpacing: '0.3em', textTransform: 'uppercase', paddingLeft: '19px' }}>
+          {/* Quill icon above title */}
+          <svg viewBox="0 0 32 32" style={{ width: '22px', height: '22px', marginBottom: '0.6rem', display: 'block' }} fill="none">
+            <path d="M28 2 Q22 4 18 10 Q14 16 10 28 Q14 24 16 20 Q18 16 20 14 Q24 8 28 2 Z" fill="#c9a84c" fillOpacity="0.18" stroke="#c9a84c" strokeWidth="0.7" />
+            <path d="M10 28 Q10 22 14 18" stroke="#8a6d2f" strokeWidth="0.8" fill="none" />
+            <path d="M10 28 L8 30 L12 29 Z" fill="#8a6d2f" opacity="0.6" />
+            <line x1="9" y1="24" x2="6" y2="27" stroke="#8a6d2f" strokeWidth="0.6" opacity="0.5" />
+          </svg>
+          <p style={{
+            fontFamily: "'Playfair Display', serif",
+            color: '#e8c86a',
+            fontSize: '1.05rem',
+            fontStyle: 'italic',
+            marginBottom: '0.2rem',
+            letterSpacing: '0.02em',
+          }}>
+            The Ledger
+          </p>
+          <p style={{ color: '#3d2b14', fontSize: '0.52rem', letterSpacing: '0.35em', textTransform: 'uppercase', fontFamily: "'Crimson Text', serif" }}>
             Admin Panel
           </p>
         </div>
@@ -69,15 +71,15 @@ export default function AdminLayout({ children }) {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.7rem',
-                padding: '0.7rem 1.5rem',
-                color: isActive ? '#c9a84c' : '#6b5a3e',
+                padding: '0.65rem 1.5rem',
+                color: isActive ? '#e8c86a' : '#6b5a3e',
                 borderLeft: isActive ? '2px solid #c9a84c' : '2px solid transparent',
                 textDecoration: 'none',
-                fontSize: '0.7rem',
+                fontSize: '11px',
                 letterSpacing: '0.15em',
                 textTransform: 'uppercase',
-                fontFamily: "'Playfair Display', serif",
-                background: isActive ? 'rgba(201,168,76,0.05)' : 'transparent',
+                fontFamily: "'Crimson Text', serif",
+                background: isActive ? 'rgba(201,168,76,0.06)' : 'transparent',
                 transition: 'color 0.2s, background 0.2s',
               })}
             >

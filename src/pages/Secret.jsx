@@ -120,8 +120,16 @@ function MessageToSelf() {
                 style={{
                   background: ready ? 'rgba(201,168,76,0.05)' : 'rgba(0,0,0,0.2)',
                   border: `1px solid ${ready ? 'rgba(201,168,76,0.3)' : 'rgba(138,109,47,0.15)'}`,
+                  overflow: 'hidden',
                 }}
               >
+                {/* Paper fold corner */}
+                {!ready && (
+                  <svg viewBox="0 0 24 24" style={{ position: 'absolute', top: 0, right: 0, width: '24px', height: '24px', opacity: 0.35 }} fill="none">
+                    <path d="M24 0 L24 14 L10 0 Z" fill="#c9a84c" fillOpacity="0.25" />
+                    <path d="M10 0 L24 14" stroke="#c9a84c" strokeWidth="0.6" />
+                  </svg>
+                )}
                 <div className="flex justify-between items-start mb-2">
                   <div>
                     <p className="text-xs tracking-widest" style={{ color: ready ? '#c9a84c' : '#4a3520' }}>
@@ -260,12 +268,15 @@ function PrivateJournal() {
           onChange={(e) => setBody(e.target.value)}
           placeholder="Begin writing..."
           rows={8}
-          className="w-full bg-transparent outline-none resize-none text-base leading-relaxed p-4"
+          className="w-full outline-none resize-none text-base leading-relaxed p-4"
           style={{
             border: '1px solid rgba(138,109,47,0.15)',
             color: '#a89060',
             fontFamily: "'IM Fell English', serif",
-            background: 'rgba(0,0,0,0.2)',
+            background: 'rgba(15,10,4,0.9)',
+            backgroundImage: 'repeating-linear-gradient(transparent, transparent 27px, rgba(138,109,47,0.07) 28px)',
+            lineHeight: '28px',
+            paddingTop: '8px',
           }}
         />
 
@@ -386,7 +397,7 @@ function PrivateJournal() {
 
 export default function Secret({ onLogout }) {
   return (
-    <div className="min-h-screen pt-28 pb-24 px-6" style={{ background: '#0d0a05' }}>
+    <div className="min-h-screen pt-28 pb-24 px-6" style={{ background: '#110e07', position: 'relative', overflow: 'hidden' }}>
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
@@ -405,17 +416,37 @@ export default function Secret({ onLogout }) {
           <OrnateDivider className="mt-6" />
         </div>
 
-        {/* Candle ambience */}
-        <div className="text-center mb-10">
-          <svg viewBox="0 0 80 120" className="w-12 h-16 mx-auto" fill="none">
-            <ellipse cx="40" cy="18" rx="10" ry="15" fill="#f59e0b" opacity="0.7" className="animate-flicker" />
-            <ellipse cx="40" cy="20" rx="6" ry="9" fill="#fde68a" opacity="0.6" />
-            <ellipse cx="40" cy="10" rx="20" ry="20" fill="#f59e0b" opacity="0.1" className="animate-flicker" />
-            <line x1="40" y1="33" x2="40" y2="40" stroke="#3d2b14" strokeWidth="1.5" />
-            <rect x="28" y="40" width="24" height="60" rx="2" fill="#f0e6c8" opacity="0.7" />
-            <rect x="28" y="40" width="6" height="60" rx="0" fill="#d4c49a" opacity="0.3" />
-            <path d="M28 55 Q22 60 24 70 L28 70 Z" fill="#f0e6c8" opacity="0.5" />
-            <rect x="22" y="100" width="36" height="10" rx="2" fill="#8a6d2f" opacity="0.6" />
+        {/* Candle ambience — large, dramatic */}
+        <div className="text-center mb-10" style={{ position: 'relative' }}>
+          {/* Ambient radial warmth from the candle */}
+          <div style={{
+            position: 'absolute',
+            left: '50%', top: '-20px',
+            transform: 'translateX(-50%)',
+            width: '320px', height: '200px',
+            background: 'radial-gradient(ellipse 60% 55% at 50% 30%, rgba(245,158,11,0.12) 0%, rgba(201,168,76,0.04) 50%, transparent 80%)',
+            pointerEvents: 'none',
+          }} className="animate-flickerGlow" />
+          <svg viewBox="0 0 80 140" className="w-20 h-28 mx-auto" fill="none" style={{ position: 'relative', zIndex: 1 }}>
+            {/* Outer glow halo */}
+            <ellipse cx="40" cy="22" rx="22" ry="26" fill="#f59e0b" fillOpacity="0.08" className="animate-flickerGlow" />
+            {/* Main flame */}
+            <ellipse cx="40" cy="18" rx="9" ry="16" fill="#f59e0b" opacity="0.85" className="animate-flicker" />
+            <ellipse cx="40" cy="20" rx="5.5" ry="10" fill="#fde68a" opacity="0.75" className="animate-flicker" />
+            {/* Inner bright core */}
+            <ellipse cx="40" cy="23" rx="2.5" ry="4" fill="#fff9c4" opacity="0.9" />
+            {/* Wick */}
+            <line x1="40" y1="34" x2="40" y2="42" stroke="#2a1f0e" strokeWidth="1.8" />
+            {/* Candle body */}
+            <rect x="26" y="42" width="28" height="76" rx="2" fill="#f0e6c8" opacity="0.82" />
+            {/* Highlight stripe */}
+            <rect x="26" y="42" width="7" height="76" rx="0" fill="#d4c49a" opacity="0.35" />
+            {/* Wax drips */}
+            <path d="M26 58 Q18 64 20 75 L26 75 Z" fill="#f0e6c8" opacity="0.55" />
+            <path d="M54 65 Q60 70 58 78 L54 78 Z" fill="#f0e6c8" opacity="0.4" />
+            {/* Base plate */}
+            <rect x="18" y="118" width="44" height="12" rx="3" fill="#8a6d2f" opacity="0.7" />
+            <rect x="20" y="118" width="40" height="3" rx="1" fill="#c9a84c" opacity="0.25" />
           </svg>
         </div>
 

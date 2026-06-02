@@ -192,6 +192,12 @@ export default function WorksAll() {
                 pointerEvents: 'none',
                 opacity: 0.5,
               }} />
+              {/* Aged vignette */}
+              <div style={{
+                position: 'absolute', inset: 0,
+                background: 'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%)',
+                pointerEvents: 'none',
+              }} />
 
               {/* Top inset border */}
               <div style={{
@@ -202,43 +208,48 @@ export default function WorksAll() {
                 borderColor: isActive || isHovered ? `${door.accent}44` : `${door.accent}22`,
               }} />
 
-              {/* Roman numeral */}
+              {/* Roman numeral — top corner manuscript marker */}
               <p style={{
-                fontFamily: "'Playfair Display', serif",
+                position: 'absolute',
+                top: '24px',
+                left: '20px',
+                fontFamily: "'IM Fell English', serif",
                 color: door.accent,
-                fontSize: '0.6rem',
+                fontSize: '10px',
                 letterSpacing: '0.4em',
-                opacity: isActive ? 0.9 : 0.4,
-                marginBottom: 'auto',
+                opacity: isActive ? 0.9 : 0.35,
                 zIndex: 1,
                 transition: 'opacity 0.3s',
+                fontStyle: 'italic',
               }}>
                 {door.roman}
               </p>
 
               {/* Main label */}
               <div style={{ zIndex: 1, textAlign: 'center', flex: '0 0 auto', marginTop: '1rem' }}>
-                {/* Top rule */}
+                {/* Top rule — slides in from left on hover */}
                 <div style={{
-                  width: '40px', height: '1px',
-                  background: `linear-gradient(90deg, transparent, ${door.accent}88, transparent)`,
+                  height: '1px',
+                  background: `linear-gradient(90deg, ${door.accent}cc, transparent)`,
                   margin: '0 auto 1.5rem',
-                  transition: 'opacity 0.3s',
-                  opacity: isActive || isHovered ? 1 : 0.4,
+                  transition: 'width 0.45s ease, opacity 0.3s',
+                  width: isActive || isHovered ? '60px' : '0px',
+                  opacity: isActive || isHovered ? 1 : 0,
                 }} />
 
                 <h2 style={{
                   fontFamily: "'Playfair Display', serif",
                   color: '#f0e6c8',
-                  fontSize: 'clamp(1.5rem, 2vw, 2.4rem)',
+                  fontSize: 'clamp(1.8rem, 2.4vw, 3rem)',
                   fontStyle: 'italic',
                   fontWeight: 400,
-                  lineHeight: 1.2,
+                  lineHeight: 1.15,
                   marginBottom: '0.75rem',
                   whiteSpace: 'pre-line',
-                  opacity: isActive ? 1 : isHovered ? 0.95 : 0.7,
+                  opacity: isActive ? 1 : isHovered ? 0.95 : 0.72,
                   transition: 'opacity 0.3s',
                   letterSpacing: '0.01em',
+                  textShadow: '0 2px 20px rgba(0,0,0,0.8)',
                 }}>
                   {door.label}
                 </h2>
