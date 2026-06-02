@@ -114,111 +114,87 @@ export default function Journal() {
 
       {/* ── Entry list ── */}
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 48px 80px' }}>
-        {entries.map((entry, i) => {
-          const featured = i === 0
-          return (
-            <div key={entry.id}>
-              {/* Entry row */}
+        {entries.map((entry, i) => (
+          <div key={entry.id}>
+
+            {/* ── Featured (first entry) ── */}
+            {i === 0 && (
               <div
                 onClick={() => setActive(entry)}
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: featured ? '1fr' : '140px 1fr',
-                  cursor: 'pointer',
-                  gap: 0,
-                }}
-                onMouseEnter={e => {
-                  const title = e.currentTarget.querySelector('.j-title')
-                  const cta   = e.currentTarget.querySelector('.j-cta')
-                  if (title && !featured) title.style.color = '#c9a85c'
-                  if (cta)   cta.style.opacity = '1'
-                  if (cta)   cta.style.color   = '#c9a85c'
-                }}
-                onMouseLeave={e => {
-                  const title = e.currentTarget.querySelector('.j-title')
-                  const cta   = e.currentTarget.querySelector('.j-cta')
-                  if (title) title.style.color = featured ? '#e8dcc0' : '#d4c4a0'
-                  if (cta)   cta.style.opacity = '0.5'
-                  if (cta)   cta.style.color   = '#3a2e1a'
-                }}
+                style={{ display: 'grid', gridTemplateColumns: '1fr', cursor: 'pointer' }}
+                onMouseEnter={e => { const c = e.currentTarget.querySelector('.j-cta'); if (c) { c.style.opacity='1'; c.style.color='#c9a85c'; } }}
+                onMouseLeave={e => { const c = e.currentTarget.querySelector('.j-cta'); if (c) { c.style.opacity='0.5'; c.style.color='#3a2e1a'; } }}
               >
-                {/* Left column — non-featured only */}
-                {!featured && (
-                  <div style={{
-                    padding: '40px 32px 40px 0',
-                    borderRight: '0.5px solid #1a1410',
-                    display: 'flex', flexDirection: 'column',
-                    gap: 6, alignItems: 'flex-end',
-                  }}>
-                    <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.3em', color: '#5a4a2a', textAlign: 'right', textTransform: 'uppercase' }}>
-                      {entry.category}
-                    </span>
-                    <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.15em', color: '#2a2010', textAlign: 'right', lineHeight: 1.6, textTransform: 'uppercase' }}>
-                      {entry.date}
-                    </span>
-                    {entry.readTime && (
-                      <span style={{ fontSize: 11, color: '#2a2010', fontStyle: 'italic', textAlign: 'right', marginTop: 4 }}>
-                        {entry.readTime}
-                      </span>
-                    )}
+                <div style={{ padding: '48px 0 40px' }}>
+                  <div style={{ width: 32, height: '0.5px', background: '#c9a85c', marginBottom: 20 }} />
+                  <div style={{ display: 'flex', gap: 20, alignItems: 'center', marginBottom: 14 }}>
+                    <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.3em', color: '#c9a85c', textTransform: 'uppercase' }}>{entry.category}</span>
+                    <span style={{ color: '#1a1410', fontSize: 10 }}>·</span>
+                    <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.15em', color: '#3a2e1a', textTransform: 'uppercase' }}>{entry.date}</span>
+                    {entry.readTime && <>
+                      <span style={{ color: '#1a1410', fontSize: 10 }}>·</span>
+                      <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.15em', color: '#3a2e1a', textTransform: 'uppercase' }}>{entry.readTime} READ</span>
+                    </>}
                   </div>
-                )}
-
-                {/* Right column */}
-                <div style={{ padding: featured ? '48px 0 40px' : '40px 0 40px 40px', minWidth: 0 }}>
-                  {featured && (
-                    <>
-                      <div style={{ width: 32, height: '0.5px', background: '#c9a85c', marginBottom: 20 }} />
-                      <div style={{ display: 'flex', gap: 20, alignItems: 'center', marginBottom: 14 }}>
-                        <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.3em', color: '#c9a85c', textTransform: 'uppercase' }}>{entry.category}</span>
-                        <span style={{ color: '#1a1410', fontSize: 10 }}>·</span>
-                        <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.15em', color: '#3a2e1a', textTransform: 'uppercase' }}>{entry.date}</span>
-                        {entry.readTime && <>
-                          <span style={{ color: '#1a1410', fontSize: 10 }}>·</span>
-                          <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.15em', color: '#3a2e1a', textTransform: 'uppercase' }}>{entry.readTime} READ</span>
-                        </>}
-                      </div>
-                    </>
-                  )}
-
-                  <h2
-                    className="j-title"
-                    style={{
-                      fontFamily: "'Cormorant Garamond', serif",
-                      fontSize: featured ? 42 : 28,
-                      fontStyle: 'italic', fontWeight: 400,
-                      color: featured ? '#e8dcc0' : '#d4c4a0',
-                      marginBottom: 10, lineHeight: 1.2,
-                      transition: 'color 0.2s',
-                    }}
-                  >
+                  <h2 className="j-title" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 42, fontStyle: 'italic', fontWeight: 400, color: '#e8dcc0', marginBottom: 10, lineHeight: 1.2, transition: 'color 0.2s' }}>
                     {entry.title}
                   </h2>
-
-                  <p style={{ fontSize: featured ? 17 : 15, color: '#5a4a2a', lineHeight: 1.8, marginBottom: 14, maxWidth: featured ? 600 : 520 }}>
-                    {entry.excerpt}
-                  </p>
-
-                  <span
-                    className="j-cta"
-                    style={{
-                      fontFamily: "'Cinzel', serif", fontSize: 9,
-                      letterSpacing: '0.25em', color: '#3a2e1a',
-                      opacity: 0.5, transition: 'all 0.2s',
-                    }}
-                  >
+                  <p style={{ fontSize: 17, color: '#5a4a2a', lineHeight: 1.8, marginBottom: 14, maxWidth: 600 }}>{entry.excerpt}</p>
+                  <span className="j-cta" style={{ fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.25em', color: '#3a2e1a', opacity: 0.5, transition: 'all 0.2s' }}>
                     READ ENTRY →
                   </span>
                 </div>
               </div>
+            )}
 
-              {/* Divider */}
-              {i < entries.length - 1 && (
-                <div style={{ height: '0.5px', background: '#1a1410' }} />
-              )}
-            </div>
-          )
-        })}
+            {/* ── Standard (all other entries) ── */}
+            {i > 0 && (
+              <div
+                onClick={() => setActive(entry)}
+                style={{ display: 'grid', gridTemplateColumns: '140px 1fr', gap: 0, cursor: 'pointer' }}
+                onMouseEnter={e => {
+                  const t = e.currentTarget.querySelector('.j-title'); if (t) t.style.color = '#c9a85c';
+                  const c = e.currentTarget.querySelector('.j-cta');   if (c) { c.style.opacity='1'; c.style.color='#c9a85c'; }
+                }}
+                onMouseLeave={e => {
+                  const t = e.currentTarget.querySelector('.j-title'); if (t) t.style.color = '#d4c4a0';
+                  const c = e.currentTarget.querySelector('.j-cta');   if (c) { c.style.opacity='0.5'; c.style.color='#3a2e1a'; }
+                }}
+              >
+                {/* Left column */}
+                <div style={{ padding: '40px 32px 40px 0', borderRight: '0.5px solid #1a1410', display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-end' }}>
+                  <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.3em', color: '#5a4a2a', textAlign: 'right', textTransform: 'uppercase' }}>
+                    {entry.category}
+                  </span>
+                  <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.15em', color: '#2a2010', textAlign: 'right', lineHeight: 1.6, textTransform: 'uppercase' }}>
+                    {entry.date}
+                  </span>
+                  {entry.readTime && (
+                    <span style={{ fontSize: 11, color: '#2a2010', fontStyle: 'italic', textAlign: 'right', marginTop: 4 }}>
+                      {entry.readTime}
+                    </span>
+                  )}
+                </div>
+
+                {/* Right column */}
+                <div style={{ padding: '40px 0 40px 40px', minWidth: 0 }}>
+                  <h2 className="j-title" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontStyle: 'italic', fontWeight: 400, color: '#d4c4a0', marginBottom: 10, lineHeight: 1.2, transition: 'color 0.2s' }}>
+                    {entry.title}
+                  </h2>
+                  <p style={{ fontSize: 15, color: '#5a4a2a', lineHeight: 1.8, marginBottom: 14, maxWidth: 520 }}>{entry.excerpt}</p>
+                  <span className="j-cta" style={{ fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.25em', color: '#3a2e1a', opacity: 0.5, transition: 'all 0.2s' }}>
+                    READ ENTRY →
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Divider */}
+            {i < entries.length - 1 && (
+              <div style={{ height: '0.5px', background: '#1a1410' }} />
+            )}
+          </div>
+        ))}
       </div>
 
       <OrnamentRule />
