@@ -1,19 +1,9 @@
 import { motion } from 'framer-motion'
 
-// Exit: door closes fast (fade to black)
-// Enter: room reveals slowly (drift up from darkness)
 const variants = {
-  initial: { opacity: 0, y: 10 },
-  animate: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] },
-  },
-  exit: {
-    opacity: 0,
-    y: -6,
-    transition: { duration: 0.28, ease: [0.55, 0.085, 0.68, 0.53] },
-  },
+  initial: { opacity: 0, backgroundColor: '#000' },
+  animate: { opacity: 1, backgroundColor: '#0d0a05', transition: { duration: 0.6, ease: 'easeOut' } },
+  exit:    { opacity: 0, backgroundColor: '#000', transition: { duration: 0.4, ease: 'easeIn' } }
 }
 
 export default function PageTransition({ children }) {
@@ -23,7 +13,7 @@ export default function PageTransition({ children }) {
       initial="initial"
       animate="animate"
       exit="exit"
-      style={{ width: '100%' }}
+      style={{ minHeight: '100vh' }}
     >
       {children}
     </motion.div>
