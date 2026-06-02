@@ -10,6 +10,7 @@ import { useSecretAccess } from './hooks/useSecretAccess'
 import AdminRequireAuth from './components/admin/AdminRequireAuth'
 import AdminLayout from './components/admin/AdminLayout'
 import DustMotes from './components/DustMotes'
+import QuillCursor from './components/QuillCursor'
 
 import Home from './pages/Home'
 import Works from './pages/Works'
@@ -173,6 +174,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <DustMotes />
+      <QuillCursor />
       <AppInner />
     </BrowserRouter>
   )
