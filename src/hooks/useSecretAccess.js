@@ -6,7 +6,7 @@ const KONAMI = [
   'b','a'
 ]
 
-const SECRET_PASSWORD = 'AAAA18'
+const SECRET_PASSWORD = '12345'
 
 export function useSecretAccess() {
   const [showPasswordModal, setShowPasswordModal] = useState(false)
