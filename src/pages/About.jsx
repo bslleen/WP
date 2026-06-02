@@ -3,16 +3,16 @@ import { OrnateDivider, SectionTitle } from '../components/OrnateElements'
 import { fetchAbout } from '../data/api'
 
 const DEFAULT_BIO = [
-  { heading: 'The Beginning', text: `Eleanor Ashworth grew up in a house that held more books than furniture, in a town where winters lasted six months and stories lasted longer. She wrote her first poem at nine, about the death of a crow she found in the garden. Her mother kept it in a bureau drawer for twenty years.` },
-  { heading: 'The Work', text: `Her debut novel, The Amber Meridian, was called "a lighthouse of a book — disorienting and, in the end, necessary" by the Times Literary Supplement. Her poetry collection Salt & Silence won the Calvert Prize for voice and was shortlisted for the Forward.` },
-  { heading: 'The Process', text: `She writes by hand, in the morning, before light if possible. She keeps a research archive of found objects: postcards, newspaper clippings, photographs of strangers, maps torn from old atlases. Every book begins with an object and a question.` },
-  { heading: 'The Life', text: `She has been writer-in-residence on the Orkney Islands and a visiting fellow at Pembroke College, Oxford. She divides her time between a house with unreliable heating and a manuscript that requires her full attention.` },
+  { heading: 'What Is Known', text: `The author was born in a house with too many rooms and not enough light. The earliest surviving document — a notebook, water-damaged, pages stuck together — dates to sometime in the last century. The handwriting is careful. The contents are not.` },
+  { heading: 'What Was Said of the Work', text: `The first novel was described by one reader as 'a lighthouse of a book — disorienting and, in the end, necessary.' The poetry was shortlisted for a prize whose committee has since dissolved. The short fiction appeared in journals that no longer publish.` },
+  { heading: 'What Remained', text: `A writing practice conducted by hand, before dawn. A research archive of found objects: postcards, maps torn from old atlases, photographs of strangers. Every book begins with an object and a question. Neither is ever fully answered.` },
+  { heading: 'What Little Is Left', text: `The author was last known to be dividing time between a house with unreliable heating and a manuscript that has not yet declared its intentions.` },
 ]
 const DEFAULT_STATS = [
-  { num: '6', label: 'Published Works' },
-  { num: '2', label: 'Awards' },
-  { num: '1', label: 'Residency' },
-  { num: '3', label: 'Countries Written In' },
+  { num: '6', label: 'Recovered Volumes' },
+  { num: '2', label: 'Prizes, Disputed' },
+  { num: '1', label: 'Known Residence' },
+  { num: '3', label: 'Countries, Unconfirmed' },
 ]
 
 export default function About() {
@@ -34,7 +34,10 @@ export default function About() {
 
         {/* Title */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <SectionTitle subtitle="The Author">{name}</SectionTitle>
+          <SectionTitle subtitle="THE ARCHIVE">{name}</SectionTitle>
+          <p style={{ fontStyle: 'italic', fontSize: '15px', color: '#4a3a20', marginTop: '8px' }}>
+            What remains of a life spent in letters.
+          </p>
         </div>
 
         <div className="grid lg:grid-cols-5 gap-16 mt-8">
@@ -94,7 +97,7 @@ export default function About() {
               )}
               <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '16px', textAlign: 'center', background: 'linear-gradient(to top, #0d0a05, transparent)' }}>
                 <p style={{ fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#8a6d2f' }}>
-                  {name}, at work
+                  Photograph, provenance unknown.
                 </p>
               </div>
             </div>
@@ -134,10 +137,10 @@ export default function About() {
             {/* Correspondence */}
             <div style={{ border: '0.5px solid #2a1e0a', padding: '28px 32px', background: 'rgba(26,18,9,0.8)' }}>
               <h4 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1rem', fontStyle: 'italic', color: '#f0e6c8', marginBottom: '12px' }}>
-                Correspondence
+                Letters to the Estate
               </h4>
               <p style={{ fontSize: '14px', color: '#6b5a3e', marginBottom: '16px' }}>
-                For rights inquiries, speaking engagements, or letters —
+                For matters pertaining to the work, the archive, or the whereabouts of the author —
               </p>
               <a href={`mailto:${email}`} style={{ fontSize: '14px', letterSpacing: '0.1em', color: '#c9a84c', fontFamily: "'Crimson Text', serif", textDecoration: 'none' }}>
                 {email} →
