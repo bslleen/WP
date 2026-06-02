@@ -163,79 +163,156 @@ function HeroSection() {
   )
 }
 
+function BookCoverSVG({ work }) {
+  const initial = work.category ? work.category.charAt(0).toUpperCase() : '✦'
+  const c = work.accentColor || '#c9a84c'
+  return (
+    <svg viewBox="0 0 300 400" style={{ width: '100%', display: 'block' }} fill="none">
+      {/* Background fill */}
+      <rect width="300" height="400" fill={work.coverColor || '#1a1209'} />
+      <rect width="300" height="400" fill="url(#coverGrad)" />
+      <defs>
+        <linearGradient id={`coverGrad`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#000" stopOpacity="0" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0.55" />
+        </linearGradient>
+      </defs>
+
+      {/* Large faded category initial behind ornament */}
+      <text
+        x="150" y="235"
+        textAnchor="middle" dominantBaseline="middle"
+        fontFamily="Playfair Display, serif"
+        fontSize="200"
+        fontStyle="italic"
+        fill={c}
+        fillOpacity="0.05"
+      >{initial}</text>
+
+      {/* Outer border with corner ornaments */}
+      <rect x="14" y="14" width="272" height="372" fill="none" stroke={c} strokeWidth="0.7" opacity="0.45" />
+      <rect x="22" y="22" width="256" height="356" fill="none" stroke={c} strokeWidth="0.3" opacity="0.25" />
+      {/* Corner marks */}
+      <path d="M14 44 L14 14 L44 14" stroke={c} strokeWidth="1.2" opacity="0.7" />
+      <path d="M256 14 L286 14 L286 44" stroke={c} strokeWidth="1.2" opacity="0.7" />
+      <path d="M14 356 L14 386 L44 386" stroke={c} strokeWidth="1.2" opacity="0.7" />
+      <path d="M256 386 L286 386 L286 356" stroke={c} strokeWidth="1.2" opacity="0.7" />
+
+      {/* Title block lines (upper area) */}
+      <line x1="50" y1="90" x2="250" y2="90" stroke={c} strokeWidth="0.6" opacity="0.5" />
+      <line x1="70" y1="100" x2="230" y2="100" stroke={c} strokeWidth="0.3" opacity="0.3" />
+
+      {/* Center compass/diamond ornament */}
+      <path d="M150 175 L170 210 L150 245 L130 210 Z" fill="none" stroke={c} strokeWidth="0.8" opacity="0.7" />
+      <path d="M150 185 L163 210 L150 235 L137 210 Z" fill={c} fillOpacity="0.1" stroke={c} strokeWidth="0.5" opacity="0.5" />
+      <circle cx="150" cy="210" r="18" fill="none" stroke={c} strokeWidth="0.6" opacity="0.4" />
+      <circle cx="150" cy="210" r="4" fill={c} opacity="0.5" />
+      {/* Cardinal marks */}
+      <line x1="150" y1="163" x2="150" y2="173" stroke={c} strokeWidth="0.7" opacity="0.5" />
+      <line x1="150" y1="247" x2="150" y2="257" stroke={c} strokeWidth="0.7" opacity="0.5" />
+      <line x1="118" y1="210" x2="128" y2="210" stroke={c} strokeWidth="0.7" opacity="0.5" />
+      <line x1="172" y1="210" x2="182" y2="210" stroke={c} strokeWidth="0.7" opacity="0.5" />
+
+      {/* Bottom rule lines */}
+      <line x1="50" y1="310" x2="250" y2="310" stroke={c} strokeWidth="0.6" opacity="0.5" />
+      <line x1="70" y1="318" x2="230" y2="318" stroke={c} strokeWidth="0.3" opacity="0.3" />
+
+      {/* Bottom strip */}
+      <rect x="14" y="360" width="272" height="26" fill={c} fillOpacity="0.07" />
+      <text
+        x="150" y="377"
+        textAnchor="middle"
+        fontFamily="Playfair Display, serif"
+        fontSize="8"
+        letterSpacing="4"
+        fill={c}
+        fillOpacity="0.5"
+        textTransform="uppercase"
+      >EST. MMXXIV</text>
+    </svg>
+  )
+}
+
 function FeaturedWorks({ works }) {
   return (
     <section className="py-24 px-6" style={{ background: '#0d0a05' }}>
       <div className="max-w-6xl mx-auto">
         <SectionTitle subtitle="Selected Works">The Collection</SectionTitle>
 
-        <div className="grid md:grid-cols-3 gap-8 mt-16">
+        <div
+          className="grid md:grid-cols-3 gap-6 mb-16"
+          style={{ maxWidth: '900px', margin: '0 auto', marginTop: '4rem' }}
+        >
           {works.map((work, i) => (
-            <Link key={work.id} to="/works" className="group">
+            <Link key={work.id} to="/works" className="group" style={{ display: 'block' }}>
               <div
-                className="relative overflow-hidden transition-all duration-500 group-hover:translate-y-[-4px]"
+                className="relative overflow-hidden"
                 style={{
-                  background: `linear-gradient(135deg, ${work.coverColor}, #0d0a05)`,
-                  border: '1px solid rgba(138, 109, 47, 0.3)',
-                  boxShadow: '0 4px 30px rgba(0,0,0,0.5)',
-                  animationDelay: `${i * 0.15}s`,
+                  background: `linear-gradient(170deg, ${work.coverColor || '#1a1209'} 0%, #0d0a05 100%)`,
+                  border: '1px solid rgba(201,168,76,0.2)',
+                  boxShadow: '0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.08)',
+                  padding: 0,
+                  transition: 'transform 0.4s ease, box-shadow 0.4s ease',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = 'translateY(-6px)'
+                  e.currentTarget.style.boxShadow = '0 20px 60px rgba(0,0,0,0.85), 0 0 30px rgba(201,168,76,0.1)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.boxShadow = '0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.08)'
                 }}
               >
-                {/* Category badge */}
-                <div className="p-6 pb-0">
-                  <span
-                    className="text-xs tracking-[0.3em] uppercase"
-                    style={{ color: work.accentColor }}
+                {/* Full-width book cover SVG — 3:4 aspect ratio */}
+                <div style={{ width: '100%', aspectRatio: '3/4' }}>
+                  <BookCoverSVG work={work} />
+                </div>
+
+                {/* Text block */}
+                <div style={{ padding: '20px 20px 24px' }}>
+                  {/* Category */}
+                  <p
+                    className="text-xs uppercase mb-2"
+                    style={{ letterSpacing: '0.35em', color: work.accentColor || '#c9a84c' }}
                   >
                     {work.category}
-                  </span>
-                </div>
+                  </p>
 
-                {/* Decorative SVG */}
-                <div className="px-6 py-4 flex justify-center">
-                  <svg viewBox="0 0 120 80" className="w-32 h-20 opacity-30">
-                    <rect x="10" y="10" width="100" height="60" rx="2"
-                      fill="none" stroke={work.accentColor} strokeWidth="0.8" />
-                    <line x1="25" y1="30" x2="95" y2="30"
-                      stroke={work.accentColor} strokeWidth="0.5" opacity="0.6" />
-                    <line x1="25" y1="40" x2="80" y2="40"
-                      stroke={work.accentColor} strokeWidth="0.5" opacity="0.6" />
-                    <line x1="25" y1="50" x2="70" y2="50"
-                      stroke={work.accentColor} strokeWidth="0.5" opacity="0.4" />
-                    <circle cx="60" cy="20" r="6"
-                      fill="none" stroke={work.accentColor} strokeWidth="0.8" />
-                  </svg>
-                </div>
-
-                <div className="px-6 pb-6">
+                  {/* Title */}
                   <h3
-                    className="text-xl italic mb-2 group-hover:text-gold transition-colors"
-                    style={{ fontFamily: "'Playfair Display', serif", color: '#f0e6c8' }}
+                    className="text-xl italic mb-2"
+                    style={{ fontFamily: "'Playfair Display', serif", color: '#f0e6c8', lineHeight: 1.25 }}
                   >
                     {work.title}
                   </h3>
-                  <p className="text-sm leading-relaxed mb-3" style={{ color: '#6b5a3e' }}>
-                    {work.description.substring(0, 90)}...
-                  </p>
-                  <p
-                    className="text-xs italic"
-                    style={{ color: work.accentColor, fontFamily: "'IM Fell English', serif" }}
-                  >
-                    "{work.excerpt.substring(0, 60)}..."
-                  </p>
-                </div>
 
-                {/* Hover overlay */}
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                  style={{ background: `radial-gradient(ellipse at center, ${work.accentColor}0d 0%, transparent 70%)` }}
-                />
+                  {/* Description */}
+                  <p className="text-sm mb-3" style={{ color: '#6b5a3e', lineHeight: 1.5 }}>
+                    {work.description.substring(0, 85)}…
+                  </p>
+
+                  {/* Excerpt */}
+                  <p
+                    className="text-sm italic mb-4"
+                    style={{ color: '#a89060', fontFamily: "'IM Fell English', serif", lineHeight: 1.6 }}
+                  >
+                    “{work.excerpt.substring(0, 65)}…”
+                  </p>
+
+                  {/* Year / Pages */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span className="text-xs" style={{ color: '#3d2b14' }}>{work.year}</span>
+                    <span className="text-xs" style={{ color: '#3d2b14' }}>
+                      {work.pages > 0 ? `${work.pages} pp.` : 'In progress'}
+                    </span>
+                  </div>
+                </div>
               </div>
             </Link>
           ))}
         </div>
 
-        <div className="text-center mt-12">
+        <div className="mt-10 flex justify-center">
           <Link to="/works">
             <button className="btn-gold">View All Works</button>
           </Link>
