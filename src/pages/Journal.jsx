@@ -93,7 +93,7 @@ export default function Journal() {
   }, [])
 
   return (
-    <div style={{ background: '#0d0a05', minHeight: '100vh', fontFamily: "'EB Garamond', Georgia, serif", color: '#a89060' }}>
+    <div style={{ background: '#0d0a05', minHeight: '100vh', fontFamily: "'EB Garamond', Georgia, serif", color: '#a89060', paddingTop: '72px' }}>
 
       {/* ── Header ── */}
       <div style={{ padding: '72px 48px 0', maxWidth: 900, margin: '0 auto' }}>
@@ -125,11 +125,12 @@ export default function Journal() {
                   display: 'grid',
                   gridTemplateColumns: featured ? '1fr' : '140px 1fr',
                   cursor: 'pointer',
+                  gap: 0,
                 }}
                 onMouseEnter={e => {
                   const title = e.currentTarget.querySelector('.j-title')
                   const cta   = e.currentTarget.querySelector('.j-cta')
-                  if (title) title.style.color = '#c9a85c'
+                  if (title && !featured) title.style.color = '#c9a85c'
                   if (cta)   cta.style.opacity = '1'
                   if (cta)   cta.style.color   = '#c9a85c'
                 }}
@@ -164,7 +165,7 @@ export default function Journal() {
                 )}
 
                 {/* Right column */}
-                <div style={{ padding: featured ? '48px 0 40px' : '40px 0 40px 40px' }}>
+                <div style={{ padding: featured ? '48px 0 40px' : '40px 0 40px 40px', minWidth: 0 }}>
                   {featured && (
                     <>
                       <div style={{ width: 32, height: '0.5px', background: '#c9a85c', marginBottom: 20 }} />
