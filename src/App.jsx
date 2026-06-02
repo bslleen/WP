@@ -9,6 +9,7 @@ import PageTransition from './components/PageTransition'
 import { useSecretAccess } from './hooks/useSecretAccess'
 import AdminRequireAuth from './components/admin/AdminRequireAuth'
 import AdminLayout from './components/admin/AdminLayout'
+import DustMotes from './components/DustMotes'
 
 import Home from './pages/Home'
 import Works from './pages/Works'
@@ -171,6 +172,7 @@ function AppInner() {
 export default function App() {
   return (
     <BrowserRouter>
+      <DustMotes />
       <AppInner />
     </BrowserRouter>
   )
