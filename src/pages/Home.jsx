@@ -3,7 +3,21 @@ import { Link } from 'react-router-dom'
 import { fetchWorks, fetchJournal } from '../data/api'
 import { normalizeWork, normalizeJournal } from '../data/normalize'
 import { featuredWorks as mockWorks, journalEntries as mockJournal } from '../data/content'
-import heroBg from '../assets/study.jpg'
+import heroBg          from '../assets/study.jpg'
+import parchmentBg     from '../assets/parchment.jpg'
+import cardManuscripts from '../assets/card-manuscripts.jpg'
+import cardQuill       from '../assets/card-quill.jpg'
+import cardBooks       from '../assets/card-books.jpg'
+import booksAlt        from '../assets/books.jpg'
+
+const CARD_PHOTOS = {
+  'Novel':       cardManuscripts,
+  'novel':       cardManuscripts,
+  'Poetry':      cardQuill,
+  'poetry':      cardQuill,
+  'Short Story': cardBooks,
+  'short story': cardBooks,
+}
 
 // ─── font injection ───────────────────────────────────────────────────────────
 function useFonts() {
@@ -60,12 +74,11 @@ function WorkCard({ work, loading }) {
       ) : (
         <div style={{
           width: '100%', aspectRatio: '4/3',
-          background: 'linear-gradient(135deg, #2a2010 0%, #1a140a 100%)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 48, color: '#3a2e1a',
-        }}>
-          {CATEGORY_EMOJI[work.category] || '📖'}
-        </div>
+          backgroundImage: `url(${CARD_PHOTOS[work.category] || booksAlt})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          filter: 'sepia(30%) brightness(0.9)',
+        }} />
       )}
 
       {/* Info block */}
@@ -268,7 +281,12 @@ export default function Home() {
       </section>
 
       {/* ── COLLECTION ────────────────────────────────────────────────────── */}
-      <section style={{ background: '#f5eedf', padding: '80px 40px' }}>
+      <section style={{
+        backgroundImage: `url(${parchmentBg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        padding: '80px 40px',
+      }}>
         {/* Header */}
         <div style={{
           display: 'flex', alignItems: 'flex-end',
