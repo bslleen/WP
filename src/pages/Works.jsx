@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import heroImg from '../assets/hero.png'
+import booksImg       from '../assets/photo_2026-06-02 17.29.04.jpeg'
+import deskImg        from '../assets/photo_2026-06-02 17.29.07.jpeg'
+import manuscriptsImg from '../assets/photo_2026-06-02 17.41.58.jpeg'
+import journalImg     from '../assets/photo_2026-06-02 17.41.55.jpeg'
 import { fetchWorks } from '../data/api'
 import { normalizeWork } from '../data/normalize'
 import { works as mockWorks } from '../data/content'
@@ -235,10 +238,10 @@ export default function Works() {
         {/* Background photo */}
         <div style={{
           position: 'absolute', inset: 0,
-          backgroundImage: `url(${heroImg})`,
+          backgroundImage: `url(${booksImg})`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center 30%',
-          filter: 'brightness(0.38) sepia(0.2)',
+          backgroundPosition: 'center 40%',
+          filter: 'brightness(0.38) sepia(0.25)',
         }} />
         {/* Left-to-right fade */}
         <div style={{
@@ -383,13 +386,18 @@ export default function Works() {
 
         {/* About the Author */}
         <div style={{
-          background: 'linear-gradient(160deg, #1e150a 0%, #0d0a05 100%)',
+          position: 'relative',
+          backgroundImage: `url(${deskImg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
           padding: '3.5rem 2.75rem',
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           gap: 0,
           borderTop: '1px solid rgba(201,168,76,0.12)',
-          boxShadow: 'inset 0 0 60px rgba(0,0,0,0.4)',
+          overflow: 'hidden',
         }}>
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,7,3,0.78)', pointerEvents: 'none' }} />
+          <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <h3 style={{
             fontFamily: "'Playfair Display', serif",
             color: '#f0e6c8',
@@ -429,17 +437,18 @@ export default function Works() {
           >
             READ MORE →
           </Link>
+          </div>
         </div>
 
         {/* Center image */}
         <div style={{ position: 'relative', minHeight: '420px', overflow: 'hidden' }}>
           <img
-            src={heroImg}
+            src={manuscriptsImg}
             alt=""
             style={{
               width: '100%', height: '100%',
               objectFit: 'cover', objectPosition: 'center',
-              filter: 'brightness(0.48) sepia(0.35)',
+              filter: 'brightness(0.55) sepia(0.3)',
               display: 'block',
             }}
           />
@@ -447,12 +456,17 @@ export default function Works() {
 
         {/* The Journal */}
         <div style={{
-          background: 'linear-gradient(160deg, #0d1018 0%, #0d0a05 100%)',
+          position: 'relative',
+          backgroundImage: `url(${journalImg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center 20%',
           padding: '3.5rem 2.75rem',
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           borderTop: '1px solid rgba(201,168,76,0.12)',
-          boxShadow: 'inset 0 0 60px rgba(0,0,0,0.4)',
+          overflow: 'hidden',
         }}>
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(8,5,2,0.80)', pointerEvents: 'none' }} />
+          <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <h3 style={{
             fontFamily: "'Playfair Display', serif",
             color: '#f0e6c8',
@@ -492,6 +506,7 @@ export default function Works() {
           >
             EXPLORE JOURNAL →
           </Link>
+          </div>
         </div>
       </div>
 
