@@ -63,11 +63,11 @@ function MessageToSelf() {
           onChange={(e) => setNewMsg(e.target.value)}
           placeholder="Dear future self..."
           rows={4}
-          className="w-full bg-transparent resize-none outline-none p-4 text-base leading-relaxed"
+          className="resize-none outline-none"
           style={{
-            border: '1px solid rgba(138,109,47,0.3)',
-            color: '#d4c49a',
-            fontFamily: "'IM Fell English', serif",
+            width: '100%', background: 'rgba(255,255,255,0.02)',
+            border: '0.5px solid #2a1e0a', color: '#d4c4a0',
+            padding: '16px', fontFamily: "'EB Garamond', serif", fontSize: '16px',
           }}
         />
         <div className="flex gap-3 items-center">
@@ -76,11 +76,11 @@ function MessageToSelf() {
             value={futureDate}
             onChange={(e) => setFutureDate(e.target.value)}
             min={new Date().toISOString().split('T')[0]}
-            className="bg-transparent outline-none px-3 py-2 text-sm flex-1"
+            className="outline-none flex-1"
             style={{
-              border: '1px solid rgba(138,109,47,0.3)',
-              color: '#8a6d2f',
-              fontFamily: "'Crimson Text', serif",
+              width: '100%', background: 'rgba(255,255,255,0.02)',
+              border: '0.5px solid #2a1e0a', color: '#d4c4a0',
+              padding: '16px', fontFamily: "'EB Garamond', serif", fontSize: '16px',
               colorScheme: 'dark',
             }}
           />
@@ -255,11 +255,12 @@ function PrivateJournal() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Title (optional)"
-          className="w-full bg-transparent outline-none mb-4 py-2 text-lg italic"
+          className="outline-none mb-4"
           style={{
-            borderBottom: '1px solid rgba(138,109,47,0.2)',
-            color: '#d4c49a',
-            fontFamily: "'Playfair Display', serif",
+            width: '100%', background: 'rgba(255,255,255,0.02)',
+            border: '0.5px solid #2a1e0a', color: '#d4c4a0',
+            padding: '16px', fontFamily: "'EB Garamond', serif", fontSize: '16px',
+            fontStyle: 'italic',
           }}
         />
 
@@ -268,15 +269,13 @@ function PrivateJournal() {
           onChange={(e) => setBody(e.target.value)}
           placeholder="Begin writing..."
           rows={8}
-          className="w-full outline-none resize-none text-base leading-relaxed p-4"
+          className="outline-none resize-none"
           style={{
-            border: '1px solid rgba(138,109,47,0.15)',
-            color: '#a89060',
-            fontFamily: "'IM Fell English', serif",
-            background: 'rgba(15,10,4,0.9)',
-            backgroundImage: 'repeating-linear-gradient(transparent, transparent 27px, rgba(138,109,47,0.07) 28px)',
+            width: '100%', background: 'rgba(255,255,255,0.02)',
+            border: '0.5px solid #2a1e0a', color: '#d4c4a0',
+            padding: '16px', fontFamily: "'EB Garamond', serif", fontSize: '16px',
+            backgroundImage: 'repeating-linear-gradient(transparent, transparent 27px, rgba(42,30,10,0.15) 28px)',
             lineHeight: '28px',
-            paddingTop: '8px',
           }}
         />
 
@@ -397,35 +396,33 @@ function PrivateJournal() {
 
 export default function Secret({ onLogout }) {
   return (
-    <div className="min-h-screen pt-28 pb-24 px-6" style={{ background: '#110e07', position: 'relative', overflow: 'hidden' }}>
-      <div className="max-w-2xl mx-auto">
+    <div style={{ background: '#110e07', minHeight: '100vh', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ maxWidth: '860px', margin: '0 auto', padding: '72px 48px 80px' }}>
         {/* Header */}
         <div className="text-center mb-12">
           <p className="text-xs tracking-[0.45em] uppercase mb-4" style={{ color: '#4a3520' }}>
             ✦ &nbsp; Private Chambers &nbsp; ✦
           </p>
-          <h1
-            className="text-5xl italic mb-4"
-            style={{ fontFamily: "'Playfair Display', serif", color: '#f0e6c8' }}
-          >
+          <h1 style={{ fontSize: '52px', fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 300, color: '#e8dcc0', marginBottom: '8px' }}>
             The Inner Study
           </h1>
-          <p className="text-base" style={{ color: '#6b5a3e', fontFamily: "'IM Fell English', serif" }}>
+          <p style={{ fontSize: '15px', fontStyle: 'italic', color: '#4a3a20', marginBottom: '32px' }}>
             No one reads this. That is why you can write here.
           </p>
           <OrnateDivider className="mt-6" />
         </div>
 
         {/* Candle ambience — large, dramatic */}
-        <div className="text-center mb-10" style={{ position: 'relative' }}>
-          {/* Ambient radial warmth from the candle */}
+        <div style={{ textAlign: 'center', marginBottom: '40px', position: 'relative' }}>
+          {/* Ambient radial warmth — contained inside the max-width column */}
           <div style={{
             position: 'absolute',
             left: '50%', top: '-20px',
             transform: 'translateX(-50%)',
-            width: '320px', height: '200px',
+            width: '260px', height: '160px',
             background: 'radial-gradient(ellipse 60% 55% at 50% 30%, rgba(245,158,11,0.12) 0%, rgba(201,168,76,0.04) 50%, transparent 80%)',
             pointerEvents: 'none',
+            zIndex: 0,
           }} className="animate-flickerGlow" />
           <svg viewBox="0 0 80 140" className="w-20 h-28 mx-auto" fill="none" style={{ position: 'relative', zIndex: 1 }}>
             {/* Outer glow halo */}
@@ -452,10 +449,7 @@ export default function Secret({ onLogout }) {
 
         {/* Private Journal */}
         <div className="mb-4">
-          <h2
-            className="text-2xl italic mb-6"
-            style={{ fontFamily: "'Playfair Display', serif", color: '#c9a84c' }}
-          >
+          <h2 style={{ fontSize: '28px', fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', color: '#c9a85c', marginBottom: '24px', marginTop: '56px' }}>
             Private Journal
           </h2>
           <PrivateJournal />
@@ -465,10 +459,7 @@ export default function Secret({ onLogout }) {
 
         {/* Message to self */}
         <div>
-          <h2
-            className="text-2xl italic mb-2"
-            style={{ fontFamily: "'Playfair Display', serif", color: '#c9a84c' }}
-          >
+          <h2 style={{ fontSize: '28px', fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', color: '#c9a85c', marginBottom: '24px', marginTop: '56px' }}>
             Letters to the Future
           </h2>
           <MessageToSelf />
@@ -477,7 +468,7 @@ export default function Secret({ onLogout }) {
         <OrnateDivider className="mt-12" />
 
         {/* Logout */}
-        <div className="text-center mt-8">
+        <div style={{ textAlign: 'center', marginTop: '64px' }}>
           <button
             onClick={onLogout}
             className="text-xs tracking-widest uppercase transition-colors duration-300"
