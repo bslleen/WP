@@ -281,12 +281,7 @@ export default function Home() {
       </section>
 
       {/* ── COLLECTION ────────────────────────────────────────────────────── */}
-      <section style={{
-        backgroundImage: `url(${parchmentBg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        padding: '80px 40px',
-      }}>
+      <section style={{ background: '#f5eedf', padding: '80px 40px' }}>
         {/* Header */}
         <div style={{
           display: 'flex', alignItems: 'flex-end',
