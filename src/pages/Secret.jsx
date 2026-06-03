@@ -178,6 +178,7 @@ function PrivateJournal() {
   const [body, setBody] = useState('')
   const [editingId, setEditingId] = useState(null)
   const [viewEntry, setViewEntry] = useState(null)
+  const [readEntry, setReadEntry] = useState(null)
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem('private_journal') || '[]')
@@ -358,12 +359,13 @@ function PrivateJournal() {
                   </div>
                 </div>
               ) : (
-                <button
-                  className="w-full text-left p-5 group transition-all duration-300"
-                  onClick={() => setViewEntry(entry)}
+                <div
+                  className="w-full text-left p-5 transition-all duration-300"
+                  onClick={() => setReadEntry(entry)}
                   style={{
                     background: 'rgba(13,10,5,0.6)',
                     border: '1px solid rgba(138,109,47,0.15)',
+                    cursor: 'pointer',
                   }}
                   onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(201,168,76,0.3)'}
                   onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(138,109,47,0.15)'}
@@ -380,14 +382,87 @@ function PrivateJournal() {
                         {entry.body.substring(0, 60)}...
                       </p>
                     </div>
-                    <p className="text-xs flex-shrink-0 ml-4" style={{ color: '#3d2b14' }}>
-                      {entry.date}
-                    </p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0, marginLeft: 16 }}>
+                      <p className="text-xs" style={{ color: '#3d2b14' }}>{entry.date}</p>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); edit(entry) }}
+                        className="text-xs tracking-widest uppercase"
+                        style={{ color: '#8a6d2f', background: 'none', border: 'none', cursor: 'pointer' }}
+                      >
+                        EDIT
+                      </button>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); del(entry.id) }}
+                        className="text-xs tracking-widest uppercase"
+                        style={{ color: '#4a3520', background: 'none', border: 'none', cursor: 'pointer' }}
+                      >
+                        DELETE
+                      </button>
+                    </div>
                   </div>
-                </button>
+                </div>
               )}
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Read modal */}
+      {readEntry && (
+        <div
+          onClick={(e) => e.target === e.currentTarget && setReadEntry(null)}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 50,
+            display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+            overflowY: 'auto', padding: '60px 24px',
+            background: 'rgba(0,0,0,0.9)',
+          }}
+        >
+          <div style={{
+            width: '100%', maxWidth: 640,
+            background: 'linear-gradient(160deg, #1a1209, #0d0a05)',
+            border: '1px solid #8a6d2f',
+            padding: '56px 56px 48px',
+            position: 'relative', margin: 'auto',
+          }}>
+            <button
+              onClick={() => setReadEntry(null)}
+              style={{
+                position: 'absolute', top: 20, right: 24,
+                fontFamily: "'Cinzel', serif", fontSize: 9,
+                letterSpacing: '0.25em', color: '#3a2e1a',
+                cursor: 'pointer', background: 'none', border: 'none',
+                transition: 'color 0.2s',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#c9a85c'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#3a2e1a'}
+            >
+              ✕ CLOSE
+            </button>
+
+            <p style={{ fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.3em', color: '#5a4a2a', marginBottom: 6, textTransform: 'uppercase' }}>
+              Private Entry
+            </p>
+            <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 34, fontStyle: 'italic', fontWeight: 300, color: '#e8dcc0', marginBottom: 4, lineHeight: 1.2 }}>
+              {readEntry.title}
+            </h2>
+            <p style={{ fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.2em', color: '#2a2010', marginBottom: 32, textTransform: 'uppercase' }}>
+              {readEntry.date} · {readEntry.time}
+              {readEntry.edited && ` (edited ${readEntry.edited})`}
+            </p>
+
+            <div style={{ height: '0.5px', background: '#1a1410', marginBottom: 32 }} />
+
+            <div style={{ fontSize: 17, lineHeight: 1.9, color: '#8a7a5a' }}>
+              {(readEntry.body || '').split('\n\n').map((p, i) => (
+                <p key={i} style={{ marginBottom: '1.4em' }}>{p}</p>
+              ))}
+            </div>
+
+            <p style={{ textAlign: 'center', marginTop: 40, fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.3em', color: '#2a2010' }}>
+              ✦ &nbsp; END OF ENTRY &nbsp; ✦
+            </p>
+          </div>
         </div>
       )}
     </div>
