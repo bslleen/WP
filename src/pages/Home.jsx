@@ -205,8 +205,9 @@ export default function Home() {
             fontSize: 17, lineHeight: 1.8, color: '#8a7a5a',
             maxWidth: 380, marginBottom: 36,
           }}>
-            Eleanor Ashworth writes novels, poems, and stories that live
-            in the borderlands between the known and the haunted.
+            Edmund Ashworth wrote novels, poems, and stories that lived
+            in the borderlands between the known and the vanished. The archive
+            was discovered in 1923. The candle was still warm.
           </p>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
@@ -253,7 +254,7 @@ export default function Home() {
               letterSpacing: '0.25em', color: '#5a4a2a',
               borderTop: '0.5px solid #3a2e1a', paddingTop: 14,
             }}>
-              THE AMBER MERIDIAN, 2023
+              THE AMBER MERIDIAN, 1889
             </div>
           </div>
 
@@ -513,10 +514,10 @@ export default function Home() {
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         }}>
           <span style={{ fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.2em', color: '#2a2010' }}>
-            © 2024 E. ASHWORTH. ALL RIGHTS RESERVED.
+            © THE ASHWORTH ESTATE. ALL RIGHTS RESERVED.
           </span>
           <span style={{ fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.2em', color: '#2a2010' }}>
-            BUILT ON WORDS. WORN EVERYWHERE.
+            BUILT ON WORDS. WORN BY TIME.
           </span>
         </div>
       </footer>

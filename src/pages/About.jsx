@@ -3,16 +3,16 @@ import { OrnateDivider, SectionTitle } from '../components/OrnateElements'
 import { fetchAbout } from '../data/api'
 
 const DEFAULT_BIO = [
-  { heading: 'What Is Known', text: `The author was born in a house with too many rooms and not enough light. The earliest surviving document — a notebook, water-damaged, pages stuck together — dates to sometime in the last century. The handwriting is careful. The contents are not.` },
-  { heading: 'What Was Said of the Work', text: `The first novel was described by one reader as 'a lighthouse of a book — disorienting and, in the end, necessary.' The poetry was shortlisted for a prize whose committee has since dissolved. The short fiction appeared in journals that no longer publish.` },
-  { heading: 'What Remained', text: `A writing practice conducted by hand, before dawn. A research archive of found objects: postcards, maps torn from old atlases, photographs of strangers. Every book begins with an object and a question. Neither is ever fully answered.` },
-  { heading: 'What Little Is Left', text: `The author was last known to be dividing time between a house with unreliable heating and a manuscript that has not yet declared its intentions.` },
+  { heading: 'What Is Known', text: `Edmund Ashworth was born in 1847 in a town that appeared on only one map, which was later lost. His father was a clockmaker. His mother read to him from books she wouldn't let him see the covers of. He grew up believing stories had no authors — that they simply arrived, like weather, and someone had to be present to receive them.` },
+  { heading: 'What Was Said of the Work', text: `The novels were described, by the one reviewer who encountered them during his lifetime, as 'architecturally unsound and emotionally unavoidable.' The poetry was read aloud at three funerals before it was published. The short fiction was found in an envelope addressed to no one.` },
+  { heading: 'The Disappearance', text: `At forty-one, Ashworth ceased to appear in any record. No death certificate was filed. No forwarding address was left. What exists is this: a house discovered in 1923 by a surveyor who was not looking for it, containing a library, three manuscripts, a journal kept across forty years, and a candle that was still warm.` },
+  { heading: 'What Little Remains', text: `Three witnesses remembered him. None agreed on what he looked like. One said he was tall. One said he was unremarkable in every visible way. The third said only: he listened as though he already knew what you were going to say, and was grateful you said it anyway.` },
 ]
 const DEFAULT_STATS = [
-  { num: '6', label: 'Recovered Volumes' },
-  { num: '2', label: 'Prizes, Disputed' },
+  { num: '4', label: 'Recovered Works' },
   { num: '1', label: 'Known Residence' },
-  { num: '3', label: 'Countries, Unconfirmed' },
+  { num: '1923', label: 'Year of Discovery' },
+  { num: '0', label: 'Confirmed Sightings' },
 ]
 
 export default function About() {
@@ -22,7 +22,7 @@ export default function About() {
     fetchAbout().then(data => { if (data) setAbout(data) }).catch(() => {})
   }, [])
 
-  const name  = about?.name      || 'Eleanor Ashworth'
+  const name  = about?.name      || 'E. Ashworth'
   const email = about?.email     || 'eleanor@ashworthwrites.com'
   const photo = about?.photo_url || ''
   const bio   = about?.bio?.length   ? about.bio   : DEFAULT_BIO
@@ -97,7 +97,7 @@ export default function About() {
               )}
               <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '16px', textAlign: 'center', background: 'linear-gradient(to top, #0d0a05, transparent)' }}>
                 <p style={{ fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#8a6d2f' }}>
-                  Photograph, provenance unknown.
+                  Photograph recovered from the study. Date and subject unconfirmed.
                 </p>
               </div>
             </div>
