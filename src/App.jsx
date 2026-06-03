@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import Navigation from './components/Navigation'
 import Footer from './components/Footer'
@@ -11,6 +11,7 @@ import AdminRequireAuth from './components/admin/AdminRequireAuth'
 import AdminLayout from './components/admin/AdminLayout'
 import DustMotes from './components/DustMotes'
 import AmbientSound from './components/AmbientSound'
+import MusicPlayer from './components/MusicPlayer'
 
 import Home from './pages/Home'
 import Works from './pages/Works'
@@ -37,6 +38,7 @@ function ScrollToTop() {
 function AppInner() {
   const location = useLocation()
   const isAdmin = location.pathname.startsWith('/admin')
+  const [musicOpen, setMusicOpen] = useState(false)
 
   const {
     showPasswordModal,
@@ -131,6 +133,7 @@ function AppInner() {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <ScrollToTop />
       <Navigation onCandleClick={triggerCandle} />
+      <MusicPlayer open={musicOpen} onToggle={() => setMusicOpen(o => !o)} />
 
       <PasswordModal
         isOpen={showPasswordModal}
