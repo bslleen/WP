@@ -5,6 +5,7 @@ const playlist = [
   { id: 1, title: 'Sonata Op. 110 — I', composer: 'Beethoven', file: '/music/sonata-110-i.mp3' },
   { id: 2, title: 'Sonata Op. 110 — II', composer: 'Beethoven', file: '/music/sonata-110-ii.mp3' },
   { id: 3, title: 'Moonlight Sonata — II', composer: 'Beethoven', file: '/music/moonlight.mp3' },
+  { id: 4, title: '911', composer: '', file: '/music/911.mp3' },
 ]
 
 export default function MusicPlayer({ open, onToggle }) {
