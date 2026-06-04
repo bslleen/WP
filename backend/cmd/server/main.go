@@ -20,7 +20,7 @@ func main() {
 	}
 
 	// Connect to database
-	database, err := db.Connect(os.Getenv("DATABASE_PATH"))
+	database, err := db.Connect(os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}

@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 	"strconv"
@@ -74,13 +75,16 @@ func (h *Handler) GetWorks(c *gin.Context) {
 		pages, status, COALESCE(cover_image,''), COALESCE(accent_color,'#c9a84c'), created_at, updated_at
 		FROM works WHERE 1=1`
 	args := []interface{}{}
+	n := 0
 
 	if cat := c.Query("category"); cat != "" {
-		query += " AND category = ?"
+		n++
+		query += fmt.Sprintf(" AND category = $%d", n)
 		args = append(args, cat)
 	}
 	if status := c.Query("status"); status != "" {
-		query += " AND status = ?"
+		n++
+		query += fmt.Sprintf(" AND status = $%d", n)
 		args = append(args, status)
 	}
 	query += " ORDER BY created_at DESC"
@@ -116,7 +120,7 @@ func (h *Handler) GetWork(c *gin.Context) {
 	var w models.Work
 	err = h.db.QueryRowContext(c, `SELECT id, title, description, COALESCE(excerpt,''), category,
 		COALESCE(year,''), pages, status, COALESCE(cover_image,''), COALESCE(accent_color,'#c9a84c'),
-		created_at, updated_at FROM works WHERE id = ?`, id).Scan(
+		created_at, updated_at FROM works WHERE id = $1`, id).Scan(
 		&w.ID, &w.Title, &w.Description, &w.Excerpt, &w.Category, &w.Year, &w.Pages,
 		&w.Status, &w.CoverImage, &w.AccentColor, &w.CreatedAt, &w.UpdatedAt)
 	if err == sql.ErrNoRows {
@@ -143,21 +147,14 @@ func (h *Handler) CreateWork(c *gin.Context) {
 		req.AccentColor = "#c9a84c"
 	}
 
-	res, err := h.db.ExecContext(c,
-		`INSERT INTO works (title, description, excerpt, category, year, pages, status, cover_image, accent_color)
-		VALUES (?,?,?,?,?,?,?,?,?)`,
-		req.Title, req.Description, req.Excerpt, req.Category, req.Year,
-		req.Pages, req.Status, req.CoverImage, req.AccentColor)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	newID, _ := res.LastInsertId()
-
 	var w models.Work
-	err = h.db.QueryRowContext(c, `SELECT id, title, description, COALESCE(excerpt,''), category,
-		COALESCE(year,''), pages, status, COALESCE(cover_image,''), COALESCE(accent_color,'#c9a84c'),
-		created_at, updated_at FROM works WHERE id = ?`, newID).Scan(
+	err := h.db.QueryRowContext(c,
+		`INSERT INTO works (title, description, excerpt, category, year, pages, status, cover_image, accent_color)
+		VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+		RETURNING id, title, description, COALESCE(excerpt,''), category, COALESCE(year,''),
+		pages, status, COALESCE(cover_image,''), COALESCE(accent_color,'#c9a84c'), created_at, updated_at`,
+		req.Title, req.Description, req.Excerpt, req.Category, req.Year,
+		req.Pages, req.Status, req.CoverImage, req.AccentColor).Scan(
 		&w.ID, &w.Title, &w.Description, &w.Excerpt, &w.Category, &w.Year,
 		&w.Pages, &w.Status, &w.CoverImage, &w.AccentColor, &w.CreatedAt, &w.UpdatedAt)
 	if err != nil {
@@ -183,7 +180,7 @@ func (h *Handler) UpdateWork(c *gin.Context) {
 	var w models.Work
 	err = h.db.QueryRowContext(c, `SELECT id, title, description, COALESCE(excerpt,''), category,
 		COALESCE(year,''), pages, status, COALESCE(cover_image,''), COALESCE(accent_color,'#c9a84c'),
-		created_at, updated_at FROM works WHERE id = ?`, id).Scan(
+		created_at, updated_at FROM works WHERE id = $1`, id).Scan(
 		&w.ID, &w.Title, &w.Description, &w.Excerpt, &w.Category, &w.Year,
 		&w.Pages, &w.Status, &w.CoverImage, &w.AccentColor, &w.CreatedAt, &w.UpdatedAt)
 	if err == sql.ErrNoRows {
@@ -205,9 +202,9 @@ func (h *Handler) UpdateWork(c *gin.Context) {
 	if req.AccentColor != nil { w.AccentColor = *req.AccentColor }
 
 	err = h.db.QueryRowContext(c,
-		`UPDATE works SET title=?, description=?, excerpt=?, category=?, year=?,
-		pages=?, status=?, cover_image=?, accent_color=?, updated_at=datetime('now')
-		WHERE id=? RETURNING updated_at`,
+		`UPDATE works SET title=$1, description=$2, excerpt=$3, category=$4, year=$5,
+		pages=$6, status=$7, cover_image=$8, accent_color=$9, updated_at=NOW()
+		WHERE id=$10 RETURNING updated_at`,
 		w.Title, w.Description, w.Excerpt, w.Category, w.Year,
 		w.Pages, w.Status, w.CoverImage, w.AccentColor, id).Scan(&w.UpdatedAt)
 	if err != nil {
@@ -224,8 +221,7 @@ func (h *Handler) DeleteWork(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 		return
 	}
-	var res sql.Result
-	res, err = h.db.ExecContext(c, `DELETE FROM works WHERE id = ?`, id)
+	res, err := h.db.ExecContext(c, `DELETE FROM works WHERE id = $1`, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -276,7 +272,7 @@ func (h *Handler) GetJournalEntry(c *gin.Context) {
 	err = h.db.QueryRowContext(c,
 		`SELECT id, title, body, COALESCE(excerpt,''), COALESCE(category,''),
 		COALESCE(read_time,''), published, created_at, updated_at
-		FROM journal_entries WHERE id = ? AND published = 1`, id).Scan(
+		FROM journal_entries WHERE id = $1 AND published = 1`, id).Scan(
 		&e.ID, &e.Title, &e.Body, &e.Excerpt, &e.Category,
 		&e.ReadTime, &e.Published, &e.CreatedAt, &e.UpdatedAt)
 	if err == sql.ErrNoRows {
@@ -302,21 +298,13 @@ func (h *Handler) CreateJournalEntry(c *gin.Context) {
 		published = *req.Published
 	}
 
-	res, err := h.db.ExecContext(c,
-		`INSERT INTO journal_entries (title, body, excerpt, category, read_time, published)
-		VALUES (?,?,?,?,?,?)`,
-		req.Title, req.Body, req.Excerpt, req.Category, req.ReadTime, published)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	newID, _ := res.LastInsertId()
-
 	var e models.JournalEntry
-	err = h.db.QueryRowContext(c,
-		`SELECT id, title, body, COALESCE(excerpt,''), COALESCE(category,''),
-		COALESCE(read_time,''), published, created_at, updated_at
-		FROM journal_entries WHERE id = ?`, newID).Scan(
+	err := h.db.QueryRowContext(c,
+		`INSERT INTO journal_entries (title, body, excerpt, category, read_time, published)
+		VALUES ($1,$2,$3,$4,$5,$6)
+		RETURNING id, title, body, COALESCE(excerpt,''), COALESCE(category,''),
+		COALESCE(read_time,''), published, created_at, updated_at`,
+		req.Title, req.Body, req.Excerpt, req.Category, req.ReadTime, published).Scan(
 		&e.ID, &e.Title, &e.Body, &e.Excerpt, &e.Category,
 		&e.ReadTime, &e.Published, &e.CreatedAt, &e.UpdatedAt)
 	if err != nil {
@@ -343,7 +331,7 @@ func (h *Handler) UpdateJournalEntry(c *gin.Context) {
 	err = h.db.QueryRowContext(c,
 		`SELECT id, title, body, COALESCE(excerpt,''), COALESCE(category,''),
 		COALESCE(read_time,''), published, created_at, updated_at
-		FROM journal_entries WHERE id = ?`, id).Scan(
+		FROM journal_entries WHERE id = $1`, id).Scan(
 		&e.ID, &e.Title, &e.Body, &e.Excerpt, &e.Category,
 		&e.ReadTime, &e.Published, &e.CreatedAt, &e.UpdatedAt)
 	if err == sql.ErrNoRows {
@@ -362,8 +350,8 @@ func (h *Handler) UpdateJournalEntry(c *gin.Context) {
 	if req.Published != nil { e.Published = *req.Published }
 
 	err = h.db.QueryRowContext(c,
-		`UPDATE journal_entries SET title=?, body=?, excerpt=?, category=?,
-		read_time=?, published=?, updated_at=datetime('now') WHERE id=? RETURNING updated_at`,
+		`UPDATE journal_entries SET title=$1, body=$2, excerpt=$3, category=$4,
+		read_time=$5, published=$6, updated_at=NOW() WHERE id=$7 RETURNING updated_at`,
 		e.Title, e.Body, e.Excerpt, e.Category, e.ReadTime, e.Published, id).Scan(&e.UpdatedAt)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -379,8 +367,7 @@ func (h *Handler) DeleteJournalEntry(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 		return
 	}
-	var res sql.Result
-	res, err = h.db.ExecContext(c, `DELETE FROM journal_entries WHERE id = ?`, id)
+	res, err := h.db.ExecContext(c, `DELETE FROM journal_entries WHERE id = $1`, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -414,8 +401,8 @@ func (h *Handler) ChangePassword(c *gin.Context) {
 	}
 
 	_, err = h.db.ExecContext(c,
-		`INSERT INTO config (key, value) VALUES ('owner_password', ?)
-		 ON CONFLICT (key) DO UPDATE SET value = excluded.value`,
+		`INSERT INTO config (key, value) VALUES ('owner_password', $1)
+		 ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value`,
 		string(hashed))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -498,20 +485,20 @@ func (h *Handler) UploadImage(c *gin.Context) {
 // ─── ABOUT ───────────────────────────────────────────────────────────────────
 
 var defaultAbout = models.About{
-	Name:    "Eleanor Ashworth",
+	Name:    "E. Ashworth",
 	Tagline: "Author & Poet",
 	Email:   "eleanor@ashworthwrites.com",
 	Bio: []models.AboutBioSection{
-		{Heading: "The Beginning", Text: "Eleanor Ashworth grew up in a house that held more books than furniture, in a town where winters lasted six months and stories lasted longer. She wrote her first poem at nine, about the death of a crow she found in the garden. Her mother kept it in a bureau drawer for twenty years."},
-		{Heading: "The Work", Text: "Her debut novel, The Amber Meridian, was called \"a lighthouse of a book — disorienting and, in the end, necessary\" by the Times Literary Supplement. Her poetry collection Salt & Silence won the Calvert Prize for voice and was shortlisted for the Forward."},
-		{Heading: "The Process", Text: "She writes by hand, in the morning, before light if possible. She keeps a research archive of found objects: postcards, newspaper clippings, photographs of strangers, maps torn from old atlases. Every book begins with an object and a question."},
-		{Heading: "The Life", Text: "She has been writer-in-residence on the Orkney Islands and a visiting fellow at Pembroke College, Oxford. She divides her time between a house with unreliable heating and a manuscript that requires her full attention."},
+		{Heading: "What Is Known", Text: "Edmund Ashworth was born in 1847 in a town that appeared on only one map, which was later lost. His father was a clockmaker. His mother read to him from books she wouldn't let him see the covers of. He grew up believing stories had no authors — that they simply arrived, like weather, and someone had to be present to receive them."},
+		{Heading: "What Was Said of the Work", Text: "The novels were described, by the one reviewer who encountered them during his lifetime, as 'architecturally unsound and emotionally unavoidable.' The poetry was read aloud at three funerals before it was published. The short fiction was found in an envelope addressed to no one."},
+		{Heading: "The Disappearance", Text: "At forty-one, Ashworth ceased to appear in any record. No death certificate was filed. No forwarding address was left. What exists is this: a house discovered in 1923 by a surveyor who was not looking for it, containing a library, three manuscripts, a journal kept across forty years, and a candle that was still warm."},
+		{Heading: "What Little Remains", Text: "Three witnesses remembered him. None agreed on what he looked like. One said he was tall. One said he was unremarkable in every visible way. The third said only: he listened as though he already knew what you were going to say, and was grateful you said it anyway."},
 	},
 	Stats: []models.AboutStat{
-		{Num: "6", Label: "Published Works"},
-		{Num: "2", Label: "Awards"},
-		{Num: "1", Label: "Residency"},
-		{Num: "3", Label: "Countries Written In"},
+		{Num: "4", Label: "Recovered Works"},
+		{Num: "1", Label: "Known Residence"},
+		{Num: "1923", Label: "Year of Discovery"},
+		{Num: "0", Label: "Confirmed Sightings"},
 	},
 }
 
@@ -543,7 +530,7 @@ func (h *Handler) UpdateAbout(c *gin.Context) {
 		return
 	}
 	_, err = h.db.ExecContext(c,
-		`INSERT INTO config (key, value) VALUES ('about', ?) ON CONFLICT (key) DO UPDATE SET value = excluded.value`,
+		`INSERT INTO config (key, value) VALUES ('about', $1) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value`,
 		string(raw))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
