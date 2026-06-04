@@ -21,6 +21,6 @@ services:
       - key: FRONTEND_URL
         value: https://wp-jet-three.vercel.app
       - key: OWNER_PASSWORD
-        value: AAAA18
+        value: "12345"
       - key: PORT
         value: "8080"
