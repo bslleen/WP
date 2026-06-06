@@ -9,6 +9,14 @@ const NAV = [
   { to: '/admin/settings', label: 'Settings', icon: '⚙' },
 ]
 
+// Bottom tab bar shows 4 items on mobile
+const TAB_NAV = [
+  { to: '/admin', label: 'Dash', icon: '◈', end: true },
+  { to: '/admin/works', label: 'Works', icon: '✦' },
+  { to: '/admin/journal', label: 'Journal', icon: '✒' },
+  { to: '/admin/settings', label: 'Settings', icon: '⚙' },
+]
+
 export default function AdminLayout({ children }) {
   const navigate = useNavigate()
 
@@ -19,14 +27,12 @@ export default function AdminLayout({ children }) {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: '#0d0a05' }}>
-      {/* Sidebar — warm leather */}
-      <aside style={{
+      {/* Sidebar — desktop only */}
+      <aside className="hidden md:flex flex-col" style={{
         width: '220px',
         flexShrink: 0,
         borderRight: '1px solid rgba(201,168,76,0.15)',
         boxShadow: '2px 0 20px rgba(0,0,0,0.5)',
-        display: 'flex',
-        flexDirection: 'column',
         position: 'sticky',
         top: 0,
         height: '100vh',
@@ -38,7 +44,6 @@ export default function AdminLayout({ children }) {
           padding: '1.75rem 1.5rem',
           borderBottom: '1px solid rgba(201,168,76,0.12)',
         }}>
-          {/* Quill icon above title */}
           <svg viewBox="0 0 32 32" style={{ width: '22px', height: '22px', marginBottom: '0.6rem', display: 'block' }} fill="none">
             <path d="M28 2 Q22 4 18 10 Q14 16 10 28 Q14 24 16 20 Q18 16 20 14 Q24 8 28 2 Z" fill="#c9a84c" fillOpacity="0.18" stroke="#c9a84c" strokeWidth="0.7" />
             <path d="M10 28 Q10 22 14 18" stroke="#8a6d2f" strokeWidth="0.8" fill="none" />
@@ -145,10 +150,41 @@ export default function AdminLayout({ children }) {
         flex: 1,
         overflowY: 'auto',
         minHeight: '100vh',
-        padding: '3rem 3.5rem',
-      }}>
+      }} className="p-6 md:p-14 pb-24 md:pb-14">
         {children}
       </main>
+
+      {/* Mobile bottom tab bar */}
+      <nav
+        className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex"
+        style={{
+          background: '#0d0a05',
+          borderTop: '1px solid rgba(201,168,76,0.2)',
+        }}
+      >
+        {TAB_NAV.map(({ to, label, icon, end }) => (
+          <NavLink
+            key={to}
+            to={to}
+            end={end}
+            className="flex-1 flex flex-col items-center justify-center gap-1 py-3"
+            style={({ isActive }) => ({
+              color: isActive ? '#c9a84c' : '#4a3520',
+              textDecoration: 'none',
+              fontSize: '0.48rem',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              fontFamily: "'Crimson Text', serif",
+              borderTop: isActive ? '2px solid #c9a84c' : '2px solid transparent',
+              transition: 'color 0.2s, border-color 0.2s',
+              minHeight: '56px',
+            })}
+          >
+            <span style={{ fontSize: '0.85rem' }}>{icon}</span>
+            {label}
+          </NavLink>
+        ))}
+      </nav>
     </div>
   )
 }

@@ -3,13 +3,12 @@ import { fetchJournal } from '../data/api'
 import { normalizeJournal } from '../data/normalize'
 import { journalEntries as mockJournal } from '../data/content'
 
-// ─── Ornament rule ────────────────────────────────────────────────────────────
 function OrnamentRule() {
   const s = { width: 3, height: 3, border: '0.5px solid #1a1410', transform: 'rotate(45deg)', flexShrink: 0 }
   const d = { width: 5, height: 5, border: '0.5px solid #2a1e0a', transform: 'rotate(45deg)', flexShrink: 0 }
   const f = { ...d, background: '#c9a85c', borderColor: '#c9a85c' }
   return (
-    <div style={{ maxWidth: 900, margin: '48px auto 0', display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: 16, padding: '0 48px' }}>
+    <div style={{ maxWidth: 900, margin: '48px auto 0' }} className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 md:px-12">
       <div style={{ height: '0.5px', background: '#1a1410' }} />
       <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
         <div style={s} /><div style={d} /><div style={s} /><div style={f} /><div style={s} /><div style={d} /><div style={s} />
@@ -19,7 +18,6 @@ function OrnamentRule() {
   )
 }
 
-// ─── Modal ────────────────────────────────────────────────────────────────────
 function EntryModal({ entry, onClose }) {
   if (!entry) return null
   return (
@@ -28,17 +26,19 @@ function EntryModal({ entry, onClose }) {
       style={{
         position: 'fixed', inset: 0, zIndex: 50,
         display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
-        overflowY: 'auto', padding: '60px 24px',
+        overflowY: 'auto',
         background: 'rgba(0,0,0,0.92)',
       }}
+      className="p-0 md:py-16 md:px-6"
     >
-      <div style={{
-        width: '100%', maxWidth: 640,
-        background: 'linear-gradient(160deg, #1a1209, #0d0a05)',
-        border: '0.5px solid #3a2e1a',
-        padding: '56px 56px 48px',
-        position: 'relative', margin: 'auto',
-      }}>
+      <div
+        style={{
+          background: 'linear-gradient(160deg, #1a1209, #0d0a05)',
+          border: '0.5px solid #3a2e1a',
+          position: 'relative',
+        }}
+        className="w-full md:max-w-2xl md:mx-auto p-8 md:p-14"
+      >
         {/* Close */}
         <button
           onClick={onClose}
@@ -48,6 +48,8 @@ function EntryModal({ entry, onClose }) {
             letterSpacing: '0.25em', color: '#3a2e1a',
             cursor: 'pointer', background: 'none', border: 'none',
             transition: 'color 0.2s',
+            minHeight: '44px', minWidth: '44px',
+            display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
           }}
           onMouseEnter={e => e.currentTarget.style.color = '#c9a85c'}
           onMouseLeave={e => e.currentTarget.style.color = '#3a2e1a'}
@@ -58,7 +60,7 @@ function EntryModal({ entry, onClose }) {
         <p style={{ fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.3em', color: '#5a4a2a', marginBottom: 6, textTransform: 'uppercase' }}>
           {entry.category}
         </p>
-        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 34, fontStyle: 'italic', fontWeight: 300, color: '#e8dcc0', marginBottom: 4, lineHeight: 1.2 }}>
+        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(1.6rem, 5vw, 2.1rem)', fontStyle: 'italic', fontWeight: 300, color: '#e8dcc0', marginBottom: 4, lineHeight: 1.2 }}>
           {entry.title}
         </h2>
         <p style={{ fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.2em', color: '#2a2010', marginBottom: 32, textTransform: 'uppercase' }}>
@@ -81,7 +83,6 @@ function EntryModal({ entry, onClose }) {
   )
 }
 
-// ─── Main ─────────────────────────────────────────────────────────────────────
 export default function Journal() {
   const [active, setActive]   = useState(null)
   const [entries, setEntries] = useState(mockJournal.map(normalizeJournal))
@@ -93,16 +94,16 @@ export default function Journal() {
   }, [])
 
   return (
-    <div style={{ background: '#0d0a05', minHeight: '100vh', fontFamily: "'EB Garamond', Georgia, serif", color: '#a89060', paddingTop: '72px' }}>
+    <div style={{ background: '#0d0a05', minHeight: '100vh', fontFamily: "'EB Garamond', Georgia, serif", color: '#a89060' }} className="pt-20 md:pt-[72px]">
 
       {/* ── Header ── */}
-      <div style={{ padding: '72px 48px 0', maxWidth: 900, margin: '0 auto' }}>
+      <div style={{ maxWidth: 900, margin: '0 auto' }} className="px-4 md:px-12 pt-10 md:pt-16 pb-0">
         <div style={{ fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.4em', color: '#3a2e1a', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
           <span style={{ color: '#c9a85c', fontSize: 8 }}>✦</span>
           THE JOURNAL
           <span style={{ color: '#c9a85c', fontSize: 8 }}>✦</span>
         </div>
-        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 56, fontWeight: 300, fontStyle: 'italic', color: '#e8dcc0', lineHeight: 1, marginBottom: 20 }}>
+        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(2.2rem, 8vw, 3.5rem)', fontWeight: 300, fontStyle: 'italic', color: '#e8dcc0', lineHeight: 1, marginBottom: 20 }}>
           Writing &amp; Observations
         </h1>
         <p style={{ fontFamily: "'EB Garamond', serif", fontSize: 17, fontStyle: 'italic', color: '#4a3a20', lineHeight: 1.6, maxWidth: 440 }}>
@@ -113,7 +114,7 @@ export default function Journal() {
       <OrnamentRule />
 
       {/* ── Entry list ── */}
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 48px 80px' }}>
+      <div style={{ maxWidth: 900, margin: '0 auto' }} className="px-4 md:px-12 pb-20">
         {entries.map((entry, i) => (
           <div key={entry.id}>
 
@@ -121,13 +122,13 @@ export default function Journal() {
             {i === 0 && (
               <div
                 onClick={() => setActive(entry)}
-                style={{ display: 'grid', gridTemplateColumns: '1fr', cursor: 'pointer' }}
+                style={{ cursor: 'pointer' }}
                 onMouseEnter={e => { const c = e.currentTarget.querySelector('.j-cta'); if (c) { c.style.opacity='1'; c.style.color='#c9a85c'; } }}
                 onMouseLeave={e => { const c = e.currentTarget.querySelector('.j-cta'); if (c) { c.style.opacity='0.5'; c.style.color='#3a2e1a'; } }}
               >
                 <div style={{ padding: '48px 0 40px' }}>
                   <div style={{ width: 32, height: '0.5px', background: '#c9a85c', marginBottom: 20 }} />
-                  <div style={{ display: 'flex', gap: 20, alignItems: 'center', marginBottom: 14 }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center', marginBottom: 14 }}>
                     <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.3em', color: '#c9a85c', textTransform: 'uppercase' }}>{entry.category}</span>
                     <span style={{ color: '#1a1410', fontSize: 10 }}>·</span>
                     <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.15em', color: '#3a2e1a', textTransform: 'uppercase' }}>{entry.date}</span>
@@ -136,7 +137,7 @@ export default function Journal() {
                       <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.15em', color: '#3a2e1a', textTransform: 'uppercase' }}>{entry.readTime} READ</span>
                     </>}
                   </div>
-                  <h2 className="j-title" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 42, fontStyle: 'italic', fontWeight: 400, color: '#e8dcc0', marginBottom: 10, lineHeight: 1.2, transition: 'color 0.2s' }}>
+                  <h2 className="j-title" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(1.8rem, 6vw, 2.6rem)', fontStyle: 'italic', fontWeight: 400, color: '#e8dcc0', marginBottom: 10, lineHeight: 1.2, transition: 'color 0.2s' }}>
                     {entry.title}
                   </h2>
                   <p style={{ fontSize: 17, color: '#5a4a2a', lineHeight: 1.8, marginBottom: 14, maxWidth: 600 }}>{entry.excerpt}</p>
@@ -151,7 +152,8 @@ export default function Journal() {
             {i > 0 && (
               <div
                 onClick={() => setActive(entry)}
-                style={{ display: 'grid', gridTemplateColumns: '140px 1fr', gap: 0, cursor: 'pointer' }}
+                style={{ cursor: 'pointer' }}
+                className="grid grid-cols-1 sm:grid-cols-[140px_1fr]"
                 onMouseEnter={e => {
                   const t = e.currentTarget.querySelector('.j-title'); if (t) t.style.color = '#c9a85c';
                   const c = e.currentTarget.querySelector('.j-cta');   if (c) { c.style.opacity='1'; c.style.color='#c9a85c'; }
@@ -161,8 +163,11 @@ export default function Journal() {
                   const c = e.currentTarget.querySelector('.j-cta');   if (c) { c.style.opacity='0.5'; c.style.color='#3a2e1a'; }
                 }}
               >
-                {/* Left column */}
-                <div style={{ padding: '40px 32px 40px 0', borderRight: '0.5px solid #1a1410', display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-end' }}>
+                {/* Left column — date/category (visible sm+, inline on mobile) */}
+                <div
+                  className="hidden sm:flex flex-col gap-1.5 items-end"
+                  style={{ padding: '40px 32px 40px 0', borderRight: '0.5px solid #1a1410' }}
+                >
                   <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.3em', color: '#5a4a2a', textAlign: 'right', textTransform: 'uppercase' }}>
                     {entry.category}
                   </span>
@@ -176,8 +181,19 @@ export default function Journal() {
                   )}
                 </div>
 
+                {/* Mobile-only date row */}
+                <div className="sm:hidden flex flex-wrap gap-2 items-center pt-8 pb-2">
+                  <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.3em', color: '#5a4a2a', textTransform: 'uppercase' }}>
+                    {entry.category}
+                  </span>
+                  <span style={{ color: '#1a1410', fontSize: 10 }}>·</span>
+                  <span style={{ fontFamily: "'Cinzel', serif", fontSize: 8, letterSpacing: '0.15em', color: '#2a2010', textTransform: 'uppercase' }}>
+                    {entry.date}
+                  </span>
+                </div>
+
                 {/* Right column */}
-                <div style={{ padding: '40px 0 40px 40px', minWidth: 0 }}>
+                <div style={{ padding: '40px 0 40px 0', minWidth: 0 }} className="sm:pl-10">
                   <h2 className="j-title" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontStyle: 'italic', fontWeight: 400, color: '#d4c4a0', marginBottom: 10, lineHeight: 1.2, transition: 'color 0.2s' }}>
                     {entry.title}
                   </h2>
@@ -199,7 +215,8 @@ export default function Journal() {
 
       <OrnamentRule />
 
-      <p style={{ maxWidth: 900, margin: '32px auto 60px', padding: '0 48px', textAlign: 'center', fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.3em', color: '#1a1410' }}>
+      <p style={{ maxWidth: 900, margin: '32px auto 60px', textAlign: 'center', fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.3em', color: '#1a1410' }}
+        className="px-4 md:px-12">
         ✦ &nbsp; MORE ENTRIES FORTHCOMING &nbsp; ✦
       </p>
 

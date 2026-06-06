@@ -1,10 +1,119 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { getWorks, updateWork, deleteWork } from '../../data/api'
 import { OrnateDivider } from '../../components/OrnateElements'
 
-const STATUS_CYCLE = { published: 'in progress', 'in progress': 'archived', archived: 'published' }
-const STATUS_COLORS = { published: '#c9a84c', 'in progress': '#8a6d2f', archived: '#4a3520' }
+// ── Publish popover ───────────────────────────────────────────────────────────
+function PublishPopover({ isPublished, onConfirm, onCancel }) {
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) onCancel()
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [onCancel])
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        position: 'absolute',
+        right: 0, top: '110%',
+        zIndex: 20,
+        background: '#1a1209',
+        border: '1px solid rgba(201,168,76,0.25)',
+        padding: '1rem 1.25rem',
+        minWidth: '210px',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.7)',
+      }}
+    >
+      <p style={{
+        color: '#a89060',
+        fontSize: '0.72rem',
+        lineHeight: 1.5,
+        marginBottom: '0.9rem',
+        fontFamily: "'Crimson Text', serif",
+      }}>
+        {isPublished
+          ? 'Move back to draft? It will be hidden from readers.'
+          : 'Make this public? Your readers will see it.'}
+      </p>
+      <div style={{ display: 'flex', gap: '0.75rem' }}>
+        <button
+          onClick={onConfirm}
+          style={{
+            background: '#c9a84c', border: 'none',
+            color: '#0d0a05', padding: '5px 14px',
+            fontSize: '0.56rem', letterSpacing: '0.2em',
+            textTransform: 'uppercase', cursor: 'pointer',
+            fontFamily: "'Playfair Display', serif",
+          }}
+        >
+          Confirm
+        </button>
+        <button
+          onClick={onCancel}
+          style={{
+            background: 'none', border: '1px solid rgba(138,109,47,0.3)',
+            color: '#6b5a3e', padding: '5px 14px',
+            fontSize: '0.56rem', letterSpacing: '0.2em',
+            textTransform: 'uppercase', cursor: 'pointer',
+            fontFamily: "'Playfair Display', serif",
+          }}
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ── DRAFT / LIVE toggle button ────────────────────────────────────────────────
+function PublishToggle({ work, onToggle, toggling }) {
+  const [showPopover, setShowPopover] = useState(false)
+  const isLive = work.status === 'published'
+
+  const handleConfirm = () => {
+    setShowPopover(false)
+    onToggle(work, isLive ? 'in progress' : 'published')
+  }
+
+  return (
+    <div style={{ position: 'relative', flexShrink: 0 }}>
+      <button
+        onClick={() => !toggling && setShowPopover(o => !o)}
+        disabled={toggling}
+        title={isLive ? 'Currently live — click to draft' : 'Currently draft — click to publish'}
+        style={{
+          background: isLive ? '#c9a84c' : 'transparent',
+          border: `1px solid ${isLive ? '#c9a84c' : 'rgba(138,109,47,0.4)'}`,
+          color: isLive ? '#0d0a05' : '#6b5a3e',
+          fontSize: '0.52rem',
+          letterSpacing: '0.22em',
+          textTransform: 'uppercase',
+          padding: '4px 12px',
+          cursor: toggling ? 'wait' : 'pointer',
+          fontFamily: "'Playfair Display', serif",
+          whiteSpace: 'nowrap',
+          opacity: toggling ? 0.4 : 1,
+          transition: 'all 0.2s',
+          minHeight: '28px',
+        }}
+      >
+        {toggling ? '…' : isLive ? 'LIVE' : 'DRAFT'}
+      </button>
+      {showPopover && (
+        <PublishPopover
+          isPublished={isLive}
+          onConfirm={handleConfirm}
+          onCancel={() => setShowPopover(false)}
+        />
+      )}
+    </div>
+  )
+}
 
 export default function AdminWorks() {
   const [works, setWorks] = useState([])
@@ -19,11 +128,10 @@ export default function AdminWorks() {
       .finally(() => setLoading(false))
   }, [])
 
-  const toggleStatus = async (work) => {
+  const handleToggle = async (work, nextStatus) => {
     setTogglingId(work.id)
-    const next = STATUS_CYCLE[work.status] || 'published'
     try {
-      const updated = await updateWork(work.id, { status: next })
+      const updated = await updateWork(work.id, { status: nextStatus })
       setWorks(ws => ws.map(w => w.id === work.id ? { ...w, status: updated.status } : w))
     } catch {} finally {
       setTogglingId(null)
@@ -42,7 +150,7 @@ export default function AdminWorks() {
   }
 
   return (
-    <div className="">
+    <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2rem' }}>
         <div>
           <p style={{ color: '#4a3520', fontSize: '0.6rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
@@ -74,111 +182,91 @@ export default function AdminWorks() {
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          {works.map(work => {
-            const statusColor = STATUS_COLORS[work.status] || '#6b5a3e'
-            return (
-              <div
-                key={work.id}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '1rem',
-                  padding: '1rem 1.25rem',
+          {works.map(work => (
+            <div
+              key={work.id}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                padding: '1rem 1.25rem',
+                border: '1px solid rgba(138,109,47,0.2)',
+                background: 'rgba(26,18,9,0.4)',
+                transition: 'border-color 0.2s',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(138,109,47,0.4)')}
+              onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(138,109,47,0.2)')}
+            >
+              {/* Cover swatch */}
+              {work.cover_image ? (
+                <img
+                  src={work.cover_image}
+                  alt=""
+                  style={{ width: '38px', height: '54px', objectFit: 'cover', flexShrink: 0, opacity: 0.8 }}
+                />
+              ) : (
+                <div style={{
+                  width: '38px', height: '54px', flexShrink: 0,
                   border: '1px solid rgba(138,109,47,0.2)',
-                  background: 'rgba(26,18,9,0.4)',
-                  transition: 'border-color 0.2s',
-                }}
-                onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(138,109,47,0.4)')}
-                onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(138,109,47,0.2)')}
-              >
-                {/* Cover swatch */}
-                {work.cover_image ? (
-                  <img
-                    src={work.cover_image}
-                    alt=""
-                    style={{ width: '38px', height: '54px', objectFit: 'cover', flexShrink: 0, opacity: 0.8 }}
-                  />
-                ) : (
-                  <div style={{
-                    width: '38px', height: '54px', flexShrink: 0,
-                    border: '1px solid rgba(138,109,47,0.2)',
-                    background: `${work.accent_color || '#c9a84c'}12`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    <span style={{ color: work.accent_color || '#8a6d2f', fontSize: '0.75rem', opacity: 0.35 }}>✦</span>
-                  </div>
-                )}
-
-                {/* Info */}
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{
-                    fontFamily: "'Playfair Display', serif",
-                    color: '#d4c49a',
-                    fontStyle: 'italic',
-                    fontSize: '1rem',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}>
-                    {work.title}
-                  </p>
-                  <p style={{ color: '#4a3520', fontSize: '0.62rem', marginTop: '2px' }}>
-                    {[work.category, work.year, work.pages ? `${work.pages}pp` : null].filter(Boolean).join(' · ')}
-                  </p>
+                  background: `${work.accent_color || '#c9a84c'}12`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <span style={{ color: work.accent_color || '#8a6d2f', fontSize: '0.75rem', opacity: 0.35 }}>✦</span>
                 </div>
+              )}
 
-                {/* Status toggle — click to cycle */}
-                <button
-                  onClick={() => toggleStatus(work)}
-                  disabled={togglingId === work.id}
-                  title="Click to cycle status"
-                  style={{
-                    background: 'transparent',
-                    border: `1px solid ${statusColor}44`,
-                    color: statusColor,
-                    fontSize: '0.56rem',
-                    letterSpacing: '0.2em',
-                    textTransform: 'uppercase',
-                    padding: '3px 10px',
-                    cursor: 'pointer',
-                    fontFamily: "'Playfair Display', serif",
-                    whiteSpace: 'nowrap',
-                    opacity: togglingId === work.id ? 0.4 : 1,
-                    transition: 'opacity 0.2s',
-                    flexShrink: 0,
-                  }}
-                >
-                  {work.status}
-                </button>
-
-                {/* Actions */}
-                <div style={{ display: 'flex', gap: '1rem', flexShrink: 0 }}>
-                  <Link
-                    to={`/admin/works/${work.id}/edit`}
-                    style={{ color: '#8a6d2f', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none' }}
-                  >
-                    Edit
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(work.id)}
-                    disabled={deletingId === work.id}
-                    style={{
-                      background: 'none', border: 'none',
-                      color: '#4a3520', fontSize: '0.62rem',
-                      letterSpacing: '0.15em', textTransform: 'uppercase',
-                      cursor: 'pointer', padding: 0,
-                      opacity: deletingId === work.id ? 0.4 : 1,
-                      transition: 'color 0.2s',
-                    }}
-                    onMouseEnter={e => (e.target.style.color = '#8a3520')}
-                    onMouseLeave={e => (e.target.style.color = '#4a3520')}
-                  >
-                    Delete
-                  </button>
-                </div>
+              {/* Info */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{
+                  fontFamily: "'Playfair Display', serif",
+                  color: '#d4c49a',
+                  fontStyle: 'italic',
+                  fontSize: '1rem',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}>
+                  {work.title}
+                </p>
+                <p style={{ color: '#4a3520', fontSize: '0.62rem', marginTop: '2px' }}>
+                  {[work.category, work.year, work.pages ? `${work.pages}pp` : null].filter(Boolean).join(' · ')}
+                </p>
               </div>
-            )
-          })}
+
+              {/* DRAFT / LIVE toggle */}
+              <PublishToggle
+                work={work}
+                onToggle={handleToggle}
+                toggling={togglingId === work.id}
+              />
+
+              {/* Actions */}
+              <div style={{ display: 'flex', gap: '1rem', flexShrink: 0 }}>
+                <Link
+                  to={`/admin/works/${work.id}/edit`}
+                  style={{ color: '#8a6d2f', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none' }}
+                >
+                  Edit
+                </Link>
+                <button
+                  onClick={() => handleDelete(work.id)}
+                  disabled={deletingId === work.id}
+                  style={{
+                    background: 'none', border: 'none',
+                    color: '#4a3520', fontSize: '0.62rem',
+                    letterSpacing: '0.15em', textTransform: 'uppercase',
+                    cursor: 'pointer', padding: 0,
+                    opacity: deletingId === work.id ? 0.4 : 1,
+                    transition: 'color 0.2s',
+                  }}
+                  onMouseEnter={e => (e.target.style.color = '#8a3520')}
+                  onMouseLeave={e => (e.target.style.color = '#4a3520')}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>

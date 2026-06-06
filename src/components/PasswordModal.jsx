@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react'
-import { OrnateFrame } from './OrnateElements'
 import { useNavigate } from 'react-router-dom'
 
 export default function PasswordModal({ isOpen, onClose, onSuccess }) {
@@ -44,6 +43,7 @@ export default function PasswordModal({ isOpen, onClose, onSuccess }) {
           background: 'linear-gradient(135deg, #1a1209, #0d0a05)',
           border: '1px solid #8a6d2f',
           boxShadow: '0 0 60px rgba(201, 168, 76, 0.15), inset 0 0 40px rgba(0,0,0,0.5)',
+          marginBottom: 'env(safe-area-inset-bottom, 0px)',
         }}
       >
         {/* Close */}

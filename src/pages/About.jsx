@@ -29,7 +29,7 @@ export default function About() {
   const stats = about?.stats?.length ? about.stats : DEFAULT_STATS
 
   return (
-    <div style={{ background: '#0d0a05', minHeight: '100vh', paddingTop: '80px', paddingBottom: '96px', paddingLeft: '24px', paddingRight: '24px' }}>
+    <div style={{ background: '#0d0a05', minHeight: '100vh' }} className="pt-20 md:pt-24 pb-24 px-4 md:px-6">
       <div className="max-w-5xl mx-auto">
 
         {/* Title */}
@@ -40,11 +40,11 @@ export default function About() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-5 gap-16 mt-8">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16 mt-8">
 
           {/* Portrait column */}
           <div className="lg:col-span-2">
-            <div style={{ height: '420px', overflow: 'hidden', border: '1px solid #8a6d2f', position: 'relative' }}>
+            <div className="w-full max-w-xs mx-auto lg:max-w-none" style={{ height: '420px', overflow: 'hidden', border: '1px solid #8a6d2f', position: 'relative' }}>
               {photo ? (
                 <img
                   src={photo}
@@ -119,7 +119,7 @@ export default function About() {
           </div>
 
           {/* Bio column */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3 px-0">
             {bio.map((section, i) => (
               <div key={i} style={{ marginBottom: '36px' }}>
                 <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.125rem', fontStyle: 'italic', color: '#c9a84c', marginBottom: '12px' }}>

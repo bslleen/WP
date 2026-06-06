@@ -68,20 +68,22 @@ function MessageToSelf() {
             width: '100%', background: 'rgba(255,255,255,0.02)',
             border: '0.5px solid #2a1e0a', color: '#d4c4a0',
             padding: '16px', fontFamily: "'EB Garamond', serif", fontSize: '16px',
+            minHeight: '200px',
           }}
         />
-        <div className="flex gap-3 items-center">
+        <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
           <input
             type="date"
             value={futureDate}
             onChange={(e) => setFutureDate(e.target.value)}
             min={new Date().toISOString().split('T')[0]}
-            className="outline-none flex-1"
+            className="outline-none flex-1 w-full sm:w-auto"
             style={{
-              width: '100%', background: 'rgba(255,255,255,0.02)',
+              background: 'rgba(255,255,255,0.02)',
               border: '0.5px solid #2a1e0a', color: '#d4c4a0',
               padding: '16px', fontFamily: "'EB Garamond', serif", fontSize: '16px',
               colorScheme: 'dark',
+              minHeight: '44px',
             }}
           />
           <button
@@ -370,7 +372,7 @@ function PrivateJournal() {
                   onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(201,168,76,0.3)'}
                   onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(138,109,47,0.15)'}
                 >
-                  <div className="flex justify-between items-start">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
                     <div>
                       <p
                         className="italic text-base"
@@ -378,12 +380,13 @@ function PrivateJournal() {
                       >
                         {entry.title}
                       </p>
+                      <p className="text-xs mt-1" style={{ color: '#3d2b14' }}>{entry.date}</p>
                       <p className="text-xs mt-1 line-clamp-1" style={{ color: '#4a3520' }}>
                         {entry.body.substring(0, 60)}...
                       </p>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0, marginLeft: 16 }}>
-                      <p className="text-xs" style={{ color: '#3d2b14' }}>{entry.date}</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
+                      <p className="hidden sm:block text-xs" style={{ color: '#3d2b14' }}>{entry.date}</p>
                       <button
                         onClick={(e) => { e.stopPropagation(); edit(entry) }}
                         className="text-xs tracking-widest uppercase"
@@ -472,7 +475,7 @@ function PrivateJournal() {
 export default function Secret({ onLogout }) {
   return (
     <div style={{ background: '#110e07', minHeight: '100vh', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ maxWidth: '860px', margin: '0 auto', padding: '72px 48px 80px' }}>
+      <div className="max-w-2xl mx-auto px-4 md:px-12 pt-20 md:pt-[72px] pb-20">
         {/* Header */}
         <div className="text-center mb-12">
           <p className="text-xs tracking-[0.45em] uppercase mb-4" style={{ color: '#4a3520' }}>

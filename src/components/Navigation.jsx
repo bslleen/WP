@@ -4,6 +4,7 @@ import { CandleIcon, BookIcon } from './OrnateElements'
 
 export default function Navigation({ onCandleClick }) {
   const [scrolled, setScrolled] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
 
   // Draggable candle state
@@ -19,12 +20,14 @@ export default function Navigation({ onCandleClick }) {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Close menu on route change
+  useEffect(() => { setMenuOpen(false) }, [location.pathname])
+
   const onPointerDown = (e) => {
     e.preventDefault()
     const rect = e.currentTarget.getBoundingClientRect()
     dragOffset.current = { x: e.clientX - rect.left, y: e.clientY - rect.top }
     dragMoved.current = false
-    // Initialise floating position the first time
     if (!candlePos) setCandlePos({ x: rect.left, y: rect.top })
     setDragging(true)
     e.currentTarget.setPointerCapture(e.pointerId)
@@ -65,7 +68,7 @@ export default function Navigation({ onCandleClick }) {
         backdropFilter: scrolled ? 'blur(8px)' : 'none',
       }}
     >
-      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-4 md:px-6 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex flex-col items-start group">
           <span className="text-xs tracking-[0.4em] uppercase" style={{ color: '#8a6d2f' }}>
@@ -79,7 +82,7 @@ export default function Navigation({ onCandleClick }) {
           </span>
         </Link>
 
-        {/* Links */}
+        {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-8">
           {links.map(({ to, label }) => (
             <Link
@@ -107,7 +110,7 @@ export default function Navigation({ onCandleClick }) {
           ))}
         </div>
 
-        {/* Candle — placeholder keeps the nav space when candle is floating */}
+        {/* Right side: book icon + candle + hamburger */}
         <div className="flex items-center gap-3">
           <Link
             to="/admin/login"
@@ -118,6 +121,7 @@ export default function Navigation({ onCandleClick }) {
           >
             <BookIcon className="w-6 h-7" />
           </Link>
+          {/* Candle — always visible */}
           {candlePos
             ? <div style={{ width: '20px', height: '40px' }} />
             : (
@@ -130,9 +134,77 @@ export default function Navigation({ onCandleClick }) {
               </div>
             )
           }
+          {/* Hamburger — mobile only */}
+          <button
+            className="md:hidden flex flex-col justify-center items-center gap-[5px] w-11 h-11"
+            onClick={() => setMenuOpen(o => !o)}
+            aria-label="Toggle menu"
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}
+          >
+            <span
+              className="block transition-all duration-300"
+              style={{
+                width: '22px', height: '2px',
+                background: '#c9a84c',
+                transformOrigin: 'center',
+                transform: menuOpen ? 'translateY(7px) rotate(45deg)' : 'none',
+              }}
+            />
+            <span
+              className="block transition-all duration-300"
+              style={{
+                width: '22px', height: '2px',
+                background: '#c9a84c',
+                opacity: menuOpen ? 0 : 1,
+              }}
+            />
+            <span
+              className="block transition-all duration-300"
+              style={{
+                width: '22px', height: '2px',
+                background: '#c9a84c',
+                transformOrigin: 'center',
+                transform: menuOpen ? 'translateY(-7px) rotate(-45deg)' : 'none',
+              }}
+            />
+          </button>
         </div>
       </div>
     </nav>
+
+    {/* Mobile full-screen overlay menu */}
+    {menuOpen && (
+      <div
+        className="fixed inset-0 z-40 flex flex-col items-center justify-center md:hidden"
+        style={{ background: '#0d0a05' }}
+      >
+        <nav className="flex flex-col items-center gap-10">
+          {links.map(({ to, label }) => (
+            <Link
+              key={to}
+              to={to}
+              onClick={() => setMenuOpen(false)}
+              className="text-4xl italic transition-colors duration-300"
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                color: location.pathname === to ? '#c9a84c' : '#f0e6c8',
+                textDecoration: 'none',
+                letterSpacing: '0.02em',
+              }}
+            >
+              {label}
+            </Link>
+          ))}
+        </nav>
+        <div style={{ marginTop: '3rem', width: '40px', height: '0.5px', background: '#2a1e0a' }} />
+        <p
+          className="mt-6 text-xs tracking-[0.35em] uppercase"
+          style={{ color: '#3a2e1a', fontFamily: "'Cinzel', serif" }}
+        >
+          Est. MMXXIV
+        </p>
+      </div>
+    )}
 
     {/* Floating candle — rendered outside nav when dragged free */}
     {candlePos && (

@@ -4,7 +4,7 @@ import { OrnateDivider } from './OrnateElements'
 export default function Footer() {
   return (
     <footer
-      className="py-16 px-6"
+      className="py-16 px-4 md:px-6"
       style={{
         background: '#0a0806',
         borderTop: '1px solid rgba(138, 109, 47, 0.15)',
@@ -13,7 +13,7 @@ export default function Footer() {
       <div className="max-w-4xl mx-auto">
         <OrnateDivider />
 
-        <div className="grid md:grid-cols-3 gap-10 mt-8 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 mt-8 mb-10 text-center sm:text-left">
           <div>
             <p
               className="text-xl italic mb-2"
@@ -65,7 +65,7 @@ export default function Footer() {
         </div>
 
         <div
-          className="pt-6 flex flex-col md:flex-row justify-between items-center gap-4"
+          className="pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-center"
           style={{ borderTop: '1px solid rgba(138,109,47,0.1)' }}
         >
           <p className="text-xs tracking-widest" style={{ color: '#2a1f0e' }}>

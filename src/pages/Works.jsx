@@ -8,7 +8,6 @@ import { fetchWorks } from '../data/api'
 import { normalizeWork } from '../data/normalize'
 import { works as mockWorks } from '../data/content'
 
-// ── Book cover art rendered entirely in CSS/SVG ──────────────────────────────
 function BookCoverArt({ work }) {
   return (
     <div style={{
@@ -23,13 +22,11 @@ function BookCoverArt({ work }) {
       padding: '22px 18px',
       overflow: 'hidden',
     }}>
-      {/* Outer inset border */}
       <div style={{
         position: 'absolute', inset: '10px',
         border: `1px solid ${work.accentColor}44`,
         pointerEvents: 'none',
       }} />
-      {/* Corner marks */}
       {[['top:6px;left:6px', 'M1 10 L1 1 L10 1'], ['top:6px;right:6px', 'M15 10 L15 1 L6 1'], ['bottom:6px;left:6px', 'M1 6 L1 15 L10 15'], ['bottom:6px;right:6px', 'M15 6 L15 15 L6 15']].map(([pos, d], i) => (
         <svg key={i} viewBox="0 0 16 16" fill="none"
           style={{ position: 'absolute', width: '16px', height: '16px', ...Object.fromEntries(pos.split(';').map(p => p.split(':'))) }}>
@@ -37,7 +34,6 @@ function BookCoverArt({ work }) {
         </svg>
       ))}
 
-      {/* Author */}
       <p style={{
         color: work.accentColor,
         fontSize: '0.5rem',
@@ -50,18 +46,12 @@ function BookCoverArt({ work }) {
         Eleanor Ashworth
       </p>
 
-      {/* Center ornament + title */}
       <div style={{ textAlign: 'center', zIndex: 1, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
-        {/* Top rule */}
         <div style={{ width: '55%', height: '1px', background: `linear-gradient(90deg, transparent, ${work.accentColor}99, transparent)` }} />
-
-        {/* Diamond ornament */}
         <svg viewBox="0 0 24 12" style={{ width: '32px' }} fill="none">
           <path d="M12 1 L20 6 L12 11 L4 6 Z" stroke={work.accentColor} strokeWidth="0.7" opacity="0.6" fill={work.accentColor} fillOpacity="0.08" />
           <circle cx="12" cy="6" r="1.5" fill={work.accentColor} opacity="0.5" />
         </svg>
-
-        {/* Title */}
         <p style={{
           fontFamily: "'Playfair Display', serif",
           color: '#f0e6c8',
@@ -73,12 +63,9 @@ function BookCoverArt({ work }) {
         }}>
           {work.title}
         </p>
-
-        {/* Bottom rule */}
         <div style={{ width: '35%', height: '1px', background: `linear-gradient(90deg, transparent, ${work.accentColor}77, transparent)` }} />
       </div>
 
-      {/* Category */}
       <p style={{
         color: work.accentColor,
         fontSize: '0.48rem',
@@ -94,7 +81,6 @@ function BookCoverArt({ work }) {
   )
 }
 
-// ── Single work card (matches Old Harbor product card exactly) ────────────────
 function WorkCard({ work }) {
   return (
     <div
@@ -115,7 +101,6 @@ function WorkCard({ work }) {
         e.currentTarget.style.boxShadow = '0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.2), inset 0 0 30px rgba(0,0,0,0.3)'
       }}
     >
-      {/* Image / cover area */}
       <div style={{ position: 'relative', height: '280px', overflow: 'hidden' }}>
         {work.cover_image
           ? <img src={work.cover_image} alt={work.title}
@@ -123,7 +108,6 @@ function WorkCard({ work }) {
           : <BookCoverArt work={work} />
         }
 
-        {/* + button (top-right, same as screenshot) */}
         <button
           onClick={e => e.stopPropagation()}
           style={{
@@ -146,7 +130,6 @@ function WorkCard({ work }) {
           +
         </button>
 
-        {/* In Progress tag */}
         {work.status === 'In Progress' && (
           <div style={{
             position: 'absolute', bottom: '10px', left: '10px',
@@ -164,7 +147,6 @@ function WorkCard({ work }) {
         )}
       </div>
 
-      {/* Card info */}
       <div style={{ padding: '14px 16px 18px', borderTop: '1px solid #c8b89a' }}>
         <p style={{
           fontFamily: "'Playfair Display', serif",
@@ -198,7 +180,6 @@ function WorkCard({ work }) {
   )
 }
 
-// ── Ornamental section divider ────────────────────────────────────────────────
 function Ornament({ dark = false }) {
   const color = dark ? '#8a7a65' : '#8a7a65'
   return (
@@ -214,7 +195,6 @@ function Ornament({ dark = false }) {
   )
 }
 
-// ── Main Works page ───────────────────────────────────────────────────────────
 export default function Works() {
   const [featured, setFeatured] = useState(mockWorks.slice(0, 4).map(normalizeWork))
 
@@ -235,7 +215,6 @@ export default function Works() {
         alignItems: 'center',
         overflow: 'hidden',
       }}>
-        {/* Background photo */}
         <div style={{
           position: 'absolute', inset: 0,
           backgroundImage: `url(${booksImg})`,
@@ -243,20 +222,15 @@ export default function Works() {
           backgroundPosition: 'center 40%',
           filter: 'brightness(0.38) sepia(0.25)',
         }} />
-        {/* Left-to-right fade */}
         <div style={{
           position: 'absolute', inset: 0,
           background: 'linear-gradient(100deg, rgba(13,10,5,0.92) 38%, rgba(13,10,5,0.3) 100%)',
         }} />
 
-        {/* Content */}
-        <div style={{
-          position: 'relative', zIndex: 1,
-          maxWidth: '1200px', margin: '0 auto',
-          padding: '0 3rem', paddingTop: '7rem',
-          width: '100%',
-        }}>
-          {/* Est. marker */}
+        <div
+          className="relative z-10 w-full px-4 md:px-12 pt-28 md:pt-28"
+          style={{ maxWidth: '1200px', margin: '0 auto' }}
+        >
           <p style={{
             fontFamily: "'Playfair Display', serif",
             fontSize: '0.6rem', letterSpacing: '0.4em',
@@ -269,11 +243,10 @@ export default function Works() {
             <span style={{ opacity: 0.6 }}>·</span>
           </p>
 
-          {/* Headline */}
           <h1 style={{
             fontFamily: "'Playfair Display', serif",
             color: '#f0e6c8',
-            fontSize: 'clamp(2.6rem, 5vw, 4.4rem)',
+            fontSize: 'clamp(2.2rem, 6vw, 4.4rem)',
             lineHeight: 1.12,
             fontWeight: 400,
             maxWidth: '540px',
@@ -283,7 +256,6 @@ export default function Works() {
             <em>Real Stories.</em>
           </h1>
 
-          {/* Subline */}
           <p style={{
             fontFamily: "'Crimson Text', serif",
             color: '#a89060',
@@ -296,7 +268,6 @@ export default function Works() {
             Inspired by memory, crafted with precision, made to endure.
           </p>
 
-          {/* CTA */}
           <Link
             to="/works/all"
             style={{
@@ -311,6 +282,7 @@ export default function Works() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.5rem',
+              minHeight: '44px',
             }}
           >
             EXPLORE THE ARCHIVE →
@@ -318,14 +290,10 @@ export default function Works() {
         </div>
       </section>
 
-      {/* ════ FEATURED WORKS — parchment section ════ */}
-      <section style={{
-        background: '#e8dcc8',
-        padding: '5rem 3rem 5.5rem',
-      }}>
+      {/* ════ FEATURED WORKS ════ */}
+      <section style={{ background: '#e8dcc8' }} className="px-4 md:px-12 py-20">
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
 
-          {/* Section header */}
           <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
             <h2 style={{
               fontFamily: "'Playfair Display', serif",
@@ -349,8 +317,7 @@ export default function Works() {
             </p>
           </div>
 
-          {/* View all — right aligned */}
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1.75rem' }}>
+          <div className="flex justify-end mb-7">
             <Link
               to="/works/all"
               style={{
@@ -370,19 +337,15 @@ export default function Works() {
             </Link>
           </div>
 
-          {/* 4-column book card grid */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '1.25rem',
-          }}>
+          {/* Responsive book card grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '1.25rem' }}>
             {featured.map(work => <WorkCard key={work.id} work={work} />)}
           </div>
         </div>
       </section>
 
       {/* ════ BOTTOM PANELS ════ */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+      <div className="grid grid-cols-1 md:grid-cols-3">
 
         {/* About the Author */}
         <div style={{
@@ -390,12 +353,9 @@ export default function Works() {
           backgroundImage: `url(${deskImg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          padding: '3.5rem 2.75rem',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          gap: 0,
-          borderTop: '1px solid rgba(201,168,76,0.12)',
           overflow: 'hidden',
-        }}>
+          borderTop: '1px solid rgba(201,168,76,0.12)',
+        }} className="px-10 py-14 flex flex-col items-center justify-center">
           <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,7,3,0.78)', pointerEvents: 'none' }} />
           <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <h3 style={{
@@ -441,7 +401,7 @@ export default function Works() {
         </div>
 
         {/* Center image */}
-        <div style={{ position: 'relative', minHeight: '420px', overflow: 'hidden' }}>
+        <div style={{ position: 'relative', minHeight: '320px', overflow: 'hidden' }}>
           <img
             src={manuscriptsImg}
             alt=""
@@ -460,11 +420,9 @@ export default function Works() {
           backgroundImage: `url(${journalImg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center 20%',
-          padding: '3.5rem 2.75rem',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           borderTop: '1px solid rgba(201,168,76,0.12)',
           overflow: 'hidden',
-        }}>
+        }} className="px-10 py-14 flex flex-col items-center justify-center">
           <div style={{ position: 'absolute', inset: 0, background: 'rgba(8,5,2,0.80)', pointerEvents: 'none' }} />
           <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <h3 style={{

@@ -1,7 +1,119 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { getAllJournalEntries, updateJournalEntry, deleteJournalEntry } from '../../data/api'
 import { OrnateDivider } from '../../components/OrnateElements'
+
+// ── Publish popover ───────────────────────────────────────────────────────────
+function PublishPopover({ isPublished, onConfirm, onCancel }) {
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) onCancel()
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [onCancel])
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        position: 'absolute',
+        right: 0, top: '110%',
+        zIndex: 20,
+        background: '#1a1209',
+        border: '1px solid rgba(201,168,76,0.25)',
+        padding: '1rem 1.25rem',
+        minWidth: '210px',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.7)',
+      }}
+    >
+      <p style={{
+        color: '#a89060',
+        fontSize: '0.72rem',
+        lineHeight: 1.5,
+        marginBottom: '0.9rem',
+        fontFamily: "'Crimson Text', serif",
+      }}>
+        {isPublished
+          ? 'Move back to draft? It will be hidden from readers.'
+          : 'Make this public? Your readers will see it.'}
+      </p>
+      <div style={{ display: 'flex', gap: '0.75rem' }}>
+        <button
+          onClick={onConfirm}
+          style={{
+            background: '#c9a84c', border: 'none',
+            color: '#0d0a05', padding: '5px 14px',
+            fontSize: '0.56rem', letterSpacing: '0.2em',
+            textTransform: 'uppercase', cursor: 'pointer',
+            fontFamily: "'Playfair Display', serif",
+          }}
+        >
+          Confirm
+        </button>
+        <button
+          onClick={onCancel}
+          style={{
+            background: 'none', border: '1px solid rgba(138,109,47,0.3)',
+            color: '#6b5a3e', padding: '5px 14px',
+            fontSize: '0.56rem', letterSpacing: '0.2em',
+            textTransform: 'uppercase', cursor: 'pointer',
+            fontFamily: "'Playfair Display', serif",
+          }}
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ── DRAFT / LIVE toggle button ────────────────────────────────────────────────
+function PublishToggle({ entry, onToggle, toggling }) {
+  const [showPopover, setShowPopover] = useState(false)
+  const isLive = entry.published === true
+
+  const handleConfirm = () => {
+    setShowPopover(false)
+    onToggle(entry, !isLive)
+  }
+
+  return (
+    <div style={{ position: 'relative', flexShrink: 0 }}>
+      <button
+        onClick={() => !toggling && setShowPopover(o => !o)}
+        disabled={toggling}
+        title={isLive ? 'Currently live — click to draft' : 'Currently draft — click to publish'}
+        style={{
+          background: isLive ? '#c9a84c' : 'transparent',
+          border: `1px solid ${isLive ? '#c9a84c' : 'rgba(138,109,47,0.4)'}`,
+          color: isLive ? '#0d0a05' : '#6b5a3e',
+          fontSize: '0.52rem',
+          letterSpacing: '0.22em',
+          textTransform: 'uppercase',
+          padding: '4px 12px',
+          cursor: toggling ? 'wait' : 'pointer',
+          fontFamily: "'Playfair Display', serif",
+          whiteSpace: 'nowrap',
+          opacity: toggling ? 0.4 : 1,
+          transition: 'all 0.2s',
+          minHeight: '28px',
+        }}
+      >
+        {toggling ? '…' : isLive ? 'LIVE' : 'DRAFT'}
+      </button>
+      {showPopover && (
+        <PublishPopover
+          isPublished={isLive}
+          onConfirm={handleConfirm}
+          onCancel={() => setShowPopover(false)}
+        />
+      )}
+    </div>
+  )
+}
 
 export default function AdminJournal() {
   const [entries, setEntries] = useState([])
@@ -16,10 +128,10 @@ export default function AdminJournal() {
       .finally(() => setLoading(false))
   }, [])
 
-  const togglePublished = async entry => {
+  const handleToggle = async (entry, nextPublished) => {
     setTogglingId(entry.id)
     try {
-      const updated = await updateJournalEntry(entry.id, { published: !entry.published })
+      const updated = await updateJournalEntry(entry.id, { published: nextPublished })
       setEntries(es => es.map(e => e.id === entry.id ? { ...e, published: updated.published } : e))
     } catch {} finally {
       setTogglingId(null)
@@ -38,7 +150,7 @@ export default function AdminJournal() {
   }
 
   return (
-    <div className="">
+    <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2rem' }}>
         <div>
           <p style={{ color: '#4a3520', fontSize: '0.6rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
@@ -103,29 +215,12 @@ export default function AdminJournal() {
                 </p>
               </div>
 
-              {/* Published toggle */}
-              <button
-                onClick={() => togglePublished(entry)}
-                disabled={togglingId === entry.id}
-                title="Toggle published"
-                style={{
-                  background: 'transparent',
-                  border: `1px solid ${entry.published ? 'rgba(201,168,76,0.35)' : 'rgba(107,90,62,0.35)'}`,
-                  color: entry.published ? '#c9a84c' : '#6b5a3e',
-                  fontSize: '0.56rem',
-                  letterSpacing: '0.2em',
-                  textTransform: 'uppercase',
-                  padding: '3px 10px',
-                  cursor: 'pointer',
-                  fontFamily: "'Playfair Display', serif",
-                  whiteSpace: 'nowrap',
-                  opacity: togglingId === entry.id ? 0.4 : 1,
-                  transition: 'all 0.2s',
-                  flexShrink: 0,
-                }}
-              >
-                {entry.published ? 'Published' : 'Draft'}
-              </button>
+              {/* DRAFT / LIVE toggle */}
+              <PublishToggle
+                entry={entry}
+                onToggle={handleToggle}
+                toggling={togglingId === entry.id}
+              />
 
               {/* Actions */}
               <div style={{ display: 'flex', gap: '1rem', flexShrink: 0 }}>

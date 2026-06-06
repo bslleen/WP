@@ -5,7 +5,6 @@ import { normalizeWork, normalizeJournal } from '../data/normalize'
 import { featuredWorks as mockWorks, journalEntries as mockJournal } from '../data/content'
 import heroBg          from '../assets/study.jpg'
 import FadeIn          from '../components/FadeIn'
-import parchmentBg     from '../assets/parchment.jpg'
 import cardManuscripts from '../assets/card-manuscripts.jpg'
 import cardQuill       from '../assets/card-quill.jpg'
 import cardBooks       from '../assets/card-books.jpg'
@@ -20,7 +19,6 @@ const CARD_PHOTOS = {
   'short story': cardBooks,
 }
 
-// ─── font injection ───────────────────────────────────────────────────────────
 function useFonts() {
   useEffect(() => {
     const id = 'aw-fonts'
@@ -33,17 +31,6 @@ function useFonts() {
   }, [])
 }
 
-// ─── category emoji placeholder ──────────────────────────────────────────────
-const CATEGORY_EMOJI = {
-  'Novel':       '📖',
-  'novel':       '📖',
-  'Poetry':      '🪶',
-  'poetry':      '🪶',
-  'Short Story': '🗺',
-  'short story': '🗺',
-}
-
-// ─── Ornament row ─────────────────────────────────────────────────────────────
 function Ornament() {
   const dot = { width: 5, height: 5, border: '0.5px solid #3a2e1a', transform: 'rotate(45deg)' }
   const sm  = { width: 3, height: 3, border: '0.5px solid #2a2010', transform: 'rotate(45deg)' }
@@ -57,12 +44,10 @@ function Ornament() {
   )
 }
 
-// ─── Work card ────────────────────────────────────────────────────────────────
 function WorkCard({ work, loading }) {
   const hasPhoto = work.cover_image && work.cover_image.trim() !== ''
   return (
     <div style={{ background: '#fff', cursor: 'pointer', opacity: loading ? 0.45 : 1, transition: 'opacity 0.3s' }}>
-      {/* Image area */}
       {hasPhoto ? (
         <img
           src={work.cover_image}
@@ -82,7 +67,6 @@ function WorkCard({ work, loading }) {
         }} />
       )}
 
-      {/* Info block */}
       <div style={{ padding: 20, background: '#faf6ed' }}>
         <p style={{
           fontFamily: "'Cinzel', serif", fontSize: 9,
@@ -120,7 +104,6 @@ function WorkCard({ work, loading }) {
   )
 }
 
-// ─── Main component ───────────────────────────────────────────────────────────
 export default function Home() {
   useFonts()
 
@@ -139,31 +122,25 @@ export default function Home() {
       .catch(() => {})
   }, [])
 
-  const root = {
-    fontFamily: "'EB Garamond', Georgia, serif",
-    background: '#0e0b07',
-    color: '#d4c4a0',
-    width: '100%',
-    overflowX: 'hidden',
-  }
-
   return (
-    <div style={root}>
+    <div style={{
+      fontFamily: "'EB Garamond', Georgia, serif",
+      background: '#0e0b07',
+      color: '#d4c4a0',
+      width: '100%',
+      overflowX: 'hidden',
+    }}>
 
       {/* ── HERO ──────────────────────────────────────────────────────────── */}
-      <section style={{
-        minHeight: '92vh',
-        backgroundImage: `url(${heroBg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        alignItems: 'center',
-        padding: '80px 40px 60px',
-        gap: 60,
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
+      <section
+        className="relative grid grid-cols-1 lg:grid-cols-2 items-center px-4 pt-20 pb-12 lg:px-10 lg:pt-24 gap-8 lg:gap-16 overflow-hidden"
+        style={{
+          minHeight: '92vh',
+          backgroundImage: `url(${heroBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
         {/* Dark overlay */}
         <div style={{
           position: 'absolute', inset: 0,
@@ -191,11 +168,11 @@ export default function Home() {
 
           <h1 style={{
             fontFamily: "'Cormorant Garamond', serif",
-            fontSize: 62, fontWeight: 300, lineHeight: 1.1,
+            fontSize: 'clamp(2.4rem, 8vw, 3.9rem)', fontWeight: 300, lineHeight: 1.1,
             color: '#e8dcc0', marginBottom: 6,
           }}>
             Words that<br />
-            <em style={{ fontStyle: 'italic', color: '#c9a85c', fontSize: 68 }}>endure</em><br />
+            <em style={{ fontStyle: 'italic', color: '#c9a85c', fontSize: 'clamp(2.6rem, 9vw, 4.3rem)' }}>endure</em><br />
             the dark.
           </h1>
 
@@ -210,26 +187,28 @@ export default function Home() {
             was discovered in 1923. The candle was still warm.
           </p>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+          <div className="flex flex-wrap items-center gap-6">
             <Link to="/works" style={{
               fontFamily: "'Cinzel', serif", fontSize: 11,
               letterSpacing: '0.2em', color: '#c9a85c',
               border: '0.5px solid #c9a85c', padding: '14px 28px',
               textDecoration: 'none', background: 'transparent',
+              minHeight: '44px', display: 'flex', alignItems: 'center',
             }}>
               VIEW THE WORKS
             </Link>
             <Link to="/about" style={{
               fontFamily: "'Cinzel', serif", fontSize: 11,
               letterSpacing: '0.2em', color: '#7a6a4a', textDecoration: 'none',
+              minHeight: '44px', display: 'flex', alignItems: 'center',
             }}>
               About the Author →
             </Link>
           </div>
         </div>
 
-        {/* Right */}
-        <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {/* Right — hidden on mobile */}
+        <div className="hidden lg:flex flex-col gap-4" style={{ position: 'relative', zIndex: 1 }}>
           <div style={{
             border: '0.5px solid #3a2e1a', padding: '28px 32px',
             background: 'rgba(255,255,255,0.02)',
@@ -283,12 +262,9 @@ export default function Home() {
       </section>
 
       {/* ── COLLECTION ────────────────────────────────────────────────────── */}
-      <section style={{ background: '#f5eedf', padding: '80px 40px' }}>
+      <section style={{ background: '#f5eedf', padding: '80px 0' }} className="px-4 md:px-10">
         {/* Header */}
-        <div style={{
-          display: 'flex', alignItems: 'flex-end',
-          justifyContent: 'space-between', marginBottom: 48,
-        }}>
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
           <FadeIn delay={0}>
           <div>
             <p style={{
@@ -317,14 +293,14 @@ export default function Home() {
             fontFamily: "'Cinzel', serif", fontSize: 10,
             letterSpacing: '0.2em', color: '#5a4a2a',
             textDecoration: 'underline', textUnderlineOffset: 4,
-            whiteSpace: 'nowrap', marginBottom: 4,
+            whiteSpace: 'nowrap',
           }}>
             VIEW ALL WORKS →
           </Link>
         </div>
 
-        {/* 3-column card grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2 }}>
+        {/* 3-column card grid — stacks on mobile */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3" style={{ gap: 2 }}>
           {works.map((work, index) => (
             <FadeIn key={work.id} delay={0.1 * index}>
               <Link to="/works" style={{ textDecoration: 'none' }}>
@@ -336,11 +312,8 @@ export default function Home() {
       </section>
 
       {/* ── JOURNAL ───────────────────────────────────────────────────────── */}
-      <section style={{ background: '#0e0b07', padding: '80px 40px' }}>
-        <div style={{
-          display: 'flex', alignItems: 'flex-end',
-          justifyContent: 'space-between', marginBottom: 48,
-        }}>
+      <section style={{ background: '#0e0b07' }} className="px-4 md:px-10 py-20">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
           <FadeIn delay={0}>
           <div>
             <p style={{
@@ -363,17 +336,16 @@ export default function Home() {
 
         <Ornament />
 
-        <div style={{
-          display: 'grid', gridTemplateColumns: '1fr 1fr',
-          gap: 1, border: '0.5px solid #2a2010',
-        }}>
+        <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 1, border: '0.5px solid #2a2010' }}>
           {journal.map((entry, i) => (
             <FadeIn key={entry.id} delay={0.15 * i}>
             <div style={{
               padding: 32,
               borderRight: i === 0 ? '0.5px solid #2a2010' : 'none',
+              borderBottom: i === 0 ? '0.5px solid #2a2010' : 'none',
               display: 'flex', flexDirection: 'column', gap: 12,
-            }}>
+            }}
+            className="md:[&]:border-b-0">
               <p style={{
                 fontFamily: "'Cinzel', serif", fontSize: 9,
                 letterSpacing: '0.3em', color: '#5a4a2a',
@@ -396,7 +368,7 @@ export default function Home() {
                 letterSpacing: '0.2em', color: '#5a4a2a',
                 alignSelf: 'flex-start',
                 borderBottom: '0.5px solid #3a2e1a', paddingBottom: 2,
-                textDecoration: 'none',
+                textDecoration: 'none', minHeight: '44px', display: 'flex', alignItems: 'center',
               }}>
                 READ
               </Link>
@@ -411,7 +383,7 @@ export default function Home() {
             letterSpacing: '0.2em', color: '#c9a85c',
             border: '0.5px solid #c9a85c', padding: '14px 28px',
             textDecoration: 'none', display: 'inline-block',
-            background: 'transparent',
+            background: 'transparent', minHeight: '44px',
           }}>
             READ THE JOURNAL
           </Link>
@@ -420,11 +392,11 @@ export default function Home() {
 
       {/* ── CLOSING QUOTE ─────────────────────────────────────────────────── */}
       <section style={{
-        background: '#0e0b07', padding: '64px 40px',
+        background: '#0e0b07',
         textAlign: 'center',
         borderTop: '0.5px solid #1a1410',
         borderBottom: '0.5px solid #1a1410',
-      }}>
+      }} className="px-4 py-16">
         <FadeIn delay={0}>
         <div style={{
           fontFamily: "'Cinzel', serif", fontSize: 9,
@@ -439,7 +411,7 @@ export default function Home() {
         </div>
         <blockquote style={{
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 32, fontStyle: 'italic', fontWeight: 300,
+          fontSize: 'clamp(1.4rem, 4vw, 2rem)', fontStyle: 'italic', fontWeight: 300,
           color: '#c9a85c', lineHeight: 1.4,
           maxWidth: 600, margin: '0 auto 28px',
         }}>
@@ -451,13 +423,10 @@ export default function Home() {
 
       {/* ── FOOTER ────────────────────────────────────────────────────────── */}
       <footer style={{
-        background: '#080604', padding: '60px 40px 32px',
+        background: '#080604',
         borderTop: '0.5px solid #1a1410',
-      }}>
-        <div style={{
-          display: 'grid', gridTemplateColumns: '2fr 1fr 1fr',
-          gap: 48, marginBottom: 48,
-        }}>
+      }} className="px-4 md:px-10 pt-14 pb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 md:gap-12 mb-12">
           <div>
             <p style={{
               fontFamily: "'Cinzel', serif", fontSize: 15,
@@ -511,8 +480,7 @@ export default function Home() {
         <div style={{
           borderTop: '0.5px solid #1a1410',
           paddingTop: 24,
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        }}>
+        }} className="flex flex-col sm:flex-row justify-between items-center gap-4 text-center">
           <span style={{ fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.2em', color: '#2a2010' }}>
             © THE ASHWORTH ESTATE. ALL RIGHTS RESERVED.
           </span>
