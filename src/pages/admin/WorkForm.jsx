@@ -7,11 +7,11 @@ const CATEGORIES = ['novel', 'poetry', 'short story']
 
 const field = {
   width: '100%',
-  background: 'rgba(13,10,5,0.5)',
-  border: '1px solid rgba(138,109,47,0.2)',
+  background: 'var(--bg-primary)',
+  border: '1px solid var(--border)',
   outline: 'none',
   padding: '0.7rem 1rem',
-  color: '#d4c49a',
+  color: 'var(--text-primary)',
   fontFamily: "'IM Fell English', serif",
   fontSize: '0.95rem',
   resize: 'vertical',
@@ -19,7 +19,7 @@ const field = {
 
 const labelStyle = {
   display: 'block',
-  color: '#8a6d2f',
+  color: 'var(--accent-dim)',
   fontSize: '0.6rem',
   letterSpacing: '0.3em',
   textTransform: 'uppercase',
@@ -29,11 +29,11 @@ const labelStyle = {
 
 // ── Inline preview card (mirrors public Works page card) ─────────────────────
 function PreviewCard({ work }) {
-  const accentColor = work.accent_color || '#c9a84c'
+  const accentColor = work.accent_color || 'var(--accent)'
   return (
     <div style={{
-      border: '1px solid rgba(201,168,76,0.25)',
-      background: '#f0e8d8',
+      border: '1px solid var(--border-strong)',
+      background: 'var(--bg-secondary)',
       maxWidth: '260px',
       boxShadow: '0 8px 40px rgba(0,0,0,0.5)',
     }}>
@@ -44,13 +44,13 @@ function PreviewCard({ work }) {
         ) : (
           <div style={{
             width: '100%', height: '100%',
-            background: `linear-gradient(150deg, ${accentColor}33 0%, #080604 100%)`,
+            background: `linear-gradient(150deg, ${accentColor}33 0%, var(--bg-primary) 100%)`,
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
             padding: '16px',
           }}>
             <p style={{
               fontFamily: "'Playfair Display', serif",
-              color: '#f0e6c8',
+              color: 'var(--text-primary)',
               fontSize: '1rem',
               fontStyle: 'italic',
               textAlign: 'center',
@@ -61,14 +61,14 @@ function PreviewCard({ work }) {
           </div>
         )}
       </div>
-      <div style={{ padding: '14px 16px 18px', borderTop: '1px solid #c8b89a' }}>
-        <p style={{ fontFamily: "'Playfair Display', serif", color: '#1c140a', fontSize: '0.95rem', fontWeight: 400, lineHeight: 1.3, marginBottom: '4px' }}>
+      <div style={{ padding: '14px 16px 18px', borderTop: '1px solid var(--border)' }}>
+        <p style={{ fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)', fontSize: '0.95rem', fontWeight: 400, lineHeight: 1.3, marginBottom: '4px' }}>
           {work.title || 'Untitled'}
         </p>
-        <p style={{ fontFamily: "'Crimson Text', serif", fontStyle: 'italic', color: '#7a6548', fontSize: '0.85rem', marginBottom: '5px' }}>
+        <p style={{ fontFamily: "'Crimson Text', serif", fontStyle: 'italic', color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '5px' }}>
           {work.category} · {work.year}
         </p>
-        <p style={{ fontFamily: "'Crimson Text', serif", color: '#4a3a2a', fontSize: '0.85rem', lineHeight: 1.5 }}>
+        <p style={{ fontFamily: "'Crimson Text', serif", color: 'var(--text-faint)', fontSize: '0.85rem', lineHeight: 1.5 }}>
           {work.description ? work.description.substring(0, 80) + (work.description.length > 80 ? '…' : '') : ''}
         </p>
       </div>
@@ -96,15 +96,15 @@ function PreviewModal({ work, savedId, onClose, onPublished }) {
     <div
       style={{
         position: 'fixed', inset: 0, zIndex: 100,
-        background: 'rgba(0,0,0,0.88)',
+        background: 'var(--overlay)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         padding: '24px',
       }}
       onClick={e => e.target === e.currentTarget && onClose()}
     >
       <div style={{
-        background: 'linear-gradient(160deg, #1a1209, #0d0a05)',
-        border: '1px solid #3a2e1a',
+        background: 'linear-gradient(160deg, var(--bg-secondary), var(--bg-primary))',
+        border: '1px solid var(--text-faint)',
         padding: '2.5rem',
         width: '100%', maxWidth: '520px',
         position: 'relative',
@@ -114,20 +114,20 @@ function PreviewModal({ work, savedId, onClose, onPublished }) {
           style={{
             position: 'absolute', top: 16, right: 20,
             background: 'none', border: 'none',
-            color: '#4a3520', cursor: 'pointer',
+            color: 'var(--text-faint)', cursor: 'pointer',
             fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.2em',
             transition: 'color 0.2s',
           }}
-          onMouseEnter={e => (e.target.style.color = '#c9a84c')}
-          onMouseLeave={e => (e.target.style.color = '#4a3520')}
+          onMouseEnter={e => (e.target.style.color = 'var(--accent)')}
+          onMouseLeave={e => (e.target.style.color = 'var(--text-faint)')}
         >
           ✕ CLOSE
         </button>
 
-        <p style={{ color: '#4a3520', fontSize: '0.55rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.4rem' }}>
+        <p style={{ color: 'var(--text-faint)', fontSize: '0.55rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.4rem' }}>
           Preview
         </p>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", color: '#f0e6c8', fontSize: '1.5rem', fontStyle: 'italic', marginBottom: '1.5rem' }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)', fontSize: '1.5rem', fontStyle: 'italic', marginBottom: '1.5rem' }}>
           How it will appear
         </h2>
 
@@ -135,10 +135,10 @@ function PreviewModal({ work, savedId, onClose, onPublished }) {
           <PreviewCard work={work} />
         </div>
 
-        <div style={{ borderTop: '0.5px solid #2a1e0a', paddingTop: '1.5rem' }}>
+        <div style={{ borderTop: '0.5px solid var(--border)', paddingTop: '1.5rem' }}>
           {published ? (
             <p style={{
-              textAlign: 'center', color: '#c9a84c',
+              textAlign: 'center', color: 'var(--accent)',
               fontFamily: "'Playfair Display', serif", fontStyle: 'italic',
               fontSize: '1rem',
             }}>
@@ -150,9 +150,9 @@ function PreviewModal({ work, savedId, onClose, onPublished }) {
               disabled={publishing}
               style={{
                 width: '100%', padding: '14px 0',
-                background: publishing ? 'rgba(201,168,76,0.3)' : '#c9a84c',
-                border: '1px solid #c9a84c',
-                color: publishing ? '#c9a84c' : '#0d0a05',
+                background: publishing ? 'rgba(201,168,76,0.3)' : 'var(--accent)',
+                border: '1px solid var(--accent)',
+                color: publishing ? 'var(--accent)' : 'var(--bg-primary)',
                 fontFamily: "'Playfair Display', serif",
                 fontSize: '0.68rem', letterSpacing: '0.25em',
                 textTransform: 'uppercase', cursor: publishing ? 'wait' : 'pointer',
@@ -183,7 +183,10 @@ export default function WorkForm() {
     status: 'in progress',
     cover_image: '',
     accent_color: '#c9a84c',
+    storyStatus: 'ongoing',
   })
+  const [tags, setTags] = useState([])
+  const [tagInput, setTagInput] = useState('')
   const [loading, setLoading] = useState(isEdit)
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
@@ -206,12 +209,24 @@ export default function WorkForm() {
           status: w.status || 'in progress',
           cover_image: w.cover_image || '',
           accent_color: w.accent_color || '#c9a84c',
+          storyStatus: w.storyStatus || 'ongoing',
         })
+        setTags(w.tags || [])
         setSavedId(w.id)
       })
       .catch(() => setError('Could not load work.'))
       .finally(() => setLoading(false))
   }, [id])
+
+  const addTag = () => {
+    const trimmed = tagInput.trim()
+    if (trimmed && !tags.includes(trimmed)) {
+      setTags(prev => [...prev, trimmed])
+      setTagInput('')
+    }
+  }
+
+  const removeTag = (tag) => setTags(prev => prev.filter(t => t !== tag))
 
   const set = f => e => setForm(prev => ({ ...prev, [f]: e.target.value }))
 
@@ -240,6 +255,7 @@ export default function WorkForm() {
     try {
       const body = {
         ...form,
+        tags,
         pages: form.pages ? parseInt(form.pages, 10) : 0,
         status: publishNow ? 'published' : (isEdit ? form.status : 'in progress'),
       }
@@ -266,7 +282,7 @@ export default function WorkForm() {
   const handlePublishNow = () => saveWork(true)
 
   if (loading) {
-    return <p style={{ color: '#4a3520', fontStyle: 'italic', fontFamily: "'IM Fell English', serif" }}>Retrieving…</p>
+    return <p style={{ color: 'var(--text-faint)', fontStyle: 'italic', fontFamily: "'IM Fell English', serif" }}>Retrieving…</p>
   }
 
   return (
@@ -275,18 +291,18 @@ export default function WorkForm() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.6rem' }}>
           <Link
             to="/admin/works"
-            style={{ color: '#4a3520', fontSize: '0.58rem', letterSpacing: '0.25em', textTransform: 'uppercase', fontFamily: "'Playfair Display', serif", textDecoration: 'none', transition: 'color 0.2s' }}
-            onMouseEnter={e => (e.target.style.color = '#8a6d2f')}
-            onMouseLeave={e => (e.target.style.color = '#4a3520')}
+            style={{ color: 'var(--text-faint)', fontSize: '0.58rem', letterSpacing: '0.25em', textTransform: 'uppercase', fontFamily: "'Playfair Display', serif", textDecoration: 'none', transition: 'color 0.2s' }}
+            onMouseEnter={e => (e.target.style.color = 'var(--accent-dim)')}
+            onMouseLeave={e => (e.target.style.color = 'var(--text-faint)')}
           >
             ← Works
           </Link>
-          <span style={{ color: '#2a1e0a', fontSize: '0.58rem' }}>/</span>
-          <span style={{ color: '#6b5a3e', fontSize: '0.58rem', letterSpacing: '0.25em', textTransform: 'uppercase', fontFamily: "'Playfair Display', serif" }}>
+          <span style={{ color: 'var(--border)', fontSize: '0.58rem' }}>/</span>
+          <span style={{ color: 'var(--text-muted)', fontSize: '0.58rem', letterSpacing: '0.25em', textTransform: 'uppercase', fontFamily: "'Playfair Display', serif" }}>
             {isEdit ? (form.title || 'Edit') : 'New'}
           </span>
         </div>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", color: '#f0e6c8', fontSize: '2.2rem', fontStyle: 'italic' }}>
+        <h1 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)', fontSize: '2.2rem', fontStyle: 'italic' }}>
           {isEdit ? 'Edit Work' : 'New Work'}
         </h1>
       </div>
@@ -317,7 +333,7 @@ export default function WorkForm() {
         <div style={{ marginBottom: '1.5rem' }}>
           <label style={labelStyle}>Category *</label>
           <select value={form.category} onChange={set('category')} style={{ ...field, appearance: 'none', cursor: 'pointer', resize: undefined }}>
-            {CATEGORIES.map(c => <option key={c} value={c} style={{ background: '#1a1209' }}>{c}</option>)}
+            {CATEGORIES.map(c => <option key={c} value={c} style={{ background: 'var(--bg-secondary)' }}>{c}</option>)}
           </select>
         </div>
 
@@ -333,6 +349,60 @@ export default function WorkForm() {
           </div>
         </div>
 
+        {/* Story Status */}
+        <div style={{ marginBottom: '1.5rem' }}>
+          <label style={labelStyle}>Story Status</label>
+          <select value={form.storyStatus} onChange={set('storyStatus')} style={{ ...field, appearance: 'none', cursor: 'pointer', resize: undefined }}>
+            <option value="ongoing" style={{ background: 'var(--bg-secondary)' }}>Ongoing</option>
+            <option value="completed" style={{ background: 'var(--bg-secondary)' }}>Completed</option>
+          </select>
+        </div>
+
+        {/* Tags */}
+        <div style={{ marginBottom: '1.5rem' }}>
+          <label style={labelStyle}>Tags</label>
+          {tags.length > 0 && (
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '8px' }}>
+              {tags.map(tag => (
+                <span key={tag} style={{
+                  fontSize: '11px', padding: '4px 10px',
+                  background: 'var(--accent-faint)',
+                  border: '1px solid var(--border)',
+                  color: 'var(--text-secondary)',
+                  display: 'flex', alignItems: 'center', gap: '6px',
+                }}>
+                  {tag}
+                  <button
+                    type="button"
+                    onClick={() => removeTag(tag)}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: '12px', padding: 0, lineHeight: 1 }}
+                  >
+                    ✕
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <input
+              type="text"
+              value={tagInput}
+              onChange={e => setTagInput(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addTag() } }}
+              placeholder="Add tag (press Enter)"
+              style={{ ...field, resize: undefined }}
+            />
+            <button
+              type="button"
+              onClick={addTag}
+              className="btn-gold"
+              style={{ fontSize: '0.6rem', letterSpacing: '0.15em', whiteSpace: 'nowrap', flexShrink: 0 }}
+            >
+              Add
+            </button>
+          </div>
+        </div>
+
         {/* Cover image */}
         <div style={{ marginBottom: '1.5rem' }}>
           <label style={labelStyle}>Cover Image</label>
@@ -340,7 +410,7 @@ export default function WorkForm() {
             <img
               src={form.cover_image}
               alt="Cover"
-              style={{ display: 'block', width: '72px', height: '100px', objectFit: 'cover', border: '1px solid rgba(138,109,47,0.3)', opacity: 0.85, marginBottom: '0.75rem' }}
+              style={{ display: 'block', width: '72px', height: '100px', objectFit: 'cover', border: '1px solid var(--border)', opacity: 0.85, marginBottom: '0.75rem' }}
             />
           )}
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
@@ -351,8 +421,8 @@ export default function WorkForm() {
               letterSpacing: '0.2em',
               textTransform: 'uppercase',
               fontFamily: "'Playfair Display', serif",
-              color: '#8a6d2f',
-              border: '1px solid rgba(138,109,47,0.3)',
+              color: 'var(--accent-dim)',
+              border: '1px solid var(--border)',
               background: 'transparent',
               display: 'inline-block',
               transition: 'color 0.2s',
@@ -362,7 +432,7 @@ export default function WorkForm() {
             </label>
             {form.cover_image && (
               <button type="button" onClick={() => setForm(f => ({ ...f, cover_image: '' }))}
-                style={{ background: 'none', border: 'none', color: '#4a3520', fontSize: '0.62rem', cursor: 'pointer', letterSpacing: '0.1em' }}>
+                style={{ background: 'none', border: 'none', color: 'var(--text-faint)', fontSize: '0.62rem', cursor: 'pointer', letterSpacing: '0.1em' }}>
                 Remove
               </button>
             )}
@@ -372,7 +442,7 @@ export default function WorkForm() {
             value={form.cover_image}
             onChange={set('cover_image')}
             placeholder="Or paste an image URL…"
-            style={{ ...field, resize: undefined, fontSize: '0.8rem', color: '#6b5a3e' }}
+            style={{ ...field, resize: undefined, fontSize: '0.8rem', color: 'var(--text-muted)' }}
           />
         </div>
 
@@ -386,7 +456,7 @@ export default function WorkForm() {
               onChange={set('accent_color')}
               style={{
                 width: '44px', height: '44px',
-                border: '1px solid rgba(138,109,47,0.4)',
+                border: '1px solid var(--border-strong)',
                 background: 'transparent',
                 cursor: 'pointer',
                 padding: '2px',
@@ -403,14 +473,14 @@ export default function WorkForm() {
             <div style={{
               width: '24px', height: '24px',
               background: form.accent_color,
-              border: '1px solid rgba(138,109,47,0.3)',
+              border: '1px solid var(--border)',
               flexShrink: 0,
             }} />
           </div>
         </div>
 
         {error && (
-          <p style={{ color: '#c9a84c', opacity: 0.75, fontSize: '0.75rem', marginBottom: '1rem' }}>{error}</p>
+          <p style={{ color: 'var(--accent)', opacity: 0.75, fontSize: '0.75rem', marginBottom: '1rem' }}>{error}</p>
         )}
 
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -429,8 +499,8 @@ export default function WorkForm() {
             disabled={saving}
             style={{
               background: form.status === 'published' && isEdit ? 'rgba(201,168,76,0.12)' : 'transparent',
-              border: '1px solid rgba(201,168,76,0.5)',
-              color: '#c9a84c',
+              border: '1px solid var(--border-strong)',
+              color: 'var(--accent)',
               padding: '10px 24px',
               fontFamily: "'Playfair Display', serif",
               fontSize: '0.62rem',
@@ -452,18 +522,18 @@ export default function WorkForm() {
                 type="button"
                 onClick={() => setShowPreview(true)}
                 style={{
-                  background: 'transparent', border: '1px solid rgba(138,109,47,0.3)',
-                  color: '#6b5a3e', padding: '10px 20px',
+                  background: 'transparent', border: '1px solid var(--border)',
+                  color: 'var(--text-muted)', padding: '10px 20px',
                   fontFamily: "'Playfair Display', serif", fontSize: '0.62rem',
                   letterSpacing: '0.2em', textTransform: 'uppercase',
                   cursor: 'pointer', transition: 'all 0.2s',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(138,109,47,0.6)'; e.currentTarget.style.color = '#8a6d2f' }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(138,109,47,0.3)'; e.currentTarget.style.color = '#6b5a3e' }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--border-strong)'; e.currentTarget.style.color = 'var(--accent-dim)' }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-muted)' }}
               >
                 Preview
               </button>
-              <span style={{ color: '#6b5a3e', fontSize: '0.62rem', letterSpacing: '0.15em', fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>
+              <span style={{ color: 'var(--text-muted)', fontSize: '0.62rem', letterSpacing: '0.15em', fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>
                 Saved.
               </span>
             </>
@@ -473,7 +543,7 @@ export default function WorkForm() {
             type="button"
             onClick={() => navigate('/admin/works')}
             style={{
-              background: 'none', border: 'none', color: '#4a3520',
+              background: 'none', border: 'none', color: 'var(--text-faint)',
               fontSize: '0.62rem', letterSpacing: '0.2em', textTransform: 'uppercase',
               cursor: 'pointer', fontFamily: "'Playfair Display', serif",
             }}

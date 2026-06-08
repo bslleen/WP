@@ -7,11 +7,12 @@ import journalImg     from '../assets/photo_2026-06-02 17.41.55.jpeg'
 import { fetchWorks } from '../data/api'
 import { normalizeWork } from '../data/normalize'
 import WorkCard, { StoneWall } from '../components/WorkCard'
+import { useTheme } from '../themes/ThemeContext'
 
 const CATEGORIES = ['All', 'Novel', 'Poetry', 'Short Story']
 
-function Ornament({ dark = false }) {
-  const color = dark ? '#8a7a65' : '#8a7a65'
+function Ornament() {
+  const color = 'var(--accent-dim)'
   return (
     <div style={{ display: 'flex', justifyContent: 'center', margin: '6px 0 14px' }}>
       <svg viewBox="0 0 140 12" style={{ width: '100px', height: '10px' }} fill="none">
@@ -26,6 +27,7 @@ function Ornament({ dark = false }) {
 }
 
 export default function Works() {
+  const { isCastle } = useTheme()
   const [works,   setWorks]   = useState([])
   const [loading, setLoading] = useState(true)
   const [filter,  setFilter]  = useState('All')
@@ -42,17 +44,59 @@ export default function Works() {
     : works.filter(w => w.category?.toLowerCase() === filter.toLowerCase())
 
   return (
-    <div style={{ background: '#0d0a05' }}>
+    <div style={{ background: 'var(--bg-primary)' }}>
+
+      {!isCastle && (
+        <div style={{
+          paddingTop: '120px',
+          paddingBottom: '48px',
+          textAlign: 'center',
+          borderBottom: '1px solid #ddd5c8',
+          marginBottom: '60px',
+          background: '#f5f0e8',
+        }}>
+          <p style={{
+            fontSize: '0.65rem',
+            letterSpacing: '0.45em',
+            textTransform: 'uppercase',
+            color: '#8b5e3c',
+            marginBottom: '16px',
+          }}>
+            The Archive
+          </p>
+          <h1 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+            fontWeight: '400',
+            color: '#1c1917',
+            marginBottom: '16px',
+            letterSpacing: '-0.02em',
+            lineHeight: '1.1',
+          }}>
+            Works
+          </h1>
+          <p style={{
+            fontFamily: "'Crimson Text', serif",
+            fontSize: '1.1rem',
+            color: '#6b5d4f',
+            maxWidth: '400px',
+            margin: '0 auto',
+            lineHeight: '1.7',
+          }}>
+            Novels, poetry, and short fiction.
+          </p>
+        </div>
+      )}
 
       {/* ════ HERO ════ */}
-      <section style={{
+      <section className="works-page-hero works-gradient-hero" style={{
         minHeight: '100vh',
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
         overflow: 'hidden',
       }}>
-        <div style={{
+        <div className="works-hero-photo" style={{
           position: 'absolute', inset: 0,
           backgroundImage: `url(${booksImg})`,
           backgroundSize: 'cover',
@@ -71,7 +115,7 @@ export default function Works() {
           <p style={{
             fontFamily: "'Playfair Display', serif",
             fontSize: '0.6rem', letterSpacing: '0.4em',
-            textTransform: 'uppercase', color: '#c9a84c',
+            textTransform: 'uppercase', color: 'var(--accent)',
             marginBottom: '1.5rem',
             display: 'flex', alignItems: 'center', gap: '0.5rem',
           }}>
@@ -82,7 +126,7 @@ export default function Works() {
 
           <h1 style={{
             fontFamily: "'Playfair Display', serif",
-            color: '#f0e6c8',
+            color: 'var(--text-primary)',
             fontSize: 'clamp(2.2rem, 6vw, 4.4rem)',
             lineHeight: 1.12,
             fontWeight: 400,
@@ -95,7 +139,7 @@ export default function Works() {
 
           <p style={{
             fontFamily: "'Crimson Text', serif",
-            color: '#a89060',
+            color: 'var(--text-secondary)',
             fontSize: '1.05rem',
             maxWidth: '340px',
             lineHeight: 1.75,
@@ -109,12 +153,12 @@ export default function Works() {
             href="#gallery"
             style={{
               fontFamily: "'Playfair Display', serif",
-              color: '#f0e6c8',
+              color: 'var(--text-primary)',
               fontSize: '0.68rem',
               letterSpacing: '0.25em',
               textTransform: 'uppercase',
               textDecoration: 'underline',
-              textDecorationColor: '#c9a84c',
+              textDecorationColor: 'var(--accent)',
               textUnderlineOffset: '5px',
               display: 'inline-flex',
               alignItems: 'center',
@@ -129,7 +173,7 @@ export default function Works() {
 
       {/* ════ GALLERY ════ */}
       <section id="gallery" style={{
-        background: '#0d0a05',
+        background: 'var(--bg-primary)',
         position: 'relative',
         overflow: 'hidden',
         padding: '80px 40px',
@@ -146,7 +190,7 @@ export default function Works() {
         <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', marginBottom: '40px' }}>
           <p style={{
             fontFamily: "'Cinzel', serif", fontSize: 9,
-            letterSpacing: '0.35em', color: '#5a4a2a',
+            letterSpacing: '0.35em', color: 'var(--text-muted)',
             marginBottom: 8, textTransform: 'uppercase',
           }}>
             THE COLLECTION
@@ -154,20 +198,20 @@ export default function Works() {
           <h2 style={{
             fontFamily: "'Cormorant Garamond', serif",
             fontSize: 36, fontWeight: 400,
-            color: '#f0e6c8', lineHeight: 1,
+            color: 'var(--text-primary)', lineHeight: 1,
           }}>
             The Archive
           </h2>
           <p style={{
             fontFamily: "'EB Garamond', serif", fontStyle: 'italic',
-            fontSize: 15, color: '#6a5a3a', marginTop: 6,
+            fontSize: 15, color: 'var(--text-muted)', marginTop: 6,
           }}>
             From the current collection.
           </p>
         </div>
 
         {/* Category filters */}
-        <div style={{
+        <div className="category-filter" style={{
           position: 'relative', zIndex: 1,
           display: 'flex', justifyContent: 'center',
           gap: '12px', flexWrap: 'wrap',
@@ -177,10 +221,11 @@ export default function Works() {
             <button
               key={cat}
               onClick={() => setFilter(cat)}
+              className={filter === cat ? 'active' : ''}
               style={{
                 background: 'none',
                 border: 'none',
-                color: filter === cat ? '#c9a84c' : '#3d2b14',
+                color: filter === cat ? 'var(--accent)' : 'var(--text-faint)',
                 fontFamily: "'Cinzel', serif",
                 letterSpacing: '0.3em',
                 textTransform: 'uppercase',
@@ -189,8 +234,8 @@ export default function Works() {
                 cursor: 'pointer',
                 transition: 'color 0.2s ease',
               }}
-              onMouseEnter={e => { if (filter !== cat) e.currentTarget.style.color = '#8a6d2f' }}
-              onMouseLeave={e => { if (filter !== cat) e.currentTarget.style.color = '#3d2b14' }}
+              onMouseEnter={e => { if (filter !== cat) e.currentTarget.style.color = 'var(--accent-dim)' }}
+              onMouseLeave={e => { if (filter !== cat) e.currentTarget.style.color = 'var(--text-faint)' }}
             >
               {cat}
             </button>
@@ -202,7 +247,7 @@ export default function Works() {
           <p style={{
             position: 'relative', zIndex: 1, textAlign: 'center',
             fontFamily: "'Cinzel', serif", fontSize: 9,
-            letterSpacing: '0.3em', color: '#8a7a5a', padding: '48px 0',
+            letterSpacing: '0.3em', color: 'var(--text-secondary)', padding: '48px 0',
           }}>
             Consulting the archive…
           </p>
@@ -210,7 +255,7 @@ export default function Works() {
           <p style={{
             position: 'relative', zIndex: 1, textAlign: 'center',
             fontFamily: "'IM Fell English', serif", fontStyle: 'italic',
-            color: '#4a3a20', fontSize: '1rem', padding: '64px 0', lineHeight: 1.9,
+            color: 'var(--text-faint)', fontSize: '1rem', padding: '64px 0', lineHeight: 1.9,
           }}>
             No works in this category yet.<br />The archive is being assembled.
           </p>
@@ -222,7 +267,7 @@ export default function Works() {
             paddingTop: '28px',
           }}>
             {filtered.map(work => (
-              <Link key={work.id} to="/works" style={{ textDecoration: 'none' }}>
+              <Link key={work.id} to={`/works/${work.id}`} style={{ textDecoration: 'none' }}>
                 <WorkCard work={work} />
               </Link>
             ))}
@@ -231,7 +276,7 @@ export default function Works() {
       </section>
 
       {/* ════ BOTTOM PANELS ════ */}
-      <div className="grid grid-cols-1 md:grid-cols-3">
+      <div className="works-dark-panels grid grid-cols-1 md:grid-cols-3">
 
         {/* About the Author */}
         <div style={{
@@ -240,13 +285,13 @@ export default function Works() {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           overflow: 'hidden',
-          borderTop: '1px solid rgba(201,168,76,0.12)',
+          borderTop: '1px solid var(--border)',
         }} className="px-10 py-14 flex flex-col items-center justify-center">
           <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,7,3,0.78)', pointerEvents: 'none' }} />
           <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <h3 style={{
             fontFamily: "'Playfair Display', serif",
-            color: '#f0e6c8',
+            color: 'var(--text-primary)',
             fontSize: '0.68rem',
             letterSpacing: '0.38em',
             textTransform: 'uppercase',
@@ -259,7 +304,7 @@ export default function Works() {
           <Ornament />
           <p style={{
             fontFamily: "'Crimson Text', serif",
-            color: '#a89060',
+            color: 'var(--text-secondary)',
             fontSize: '0.95rem',
             lineHeight: 1.8,
             textAlign: 'center',
@@ -272,12 +317,12 @@ export default function Works() {
             to="/about"
             style={{
               fontFamily: "'Playfair Display', serif",
-              color: '#f0e6c8',
+              color: 'var(--text-primary)',
               fontSize: '0.62rem',
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
               textDecoration: 'underline',
-              textDecorationColor: '#c9a84c',
+              textDecorationColor: 'var(--accent)',
               textUnderlineOffset: '4px',
             }}
           >
@@ -306,14 +351,14 @@ export default function Works() {
           backgroundImage: `url(${journalImg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center 20%',
-          borderTop: '1px solid rgba(201,168,76,0.12)',
+          borderTop: '1px solid var(--border)',
           overflow: 'hidden',
         }} className="px-10 py-14 flex flex-col items-center justify-center">
           <div style={{ position: 'absolute', inset: 0, background: 'rgba(8,5,2,0.80)', pointerEvents: 'none' }} />
           <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <h3 style={{
             fontFamily: "'Playfair Display', serif",
-            color: '#f0e6c8',
+            color: 'var(--text-primary)',
             fontSize: '0.68rem',
             letterSpacing: '0.38em',
             textTransform: 'uppercase',
@@ -326,7 +371,7 @@ export default function Works() {
           <Ornament />
           <p style={{
             fontFamily: "'Crimson Text', serif",
-            color: '#a89060',
+            color: 'var(--text-secondary)',
             fontSize: '0.95rem',
             lineHeight: 1.8,
             textAlign: 'center',
@@ -339,12 +384,12 @@ export default function Works() {
             to="/journal"
             style={{
               fontFamily: "'Playfair Display', serif",
-              color: '#f0e6c8',
+              color: 'var(--text-primary)',
               fontSize: '0.62rem',
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
               textDecoration: 'underline',
-              textDecorationColor: '#c9a84c',
+              textDecorationColor: 'var(--accent)',
               textUnderlineOffset: '4px',
             }}
           >

@@ -193,6 +193,56 @@ export async function deleteLetter(id) {
   return deleteDoc(doc(db, 'letters', id))
 }
 
+// ─── Chapters ─────────────────────────────────────────────────────────────────
+
+export async function fetchPublishedChapters(workId) {
+  const snap = await getDocs(
+    query(
+      collection(db, 'works', workId, 'chapters'),
+      orderBy('order', 'asc')
+    )
+  )
+  return snap.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .filter(d => d.status === 'published')
+}
+
+export async function fetchAllChapters(workId) {
+  const snap = await getDocs(
+    query(
+      collection(db, 'works', workId, 'chapters'),
+      orderBy('order', 'asc')
+    )
+  )
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }))
+}
+
+export async function fetchChapter(workId, chapterId) {
+  const snap = await getDoc(doc(db, 'works', workId, 'chapters', chapterId))
+  return snap.exists() ? { id: snap.id, ...snap.data() } : null
+}
+
+export async function createChapter(workId, data) {
+  return addDoc(collection(db, 'works', workId, 'chapters'), {
+    ...data,
+    status: 'draft',
+    wordCount: 0,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  })
+}
+
+export async function updateChapter(workId, chapterId, data) {
+  return updateDoc(doc(db, 'works', workId, 'chapters', chapterId), {
+    ...data,
+    updatedAt: serverTimestamp(),
+  })
+}
+
+export async function deleteChapter(workId, chapterId) {
+  return deleteDoc(doc(db, 'works', workId, 'chapters', chapterId))
+}
+
 // ─── Image upload ─────────────────────────────────────────────────────────────
 
 export async function uploadImage(file, path = 'covers') {

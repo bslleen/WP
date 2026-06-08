@@ -14,6 +14,8 @@ import AmbientAudio from './components/AmbientAudio'
 
 import Home from './pages/Home'
 import Works from './pages/Works'
+import WorkDetail from './pages/WorkDetail'
+import ChapterReader from './pages/ChapterReader'
 
 import About from './pages/About'
 import Journal from './pages/Journal'
@@ -24,6 +26,8 @@ import AdminLogin from './pages/admin/AdminLogin'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminWorks from './pages/admin/AdminWorks'
 import WorkForm from './pages/admin/WorkForm'
+import AdminWorkDashboard from './pages/admin/AdminWorkDashboard'
+import ChapterEditor from './pages/admin/ChapterEditor'
 import AdminJournal from './pages/admin/AdminJournal'
 import JournalForm from './pages/admin/JournalForm'
 import AdminSettings from './pages/admin/AdminSettings'
@@ -38,6 +42,7 @@ function ScrollToTop() {
 function AppInner() {
   const location = useLocation()
   const isAdmin = location.pathname.startsWith('/admin')
+  const isChapterReader = /^\/works\/[^/]+\/chapter\/[^/]+/.test(location.pathname)
 
   const {
     showPasswordModal,
@@ -79,11 +84,28 @@ function AppInner() {
                 </PageTransition>
               </AdminRequireAuth>
             } />
+            <Route path="/admin/works/:workId" element={
+              <AdminRequireAuth>
+                <PageTransition>
+                  <AdminLayout><AdminWorkDashboard /></AdminLayout>
+                </PageTransition>
+              </AdminRequireAuth>
+            } />
             <Route path="/admin/works/:id/edit" element={
               <AdminRequireAuth>
                 <PageTransition>
                   <AdminLayout><WorkForm /></AdminLayout>
                 </PageTransition>
+              </AdminRequireAuth>
+            } />
+            <Route path="/admin/works/:workId/chapters/new" element={
+              <AdminRequireAuth>
+                <ChapterEditor />
+              </AdminRequireAuth>
+            } />
+            <Route path="/admin/works/:workId/chapters/:chapterId" element={
+              <AdminRequireAuth>
+                <ChapterEditor />
               </AdminRequireAuth>
             } />
             <Route path="/admin/journal" element={
@@ -131,7 +153,7 @@ function AppInner() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <ScrollToTop />
-      <Navigation onCandleClick={triggerCandle} />
+      {!isChapterReader && <Navigation onCandleClick={triggerCandle} />}
 
       <PasswordModal
         isOpen={showPasswordModal}
@@ -147,6 +169,12 @@ function AppInner() {
             } />
             <Route path="/works" element={
               <PageTransition><Works /></PageTransition>
+            } />
+            <Route path="/works/:workId" element={
+              <PageTransition><WorkDetail /></PageTransition>
+            } />
+            <Route path="/works/:workId/chapter/:chapterId" element={
+              <ChapterReader />
             } />
 <Route path="/about" element={
               <PageTransition><About /></PageTransition>
@@ -166,7 +194,7 @@ function AppInner() {
         </AnimatePresence>
       </main>
 
-      <Footer />
+      {!isChapterReader && <Footer />}
     </div>
   )
 }

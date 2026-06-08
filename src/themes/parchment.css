@@ -1,0 +1,529 @@
+/* ── Parchment mode — Premium literary magazine overrides ────────────────────── */
+
+/* ── Color variables ─────────────────────────────────────────────────────────── */
+
+[data-theme="parchment"] {
+  --parchment-bg: #f5f0e8;
+  --parchment-surface: #ede8de;
+  --parchment-card: #faf7f2;
+  --parchment-text: #1c1917;
+  --parchment-text-secondary: #6b5d4f;
+  --parchment-text-muted: #9c8e82;
+  --parchment-accent: #8b5e3c;
+  --parchment-border: #ddd5c8;
+  --parchment-border-strong: #8b5e3c;
+}
+
+/* ── Global ──────────────────────────────────────────────────────────────────── */
+
+[data-theme="parchment"] body {
+  background: #f5f0e8 !important;
+  background-image: none !important;
+  color: #1c1917 !important;
+}
+
+[data-theme="parchment"] body::before { display: none; }
+
+[data-theme="parchment"] * {
+  -webkit-font-smoothing: antialiased;
+}
+
+[data-theme="parchment"] .animate-flicker { animation: none !important; }
+
+/* ── Hide atmospheric castle elements ───────────────────────────────────────── */
+
+[data-theme="parchment"] .hero-bg-photo,
+[data-theme="parchment"] .works-hero-photo,
+[data-theme="parchment"] .works-gradient-hero,
+[data-theme="parchment"] .works-dark-panels,
+[data-theme="parchment"] .ornate-particles,
+[data-theme="parchment"] .stone-wall-texture,
+[data-theme="parchment"] .frame-wire,
+[data-theme="parchment"] .frame-ornament {
+  display: none !important;
+}
+
+/* ── Navigation ──────────────────────────────────────────────────────────────── */
+
+[data-theme="parchment"] nav {
+  background: rgba(245,240,232,0.98) !important;
+  border-bottom: 1px solid #ddd5c8 !important;
+  box-shadow: none !important;
+}
+
+[data-theme="parchment"] nav a {
+  color: #1c1917 !important;
+  font-family: 'Crimson Text', serif !important;
+  letter-spacing: 0.15em !important;
+}
+
+[data-theme="parchment"] nav a:hover {
+  color: #8b5e3c !important;
+}
+
+[data-theme="parchment"] .nav-logo {
+  color: #1c1917 !important;
+}
+
+[data-theme="parchment"] .theme-toggle {
+  border: 1px solid #ddd5c8 !important;
+  color: #9c8e82 !important;
+  background: transparent !important;
+}
+
+/* ── Hero section ────────────────────────────────────────────────────────────── */
+
+[data-theme="parchment"] .hero-section {
+  background: #f5f0e8 !important;
+  min-height: 75vh !important;
+}
+
+[data-theme="parchment"] .hero-section h1 {
+  color: #1c1917 !important;
+  font-size: clamp(3rem, 7vw, 6rem) !important;
+  line-height: 1.05 !important;
+  letter-spacing: -0.02em !important;
+  font-weight: 400 !important;
+}
+
+[data-theme="parchment"] .hero-section h1 em,
+[data-theme="parchment"] .hero-section h1 i {
+  color: #8b5e3c !important;
+  font-style: italic !important;
+}
+
+[data-theme="parchment"] .hero-section p {
+  color: #6b5d4f !important;
+  font-size: 1.2rem !important;
+  line-height: 1.8 !important;
+}
+
+[data-theme="parchment"] .hero-pull-quote {
+  background: #faf7f2 !important;
+  border: 1px solid #ddd5c8 !important;
+  box-shadow: none !important;
+}
+
+[data-theme="parchment"] .hero-pull-quote p {
+  color: #1c1917 !important;
+  font-family: 'IM Fell English', serif !important;
+  font-size: 1.1rem !important;
+}
+
+[data-theme="parchment"] .hero-pull-quote .attribution {
+  color: #9c8e82 !important;
+  font-size: 0.75rem !important;
+  letter-spacing: 0.3em !important;
+}
+
+/* ── Sections ────────────────────────────────────────────────────────────────── */
+
+[data-theme="parchment"] section {
+  background: #f5f0e8 !important;
+}
+
+[data-theme="parchment"] .section-alt {
+  background: #ede8de !important;
+}
+
+[data-theme="parchment"] h2 {
+  color: #1c1917 !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.01em !important;
+}
+
+[data-theme="parchment"] .section-subtitle {
+  color: #8b5e3c !important;
+  letter-spacing: 0.35em !important;
+  font-size: 0.7rem !important;
+}
+
+/* ── Work cards ──────────────────────────────────────────────────────────────── */
+
+[data-theme="parchment"] .work-frame {
+  background: #faf7f2 !important;
+  border: 1px solid #ddd5c8 !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+[data-theme="parchment"] .work-frame:hover {
+  border-color: #8b5e3c !important;
+  box-shadow: 0 4px 16px rgba(139,94,60,0.12) !important;
+  transform: translateY(-2px) !important;
+}
+
+[data-theme="parchment"] .work-card-image {
+  filter: sepia(0.2) contrast(0.95) !important;
+  opacity: 0.9 !important;
+}
+
+[data-theme="parchment"] .work-frame .category-label {
+  color: #8b5e3c !important;
+  letter-spacing: 0.35em !important;
+  font-size: 0.65rem !important;
+}
+
+[data-theme="parchment"] .work-frame h3 {
+  color: #1c1917 !important;
+  font-weight: 400 !important;
+}
+
+[data-theme="parchment"] .work-frame .excerpt {
+  color: #6b5d4f !important;
+  font-family: 'IM Fell English', serif !important;
+}
+
+[data-theme="parchment"] .work-frame .year,
+[data-theme="parchment"] .work-frame .status {
+  color: #9c8e82 !important;
+}
+
+[data-theme="parchment"] .work-frame .gold-separator {
+  background: linear-gradient(90deg, transparent, #ddd5c8, transparent) !important;
+}
+
+/* ── Ornate dividers — replace with a simple line ────────────────────────────── */
+
+[data-theme="parchment"] .ornate-divider-svg {
+  display: none !important;
+}
+
+[data-theme="parchment"] .ornate-divider-container::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 1px;
+  background: #8b5e3c;
+  margin: 0 auto;
+}
+
+[data-theme="parchment"] .ornate-divider-container {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 8px 0 !important;
+}
+
+/* ── Journal entries — Substack row style ────────────────────────────────────── */
+
+[data-theme="parchment"] .journal-entry-row {
+  border-bottom: 1px solid #ddd5c8 !important;
+  padding: 32px 0 !important;
+  background: transparent !important;
+}
+
+[data-theme="parchment"] .journal-entry-row:hover h3,
+[data-theme="parchment"] .journal-entry-row:hover h2,
+[data-theme="parchment"] .journal-entry-row:hover .j-title {
+  color: #8b5e3c !important;
+}
+
+[data-theme="parchment"] .journal-entry-row .entry-category {
+  color: #8b5e3c !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.35em !important;
+  text-transform: uppercase !important;
+}
+
+[data-theme="parchment"] .journal-entry-row .entry-date {
+  color: #9c8e82 !important;
+  font-size: 0.8rem !important;
+}
+
+[data-theme="parchment"] .journal-entry-row h3,
+[data-theme="parchment"] .journal-entry-row h2 {
+  color: #1c1917 !important;
+  font-size: 1.5rem !important;
+  font-weight: 400 !important;
+  transition: color 0.2s ease !important;
+}
+
+[data-theme="parchment"] .journal-entry-row .entry-excerpt {
+  color: #6b5d4f !important;
+  font-size: 1rem !important;
+  line-height: 1.7 !important;
+}
+
+[data-theme="parchment"] .journal-entry-row .read-link {
+  color: #8b5e3c !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.25em !important;
+  text-transform: uppercase !important;
+  text-decoration: none !important;
+  border-bottom: 1px solid transparent !important;
+  transition: border-color 0.2s !important;
+}
+
+[data-theme="parchment"] .journal-entry-row .read-link:hover {
+  border-bottom-color: #8b5e3c !important;
+}
+
+/* ── Journal modal ───────────────────────────────────────────────────────────── */
+
+[data-theme="parchment"] .journal-modal-overlay {
+  background: rgba(245,240,232,0.95) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+[data-theme="parchment"] .journal-modal-content {
+  background: #faf7f2 !important;
+  border: 1px solid #ddd5c8 !important;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.1) !important;
+}
+
+[data-theme="parchment"] .journal-modal-content h2 {
+  color: #1c1917 !important;
+}
+
+[data-theme="parchment"] .journal-modal-content p {
+  color: #3a3530 !important;
+  font-size: 1.1rem !important;
+  line-height: 1.9 !important;
+}
+
+/* ── Journal preview cards (Home page) ──────────────────────────────────────── */
+
+[data-theme="parchment"] .journal-preview-card {
+  background: #faf7f2 !important;
+  border: 1px solid #ddd5c8 !important;
+  padding: 24px 28px !important;
+}
+
+[data-theme="parchment"] .journal-preview-card h3 {
+  color: #1c1917 !important;
+  font-size: 1.3rem !important;
+  font-style: italic !important;
+}
+
+[data-theme="parchment"] .journal-preview-card p {
+  color: #6b5d4f !important;
+}
+
+[data-theme="parchment"] .journal-preview-card .read-link {
+  color: #8b5e3c !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.3em !important;
+  text-transform: uppercase !important;
+}
+
+/* ── Hero tagline box ────────────────────────────────────────────────────────── */
+
+[data-theme="parchment"] .hero-tagline-box { display: none !important; }
+
+/* ── About page ──────────────────────────────────────────────────────────────── */
+
+[data-theme="parchment"] .about-page {
+  background: #f5f0e8 !important;
+}
+
+[data-theme="parchment"] .portrait-frame {
+  border: 1px solid #ddd5c8 !important;
+  box-shadow: none !important;
+  filter: sepia(0.15) !important;
+}
+
+[data-theme="parchment"] .bio-section h3 {
+  color: #8b5e3c !important;
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.05em !important;
+}
+
+[data-theme="parchment"] .bio-section p {
+  color: #3a3530 !important;
+  font-size: 1.1rem !important;
+  line-height: 1.85 !important;
+}
+
+[data-theme="parchment"] .stats-grid .stat-number {
+  color: #8b5e3c !important;
+}
+
+[data-theme="parchment"] .stats-grid .stat-label {
+  color: #9c8e82 !important;
+}
+
+[data-theme="parchment"] .contact-section {
+  background: #ede8de !important;
+  border: 1px solid #ddd5c8 !important;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────────── */
+
+[data-theme="parchment"] .btn-gold {
+  border-color: #1c1917 !important;
+  color: #1c1917 !important;
+  letter-spacing: 0.2em !important;
+  font-size: 0.7rem !important;
+}
+
+[data-theme="parchment"] .btn-gold:hover {
+  background: #1c1917 !important;
+  color: #f5f0e8 !important;
+}
+
+[data-theme="parchment"] .btn-gold::before {
+  background: #1c1917 !important;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────────── */
+
+[data-theme="parchment"] footer {
+  background: #ede8de !important;
+  border-top: 1px solid #ddd5c8 !important;
+}
+
+[data-theme="parchment"] footer h3,
+[data-theme="parchment"] footer p,
+[data-theme="parchment"] footer a,
+[data-theme="parchment"] footer span {
+  color: #6b5d4f !important;
+}
+
+[data-theme="parchment"] footer a:hover {
+  color: #8b5e3c !important;
+}
+
+[data-theme="parchment"] .music-toggle {
+  color: #9c8e82 !important;
+}
+
+/* ── Admin panel ─────────────────────────────────────────────────────────────── */
+
+[data-theme="parchment"] .admin-layout {
+  background: #f5f0e8 !important;
+}
+
+[data-theme="parchment"] .admin-sidebar {
+  background: #ede8de !important;
+  border-right: 1px solid #ddd5c8 !important;
+}
+
+[data-theme="parchment"] .admin-sidebar .sidebar-title {
+  color: #1c1917 !important;
+}
+
+[data-theme="parchment"] .admin-sidebar a {
+  color: #6b5d4f !important;
+  letter-spacing: 0.15em !important;
+}
+
+[data-theme="parchment"] .admin-sidebar a:hover {
+  color: #1c1917 !important;
+}
+
+[data-theme="parchment"] .admin-sidebar a.active {
+  color: #1c1917 !important;
+  border-left: 2px solid #8b5e3c !important;
+  background: rgba(139,94,60,0.06) !important;
+}
+
+[data-theme="parchment"] .admin-content {
+  background: #f5f0e8 !important;
+}
+
+[data-theme="parchment"] .admin-card {
+  background: #faf7f2 !important;
+  border: 1px solid #ddd5c8 !important;
+  box-shadow: none !important;
+}
+
+[data-theme="parchment"] input,
+[data-theme="parchment"] textarea,
+[data-theme="parchment"] select {
+  background: #faf7f2 !important;
+  border-bottom-color: #ddd5c8 !important;
+  color: #1c1917 !important;
+}
+
+[data-theme="parchment"] input::placeholder,
+[data-theme="parchment"] textarea::placeholder {
+  color: #9c8e82 !important;
+}
+
+[data-theme="parchment"] input:focus,
+[data-theme="parchment"] textarea:focus {
+  border-bottom-color: #8b5e3c !important;
+  box-shadow: 0 2px 0 rgba(139,94,60,0.3) !important;
+  background: white !important;
+}
+
+[data-theme="parchment"] label {
+  color: #6b5d4f !important;
+}
+
+[data-theme="parchment"] .admin-stat-card {
+  background: #faf7f2 !important;
+  border: 1px solid #ddd5c8 !important;
+}
+
+[data-theme="parchment"] .admin-stat-number {
+  color: #8b5e3c !important;
+}
+
+[data-theme="parchment"] .admin-stat-label {
+  color: #9c8e82 !important;
+}
+
+[data-theme="parchment"] .published-badge {
+  background: rgba(139,94,60,0.1) !important;
+  color: #8b5e3c !important;
+  border-color: rgba(139,94,60,0.3) !important;
+}
+
+[data-theme="parchment"] .draft-badge {
+  background: rgba(156,142,130,0.1) !important;
+  color: #9c8e82 !important;
+  border-color: rgba(156,142,130,0.3) !important;
+}
+
+/* ── Works page hero ─────────────────────────────────────────────────────────── */
+
+[data-theme="parchment"] .works-page-hero {
+  background: #f5f0e8 !important;
+  min-height: 30vh !important;
+}
+
+[data-theme="parchment"] .works-page-hero h1 {
+  color: #1c1917 !important;
+}
+
+[data-theme="parchment"] .category-filter button {
+  border-color: #ddd5c8 !important;
+  color: #6b5d4f !important;
+  background: transparent !important;
+}
+
+[data-theme="parchment"] .category-filter button:hover {
+  border-color: #8b5e3c !important;
+  color: #8b5e3c !important;
+}
+
+[data-theme="parchment"] .category-filter button.active {
+  background: #1c1917 !important;
+  color: #f5f0e8 !important;
+  border-color: #1c1917 !important;
+}
+
+/* ── Closing quote section ───────────────────────────────────────────────────── */
+
+[data-theme="parchment"] .closing-quote-section {
+  background: #ede8de !important;
+}
+
+[data-theme="parchment"] .closing-quote-section p {
+  color: #3a3530 !important;
+}
+
+/* ── Password modal ──────────────────────────────────────────────────────────── */
+
+[data-theme="parchment"] .password-modal-overlay {
+  background: rgba(245,240,232,0.92) !important;
+}
+
+[data-theme="parchment"] .password-modal-box {
+  background: #faf7f2 !important;
+  border-color: #ddd5c8 !important;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.1) !important;
+}
