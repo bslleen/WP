@@ -201,12 +201,12 @@ export async function fetchPublishedChapters(workId) {
   const snap = await getDocs(
     query(
       collection(db, 'works', workId, 'chapters'),
-      orderBy('order', 'asc')
+      where('status', '==', 'published')
     )
   )
   return snap.docs
     .map(d => ({ id: d.id, ...d.data() }))
-    .filter(d => d.status === 'published')
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
 }
 
 export async function fetchAllChapters(workId) {
