@@ -2,59 +2,86 @@ import { useState } from 'react'
 
 /* ── Atmospheric SVG placeholders — exact copy from Home.jsx ─────────────── */
 
-function AtmosphericSVG({ category, accentColor }) {
-  const c = accentColor || '#8a6d2f'
+const S = 'rgba(201,168,76,0.3)'
+
+function AtmosphericSVG({ category }) {
   const cat = (category || '').toLowerCase()
 
   if (cat.includes('novel')) {
+    // Stacked book spines + faint quill diagonal + amber top glow
     return (
       <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} viewBox="0 0 200 165" preserveAspectRatio="xMidYMid slice">
-        <ellipse cx="100" cy="100" rx="90" ry="55" fill={c} fillOpacity="0.07" />
-        {[0,1,2,3].map(i => (
-          <rect key={i} x={50 + i*3} y={55 - i*13} width={100 - i*6} height={11}
-            fill="none" stroke={c} strokeWidth="0.5" strokeOpacity={0.32 - i*0.06} />
+        {/* Amber top glow */}
+        <ellipse cx="100" cy="0" rx="80" ry="40" fill="rgba(201,168,76,0.06)" />
+        {/* Stacked book rectangles */}
+        {[0,1,2,3,4].map(i => (
+          <rect key={i}
+            x={44 + i * 2} y={62 - i * 14}
+            width={112 - i * 4} height={10}
+            fill="none" stroke={S} strokeWidth="0.6"
+            strokeOpacity={1 - i * 0.15}
+          />
         ))}
-        <path d="M130 18 Q142 38 122 58 Q116 70 124 82"
-          fill="none" stroke={c} strokeWidth="0.7" strokeOpacity="0.22" />
-        <path d="M130 18 L124 30" fill="none" stroke={c} strokeWidth="0.4" strokeOpacity="0.18" />
-        <ellipse cx="100" cy="140" rx="50" ry="12" fill={c} fillOpacity="0.04" />
+        {/* Vertical spine lines on books */}
+        {[58, 80, 102, 124, 142].map((x, i) => (
+          <line key={i} x1={x} y1={62 - i * 14} x2={x} y2={72 - i * 14}
+            stroke={S} strokeWidth="0.4" />
+        ))}
+        {/* Diagonal quill line */}
+        <line x1="148" y1="18" x2="88" y2="118"
+          stroke={S} strokeWidth="0.5" strokeDasharray="3 5" />
+        {/* Quill tip */}
+        <path d="M148 18 L144 26 L152 24 Z" fill="none" stroke={S} strokeWidth="0.4" />
       </svg>
     )
   }
 
   if (cat.includes('poetry')) {
+    // Horizontal lines at varying opacities + dark curved horizon silhouette
     return (
       <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} viewBox="0 0 200 165" preserveAspectRatio="xMidYMid slice">
-        {Array.from({ length: 22 }, (_, i) => (
-          <line key={i} x1={i * 10} y1={0} x2={i * 10 - 12} y2={100}
-            stroke={c} strokeWidth="0.35" strokeOpacity={0.12 + (i % 4) * 0.04} />
+        {/* Horizontal text lines */}
+        {[28, 42, 56, 68, 80, 92, 104, 116].map((y, i) => (
+          <line key={i}
+            x1={i % 2 === 0 ? 20 : 32} y1={y}
+            x2={i % 3 === 0 ? 155 : 170} y2={y}
+            stroke={S} strokeWidth="0.5"
+            strokeOpacity={0.4 + (i % 3) * 0.2}
+          />
         ))}
-        <path d="M0 110 Q25 82 55 95 Q80 105 100 82 Q122 60 155 76 Q178 88 200 70 L200 165 L0 165 Z"
-          fill={c} fillOpacity="0.10" />
-        <circle cx="158" cy="32" r="18" fill="none" stroke={c} strokeWidth="0.5" strokeOpacity="0.18" />
-        <circle cx="165" cy="30" r="15" fill="#0d0a05" />
+        {/* Curved horizon silhouette */}
+        <path
+          d="M0 128 Q30 108 60 118 Q90 128 120 110 Q150 92 180 106 Q192 112 200 108 L200 165 L0 165 Z"
+          fill="rgba(10,7,3,0.5)" stroke={S} strokeWidth="0.5"
+        />
       </svg>
     )
   }
 
+  // Short story — scattered dots map + compass outline
   return (
     <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} viewBox="0 0 200 165" preserveAspectRatio="xMidYMid slice">
-      {[[38,38],[100,65],[162,45],[78,108],[132,96]].map(([x,y], i, arr) => (
+      {/* Map dots + dashed connectors */}
+      {[[34,44],[72,32],[118,52],[148,38],[88,86],[52,108],[130,98]].map(([x,y], i, arr) => (
         <g key={i}>
-          <circle cx={x} cy={y} r="3.5" fill="none" stroke={c} strokeWidth="0.5" strokeOpacity="0.28" />
+          <circle cx={x} cy={y} r="2.5" fill="none" stroke={S} strokeWidth="0.5" />
           {i < arr.length - 1 && (
             <line x1={x} y1={y} x2={arr[i+1][0]} y2={arr[i+1][1]}
-              stroke={c} strokeWidth="0.3" strokeOpacity="0.18" strokeDasharray="4 3" />
+              stroke={S} strokeWidth="0.35" strokeDasharray="4 4" />
           )}
         </g>
       ))}
-      <g transform="translate(158 118)">
-        <line x1="0" y1="-16" x2="0" y2="16" stroke={c} strokeWidth="0.4" strokeOpacity="0.22" />
-        <line x1="-16" y1="0" x2="16" y2="0" stroke={c} strokeWidth="0.4" strokeOpacity="0.22" />
-        <line x1="-10" y1="-10" x2="10" y2="10" stroke={c} strokeWidth="0.25" strokeOpacity="0.14" />
-        <line x1="10" y1="-10" x2="-10" y2="10" stroke={c} strokeWidth="0.25" strokeOpacity="0.14" />
-        <circle cx="0" cy="0" r="4" fill="none" stroke={c} strokeWidth="0.4" strokeOpacity="0.28" />
-      </g>
+      {/* Compass circle */}
+      <circle cx="100" cy="82" r="26" fill="none" stroke={S} strokeWidth="0.5" />
+      <circle cx="100" cy="82" r="22" fill="none" stroke={S} strokeWidth="0.25" />
+      {/* Cardinal marks */}
+      <line x1="100" y1="58" x2="100" y2="64" stroke={S} strokeWidth="0.6" />
+      <line x1="100" y1="100" x2="100" y2="106" stroke={S} strokeWidth="0.6" />
+      <line x1="76" y1="82" x2="82" y2="82" stroke={S} strokeWidth="0.6" />
+      <line x1="118" y1="82" x2="124" y2="82" stroke={S} strokeWidth="0.6" />
+      {/* Compass needle */}
+      <line x1="100" y1="68" x2="100" y2="82" stroke={S} strokeWidth="0.8" />
+      <line x1="100" y1="82" x2="106" y2="94" stroke={S} strokeWidth="0.4" />
     </svg>
   )
 }
@@ -162,7 +189,7 @@ export default function WorkCard({ work }) {
               background: 'radial-gradient(ellipse at center, transparent 30%, #0d0a05 100%)',
             }} />
             {!work.cover_image && (
-              <AtmosphericSVG category={work.category} accentColor={accent} />
+              <AtmosphericSVG category={work.category} />
             )}
           </div>
 

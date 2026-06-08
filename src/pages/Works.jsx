@@ -105,8 +105,8 @@ export default function Works() {
             Inspired by memory, crafted with precision, made to endure.
           </p>
 
-          <Link
-            to="/works/all"
+          <a
+            href="#gallery"
             style={{
               fontFamily: "'Playfair Display', serif",
               color: '#f0e6c8',
@@ -123,12 +123,12 @@ export default function Works() {
             }}
           >
             EXPLORE THE ARCHIVE →
-          </Link>
+          </a>
         </div>
       </section>
 
       {/* ════ GALLERY ════ */}
-      <section style={{
+      <section id="gallery" style={{
         background: '#0d0a05',
         position: 'relative',
         overflow: 'hidden',

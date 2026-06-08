@@ -408,6 +408,33 @@ export default function Home() {
                       onMouseEnter={() => setHoveredIdx(i)}
                       onMouseLeave={() => setHoveredIdx(null)}
                     >
+                      {/* Floor spotlight glow */}
+                      <div style={{
+                        position: 'absolute',
+                        bottom: isCenter ? '-38px' : '-32px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        width: isCenter ? '180px' : '150px',
+                        height: isCenter ? '48px' : '38px',
+                        background: 'radial-gradient(ellipse at center, rgba(201,168,76,0.18) 0%, transparent 70%)',
+                        pointerEvents: 'none',
+                        zIndex: 0,
+                      }} />
+                      {/* Featured label */}
+                      <div style={{
+                        position: 'absolute',
+                        top: isCenter ? '-48px' : '-42px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        whiteSpace: 'nowrap',
+                        fontFamily: "'Cinzel', serif",
+                        fontSize: '7px',
+                        letterSpacing: '0.3em',
+                        color: 'rgba(201,168,76,0.55)',
+                        textTransform: 'uppercase',
+                      }}>
+                        ✦ Featured
+                      </div>
                       {/* Hanging wire */}
                       <div style={{
                         position: 'absolute', top: '-20px', left: '50%',
@@ -430,8 +457,8 @@ export default function Home() {
                           background: '#1a1209',
                           overflow: 'hidden',
                           boxShadow: hoveredIdx === i
-                            ? '0 20px 60px rgba(0,0,0,0.95), inset 0 0 30px rgba(0,0,0,0.4)'
-                            : '0 8px 40px rgba(0,0,0,0.8), inset 0 0 30px rgba(0,0,0,0.4)',
+                            ? `0 24px 70px rgba(0,0,0,0.98), 0 0 30px rgba(201,168,76,${isCenter ? '0.14' : '0.10'}), inset 0 0 30px rgba(0,0,0,0.4)`
+                            : `0 10px 50px rgba(0,0,0,0.9), 0 0 18px rgba(201,168,76,${isCenter ? '0.10' : '0.06'}), inset 0 0 30px rgba(0,0,0,0.4)`,
                           transition: 'box-shadow 0.4s ease',
                         }}>
                           {/* Image area */}

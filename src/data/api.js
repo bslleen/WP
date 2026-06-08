@@ -10,6 +10,9 @@ import {
   signOut,
   onAuthStateChanged,
   updatePassword,
+  updateEmail,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
 } from 'firebase/auth'
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
@@ -23,10 +26,22 @@ export const onAuthChange = (cb) => onAuthStateChanged(auth, cb)
 
 export const getCurrentUser = () => auth.currentUser
 
-export async function changePassword(newPassword) {
+async function reauth(currentPassword) {
   const user = auth.currentUser
   if (!user) throw new Error('Not authenticated.')
+  const credential = EmailAuthProvider.credential(user.email, currentPassword)
+  await reauthenticateWithCredential(user, credential)
+  return user
+}
+
+export async function changePassword(currentPassword, newPassword) {
+  const user = await reauth(currentPassword)
   return updatePassword(user, newPassword)
+}
+
+export async function changeEmail(currentPassword, newEmail) {
+  const user = await reauth(currentPassword)
+  return updateEmail(user, newEmail)
 }
 
 // ─── Works — public reads (published only) ────────────────────────────────────

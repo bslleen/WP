@@ -14,7 +14,7 @@ import AmbientAudio from './components/AmbientAudio'
 
 import Home from './pages/Home'
 import Works from './pages/Works'
-import WorksAll from './pages/WorksAll'
+
 import About from './pages/About'
 import Journal from './pages/Journal'
 import Secret from './pages/Secret'
@@ -148,10 +148,7 @@ function AppInner() {
             <Route path="/works" element={
               <PageTransition><Works /></PageTransition>
             } />
-            <Route path="/works/all" element={
-              <PageTransition><WorksAll /></PageTransition>
-            } />
-            <Route path="/about" element={
+<Route path="/about" element={
               <PageTransition><About /></PageTransition>
             } />
             <Route path="/journal" element={
