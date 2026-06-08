@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { fetchJournal } from '../data/api'
 import { normalizeJournal } from '../data/normalize'
-import { journalEntries as mockJournal } from '../data/content'
 
 function OrnamentRule() {
   const s = { width: 3, height: 3, border: '0.5px solid #1a1410', transform: 'rotate(45deg)', flexShrink: 0 }
@@ -85,12 +84,14 @@ function EntryModal({ entry, onClose }) {
 
 export default function Journal() {
   const [active, setActive]   = useState(null)
-  const [entries, setEntries] = useState(mockJournal.map(normalizeJournal))
+  const [entries, setEntries] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetchJournal()
       .then(data => setEntries(data.map(normalizeJournal)))
-      .catch(() => setEntries(mockJournal.map(normalizeJournal)))
+      .catch(err => console.error('Journal fetch failed:', err))
+      .finally(() => setLoading(false))
   }, [])
 
   return (
@@ -115,6 +116,16 @@ export default function Journal() {
 
       {/* ── Entry list ── */}
       <div style={{ maxWidth: 900, margin: '0 auto' }} className="px-4 md:px-12 pb-20">
+        {loading && (
+          <p style={{ textAlign: 'center', fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.3em', color: '#3a2e1a', padding: '48px 0' }}>
+            Consulting the archive…
+          </p>
+        )}
+        {!loading && entries.length === 0 && (
+          <p style={{ textAlign: 'center', fontFamily: "'IM Fell English', serif", fontStyle: 'italic', color: '#4a3a20', fontSize: '1rem', padding: '64px 0', lineHeight: 1.9 }}>
+            The journal has not yet been opened.<br />The first entry is forthcoming.
+          </p>
+        )}
         {entries.map((entry, i) => (
           <div key={entry.id}>
 

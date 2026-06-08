@@ -1,3 +1,6 @@
+// LEGACY MOCK DATA — kept as fallback reference only.
+// App now reads from Firestore. This file is no longer imported anywhere.
+
 export const works = [
   {
     id: 1,

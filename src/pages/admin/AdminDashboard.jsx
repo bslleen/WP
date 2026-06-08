@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getWorks, getAllJournalEntries } from '../../data/api'
+import { fetchAllWorks, fetchAllJournal } from '../../data/api'
 import { OrnateDivider } from '../../components/OrnateElements'
 
 const STATUS_COLORS = {
@@ -92,7 +92,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    Promise.all([getWorks(), getAllJournalEntries()])
+    Promise.all([fetchAllWorks(), fetchAllJournal()])
       .then(([w, j]) => { setWorks(w || []); setJournal(j || []) })
       .catch(() => {})
       .finally(() => setLoading(false))
@@ -104,18 +104,47 @@ export default function AdminDashboard() {
 
   return (
     <div className="">
-      <div style={{ marginBottom: '2rem' }}>
-        <p style={{ color: '#4a3520', fontSize: '0.6rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
-          ✦ &nbsp; Overview &nbsp; ✦
-        </p>
-        <h1 style={{
-          fontFamily: "'Playfair Display', serif",
-          color: '#f0e6c8',
-          fontSize: '2.2rem',
-          fontStyle: 'italic',
-        }}>
-          The Ledger
-        </h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
+          <p style={{ color: '#4a3520', fontSize: '0.6rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
+            ✦ &nbsp; Overview &nbsp; ✦
+          </p>
+          <h1 style={{
+            fontFamily: "'Playfair Display', serif",
+            color: '#f0e6c8',
+            fontSize: '2.2rem',
+            fontStyle: 'italic',
+          }}>
+            The Ledger
+          </h1>
+        </div>
+        <div style={{ display: 'flex', gap: '0.75rem', flexShrink: 0 }}>
+          <Link
+            to="/admin/works/new"
+            className="btn-gold"
+            style={{ textDecoration: 'none', fontSize: '0.6rem' }}
+          >
+            + New Work
+          </Link>
+          <Link
+            to="/admin/journal/new"
+            style={{
+              textDecoration: 'none',
+              padding: '10px 20px',
+              border: '1px solid rgba(138,109,47,0.4)',
+              color: '#8a6d2f',
+              fontFamily: "'Playfair Display', serif",
+              fontSize: '0.6rem',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(138,109,47,0.7)'; e.currentTarget.style.color = '#c9a84c' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(138,109,47,0.4)'; e.currentTarget.style.color = '#8a6d2f' }}
+          >
+            + New Entry
+          </Link>
+        </div>
       </div>
 
       <OrnateDivider className="mb-8" />

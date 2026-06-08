@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { fetchWorks } from '../data/api'
 import { normalizeWork } from '../data/normalize'
-import { works as mockWorks } from '../data/content'
 
 const DOORS = [
   {
@@ -129,13 +128,15 @@ function Ornament({ color = '#8a7a65' }) {
 export default function WorksAll() {
   const [active, setActive] = useState('all')
   const [hoveredDoor, setHoveredDoor] = useState(null)
-  const [works, setWorks] = useState(mockWorks.map(normalizeWork))
+  const [works, setWorks] = useState([])
+  const [loading, setLoading] = useState(true)
   const gridRef = useRef(null)
 
   useEffect(() => {
     fetchWorks()
-      .then(data => { if (data.length > 0) setWorks(data.map(normalizeWork)) })
+      .then(data => setWorks(data.map(normalizeWork)))
       .catch(() => {})
+      .finally(() => setLoading(false))
   }, [])
 
   const filtered = active === 'all' ? works : works.filter(w => w.category === active)
@@ -364,7 +365,11 @@ export default function WorksAll() {
           </div>
 
           {/* Grid */}
-          {filtered.length > 0 ? (
+          {loading ? (
+            <p style={{ textAlign: 'center', fontFamily: "'Playfair Display', serif", fontSize: '0.62rem', letterSpacing: '0.3em', color: '#8a7a65', padding: '3rem 0' }}>
+              Consulting the archive…
+            </p>
+          ) : filtered.length > 0 ? (
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',

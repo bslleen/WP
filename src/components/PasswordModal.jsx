@@ -2,27 +2,39 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export default function PasswordModal({ isOpen, onClose, onSuccess }) {
-  const [value, setValue] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [shake, setShake] = useState(false)
-  const inputRef = useRef(null)
+  const [loading, setLoading] = useState(false)
+  const emailRef = useRef(null)
   const navigate = useNavigate()
 
   useEffect(() => {
     if (isOpen) {
-      setValue('')
+      setEmail('')
+      setPassword('')
       setError('')
-      setTimeout(() => inputRef.current?.focus(), 100)
+      setTimeout(() => emailRef.current?.focus(), 100)
     }
   }, [isOpen])
 
-  const handleSubmit = () => {
-    const ok = onSuccess(value)
-    if (!ok) {
-      setError('The ink does not match.')
+  const handleSubmit = async () => {
+    if (loading) return
+    setLoading(true)
+    const result = await onSuccess(email, password)
+    setLoading(false)
+    if (!result.ok) {
+      const code = result.code || ''
+      let msg = 'The ink does not match.'
+      if (code === 'auth/operation-not-allowed') msg = 'Email/password sign-in is not enabled.'
+      else if (code === 'auth/user-not-found' || code === 'auth/invalid-credential') msg = 'No account found, or wrong credentials.'
+      else if (code === 'auth/too-many-requests') msg = 'Too many attempts — try again later.'
+      else if (code === 'auth/network-request-failed') msg = 'Network error — check your connection.'
+      setError(msg)
       setShake(true)
       setTimeout(() => setShake(false), 500)
-      setValue('')
+      setPassword('')
     } else {
       navigate('/secret')
       onClose()
@@ -74,12 +86,37 @@ export default function PasswordModal({ isOpen, onClose, onSuccess }) {
           </p>
         </div>
 
-        <div className="mb-4">
+        {/* Correspondence (email) */}
+        <div className="mb-3">
+          <label className="block text-xs tracking-widest uppercase mb-1" style={{ color: '#6b5a3e', fontFamily: "'Cinzel', serif" }}>
+            Correspondence
+          </label>
           <input
-            ref={inputRef}
+            ref={emailRef}
+            type="email"
+            value={email}
+            onChange={(e) => { setEmail(e.target.value); setError('') }}
+            onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+            placeholder="..."
+            className="w-full bg-transparent py-2 outline-none border-b"
+            style={{
+              borderColor: '#8a6d2f',
+              color: '#f0e6c8',
+              fontFamily: "'IM Fell English', serif",
+              fontSize: '0.95rem',
+            }}
+          />
+        </div>
+
+        {/* Passphrase (password) */}
+        <div className="mb-4">
+          <label className="block text-xs tracking-widest uppercase mb-1" style={{ color: '#6b5a3e', fontFamily: "'Cinzel', serif" }}>
+            Passphrase
+          </label>
+          <input
             type="password"
-            value={value}
-            onChange={(e) => { setValue(e.target.value); setError('') }}
+            value={password}
+            onChange={(e) => { setPassword(e.target.value); setError('') }}
             onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
             placeholder="..."
             className="w-full bg-transparent text-center text-lg py-3 outline-none border-b"
@@ -100,28 +137,21 @@ export default function PasswordModal({ isOpen, onClose, onSuccess }) {
 
         <button
           onClick={handleSubmit}
+          disabled={loading}
           className="w-full py-3 text-xs tracking-[0.3em] uppercase transition-all duration-300"
           style={{
             background: 'transparent',
             border: '1px solid #8a6d2f',
             color: '#c9a84c',
             fontFamily: "'Playfair Display', serif",
+            opacity: loading ? 0.5 : 1,
+            cursor: loading ? 'wait' : 'pointer',
           }}
-          onMouseEnter={(e) => {
-            e.target.style.background = '#c9a84c'
-            e.target.style.color = '#0d0a05'
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.background = 'transparent'
-            e.target.style.color = '#c9a84c'
-          }}
+          onMouseEnter={(e) => { if (!loading) { e.target.style.background = '#c9a84c'; e.target.style.color = '#0d0a05' } }}
+          onMouseLeave={(e) => { e.target.style.background = 'transparent'; e.target.style.color = '#c9a84c' }}
         >
-          Enter
+          {loading ? '…' : 'Enter'}
         </button>
-
-        <p className="text-center mt-4 text-xs" style={{ color: '#3d2b14' }}>
-          Hint: ink &amp; ashes
-        </p>
       </div>
 
       <style>{`

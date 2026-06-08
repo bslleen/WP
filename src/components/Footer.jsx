@@ -78,6 +78,7 @@ export default function Footer() {
             "Write well, write honestly, write always."
           </p>
         </div>
+
       </div>
     </footer>
   )

@@ -1,38 +1,43 @@
 import { useState, useEffect } from 'react'
 import { OrnateDivider } from '../components/OrnateElements'
+import {
+  fetchPrivateEntries, createPrivateEntry, updatePrivateEntry, deletePrivateEntry,
+  fetchLetters, createLetter, deleteLetter,
+} from '../data/api'
 
 function MessageToSelf() {
   const [messages, setMessages] = useState([])
   const [newMsg, setNewMsg] = useState('')
   const [futureDate, setFutureDate] = useState('')
   const [saving, setSaving] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem('messages_to_self') || '[]')
-    setMessages(stored)
+    fetchLetters()
+      .then(data => setMessages(data))
+      .catch(() => {})
+      .finally(() => setLoading(false))
   }, [])
 
-  const save = () => {
+  const save = async () => {
     if (!newMsg.trim() || !futureDate) return
     setSaving(true)
-    const msg = {
-      id: Date.now(),
-      text: newMsg,
-      date: futureDate,
-      written: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
+    const written = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+    try {
+      const docRef = await createLetter({ text: newMsg, revealDate: futureDate, written })
+      setMessages(prev => [{ id: docRef.id, text: newMsg, revealDate: futureDate, written }, ...prev])
+      setNewMsg('')
+      setFutureDate('')
+    } catch {} finally {
+      setSaving(false)
     }
-    const updated = [...messages, msg]
-    localStorage.setItem('messages_to_self', JSON.stringify(updated))
-    setMessages(updated)
-    setNewMsg('')
-    setFutureDate('')
-    setTimeout(() => setSaving(false), 600)
   }
 
-  const del = (id) => {
-    const updated = messages.filter(m => m.id !== id)
-    localStorage.setItem('messages_to_self', JSON.stringify(updated))
-    setMessages(updated)
+  const del = async (id) => {
+    try {
+      await deleteLetter(id)
+      setMessages(prev => prev.filter(m => m.id !== id))
+    } catch {}
   }
 
   const today = new Date()
@@ -88,7 +93,7 @@ function MessageToSelf() {
           />
           <button
             onClick={save}
-            disabled={!newMsg.trim() || !futureDate}
+            disabled={!newMsg.trim() || !futureDate || saving}
             className="px-6 py-2 text-xs tracking-widest uppercase transition-all duration-300"
             style={{
               background: saving ? '#c9a84c' : 'transparent',
@@ -104,6 +109,12 @@ function MessageToSelf() {
         </div>
       </div>
 
+      {loading && (
+        <p className="text-xs tracking-widest" style={{ color: '#3d2b14' }}>
+          Consulting the archive…
+        </p>
+      )}
+
       {/* Messages */}
       {messages.length > 0 && (
         <div className="space-y-3">
@@ -111,8 +122,8 @@ function MessageToSelf() {
             Sealed letters ({messages.length})
           </p>
           {messages.map((msg) => {
-            const ready = isReady(msg.date)
-            const revealDate = new Date(msg.date).toLocaleDateString('en-GB', {
+            const ready = isReady(msg.revealDate)
+            const revealDate = new Date(msg.revealDate).toLocaleDateString('en-GB', {
               day: 'numeric', month: 'long', year: 'numeric'
             })
             return (
@@ -181,46 +192,47 @@ function PrivateJournal() {
   const [editingId, setEditingId] = useState(null)
   const [viewEntry, setViewEntry] = useState(null)
   const [readEntry, setReadEntry] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem('private_journal') || '[]')
-    setEntries(stored)
+    fetchPrivateEntries()
+      .then(data => setEntries(data))
+      .catch(() => {})
+      .finally(() => setLoading(false))
   }, [])
 
-  const save = () => {
+  const save = async () => {
     if (!body.trim()) return
     const now = new Date()
     const dateStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
     const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
 
-    let updated
     if (editingId) {
-      updated = entries.map(e =>
-        e.id === editingId ? { ...e, title: title || 'Untitled', body, edited: `${dateStr}, ${timeStr}` } : e
-      )
+      const edited = `${dateStr}, ${timeStr}`
+      try {
+        await updatePrivateEntry(editingId, { title: title || 'Untitled', body, edited })
+        setEntries(prev => prev.map(e =>
+          e.id === editingId ? { ...e, title: title || 'Untitled', body, edited } : e
+        ))
+      } catch {}
       setEditingId(null)
     } else {
-      const entry = {
-        id: Date.now(),
-        title: title || 'Untitled',
-        body,
-        date: dateStr,
-        time: timeStr,
-      }
-      updated = [entry, ...entries]
+      const data = { title: title || 'Untitled', body, date: dateStr, time: timeStr }
+      try {
+        const docRef = await createPrivateEntry(data)
+        setEntries(prev => [{ id: docRef.id, ...data }, ...prev])
+      } catch {}
     }
-
-    localStorage.setItem('private_journal', JSON.stringify(updated))
-    setEntries(updated)
     setTitle('')
     setBody('')
   }
 
-  const del = (id) => {
-    const updated = entries.filter(e => e.id !== id)
-    localStorage.setItem('private_journal', JSON.stringify(updated))
-    setEntries(updated)
-    if (viewEntry?.id === id) setViewEntry(null)
+  const del = async (id) => {
+    try {
+      await deletePrivateEntry(id)
+      setEntries(prev => prev.filter(e => e.id !== id))
+      if (viewEntry?.id === id) setViewEntry(null)
+    } catch {}
   }
 
   const edit = (entry) => {
@@ -313,6 +325,11 @@ function PrivateJournal() {
       </div>
 
       {/* Entry list */}
+      {loading && (
+        <p className="mt-6 text-xs tracking-widest" style={{ color: '#3d2b14' }}>
+          Consulting the archive…
+        </p>
+      )}
       {entries.length > 0 && (
         <div className="mt-8 space-y-3">
           <p className="text-xs tracking-widest uppercase mb-4" style={{ color: '#4a3520' }}>
@@ -492,7 +509,6 @@ export default function Secret({ onLogout }) {
 
         {/* Candle ambience — large, dramatic */}
         <div style={{ textAlign: 'center', marginBottom: '40px', position: 'relative' }}>
-          {/* Ambient radial warmth — contained inside the max-width column */}
           <div style={{
             position: 'absolute',
             left: '50%', top: '-20px',
@@ -503,23 +519,15 @@ export default function Secret({ onLogout }) {
             zIndex: 0,
           }} className="animate-flickerGlow" />
           <svg viewBox="0 0 80 140" className="w-20 h-28 mx-auto" fill="none" style={{ position: 'relative', zIndex: 1 }}>
-            {/* Outer glow halo */}
             <ellipse cx="40" cy="22" rx="22" ry="26" fill="#f59e0b" fillOpacity="0.08" className="animate-flickerGlow" />
-            {/* Main flame */}
             <ellipse cx="40" cy="18" rx="9" ry="16" fill="#f59e0b" opacity="0.85" className="animate-flicker" />
             <ellipse cx="40" cy="20" rx="5.5" ry="10" fill="#fde68a" opacity="0.75" className="animate-flicker" />
-            {/* Inner bright core */}
             <ellipse cx="40" cy="23" rx="2.5" ry="4" fill="#fff9c4" opacity="0.9" />
-            {/* Wick */}
             <line x1="40" y1="34" x2="40" y2="42" stroke="#2a1f0e" strokeWidth="1.8" />
-            {/* Candle body */}
             <rect x="26" y="42" width="28" height="76" rx="2" fill="#f0e6c8" opacity="0.82" />
-            {/* Highlight stripe */}
             <rect x="26" y="42" width="7" height="76" rx="0" fill="#d4c49a" opacity="0.35" />
-            {/* Wax drips */}
             <path d="M26 58 Q18 64 20 75 L26 75 Z" fill="#f0e6c8" opacity="0.55" />
             <path d="M54 65 Q60 70 58 78 L54 78 Z" fill="#f0e6c8" opacity="0.4" />
-            {/* Base plate */}
             <rect x="18" y="118" width="44" height="12" rx="3" fill="#8a6d2f" opacity="0.7" />
             <rect x="20" y="118" width="40" height="3" rx="1" fill="#c9a84c" opacity="0.25" />
           </svg>

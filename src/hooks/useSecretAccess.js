@@ -1,71 +1,62 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import { login, logout, onAuthChange } from '../data/api'
 
-const KONAMI = [
-  'ArrowUp','ArrowUp','ArrowDown','ArrowDown',
-  'ArrowLeft','ArrowRight','ArrowLeft','ArrowRight',
-  'b','a'
-]
-
-const SECRET_PASSWORD = '12345'
+const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown',
+  'ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a']
 
 export function useSecretAccess() {
-  const [showPasswordModal, setShowPasswordModal] = useState(false)
+  const [showModal, setShowModal] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [konamiProgress, setKonamiProgress] = useState(0)
+  const [loading, setLoading] = useState(true)
 
-  // Check stored auth on mount
   useEffect(() => {
-    const auth = localStorage.getItem('secret_auth')
-    if (auth === 'true') setIsAuthenticated(true)
+    const unsub = onAuthChange((user) => {
+      setIsAuthenticated(!!user)
+      setLoading(false)
+    })
+    return unsub
   }, [])
 
-  // Konami code listener
   useEffect(() => {
     let progress = 0
     const onKey = (e) => {
       if (e.key === KONAMI[progress]) {
         progress++
-        setKonamiProgress(progress)
         if (progress === KONAMI.length) {
           progress = 0
-          setKonamiProgress(0)
-          setShowPasswordModal(true)
+          setShowModal(true)
         }
       } else {
         progress = e.key === KONAMI[0] ? 1 : 0
-        setKonamiProgress(progress)
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  const tryPassword = useCallback((pw) => {
-    if (pw === SECRET_PASSWORD) {
-      localStorage.setItem('secret_auth', 'true')
-      setIsAuthenticated(true)
-      setShowPasswordModal(false)
-      return true
+  const tryPassword = useCallback(async (email, password) => {
+    try {
+      await login(email, password)
+      return { ok: true }
+    } catch (err) {
+      return { ok: false, code: err?.code || '' }
     }
-    return false
   }, [])
 
-  const triggerCandle = useCallback(() => {
-    setShowPasswordModal(true)
-  }, [])
+  const triggerCandle = useCallback(() => setShowModal(true), [])
 
-  const logout = useCallback(() => {
-    localStorage.removeItem('secret_auth')
+  const doLogout = useCallback(async () => {
+    await logout()
     setIsAuthenticated(false)
   }, [])
 
   return {
-    showPasswordModal,
-    setShowPasswordModal,
+    showPasswordModal: showModal,
+    setShowPasswordModal: setShowModal,
     isAuthenticated,
+    loading,
     tryPassword,
     triggerCandle,
-    logout,
-    konamiProgress,
+    logout: doLogout,
   }
 }

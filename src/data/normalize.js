@@ -16,9 +16,13 @@ export function normalizeWork(w) {
 }
 
 export function normalizeJournal(e) {
+  const ts = e.createdAt
+  const date = ts && typeof ts.toDate === 'function'
+    ? formatDate(ts.toDate().toISOString())
+    : (e.created_at ? formatDate(e.created_at) : (e.date || ''))
   return {
     ...e,
-    date:     e.created_at ? formatDate(e.created_at) : (e.date || ''),
+    date,
     readTime: e.read_time || '',
     category: e.category || '',
   }

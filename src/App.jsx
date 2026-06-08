@@ -10,8 +10,7 @@ import { useSecretAccess } from './hooks/useSecretAccess'
 import AdminRequireAuth from './components/admin/AdminRequireAuth'
 import AdminLayout from './components/admin/AdminLayout'
 import DustMotes from './components/DustMotes'
-import AmbientSound from './components/AmbientSound'
-import MusicPlayer from './components/MusicPlayer'
+import AmbientAudio from './components/AmbientAudio'
 
 import Home from './pages/Home'
 import Works from './pages/Works'
@@ -20,6 +19,7 @@ import About from './pages/About'
 import Journal from './pages/Journal'
 import Secret from './pages/Secret'
 
+import NotFound from './pages/NotFound'
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminWorks from './pages/admin/AdminWorks'
@@ -38,7 +38,6 @@ function ScrollToTop() {
 function AppInner() {
   const location = useLocation()
   const isAdmin = location.pathname.startsWith('/admin')
-  const [musicOpen, setMusicOpen] = useState(false)
 
   const {
     showPasswordModal,
@@ -133,7 +132,6 @@ function AppInner() {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <ScrollToTop />
       <Navigation onCandleClick={triggerCandle} />
-      <MusicPlayer open={musicOpen} onToggle={() => setMusicOpen(o => !o)} />
 
       <PasswordModal
         isOpen={showPasswordModal}
@@ -164,6 +162,9 @@ function AppInner() {
                 <PageTransition><Secret onLogout={logout} /></PageTransition>
               </ProtectedRoute>
             } />
+            <Route path="*" element={
+              <PageTransition><NotFound /></PageTransition>
+            } />
           </Routes>
         </AnimatePresence>
       </main>
@@ -177,7 +178,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <DustMotes />
-      <AmbientSound />
+      <AmbientAudio />
       <AppInner />
     </BrowserRouter>
   )

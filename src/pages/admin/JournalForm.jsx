@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { getJournalEntry, createJournalEntry, updateJournalEntry } from '../../data/api'
+import { useNavigate, useParams, Link } from 'react-router-dom'
+import { fetchJournalEntry, createJournalEntry, updateJournalEntry } from '../../data/api'
 import { OrnateDivider } from '../../components/OrnateElements'
 
 const field = {
@@ -173,7 +173,7 @@ export default function JournalForm() {
 
   useEffect(() => {
     if (!isEdit) return
-    getJournalEntry(id)
+    fetchJournalEntry(id)
       .then(e => {
         setForm({
           title: e.title || '',
@@ -191,8 +191,7 @@ export default function JournalForm() {
 
   const set = f => e => setForm(prev => ({ ...prev, [f]: e.target.value }))
 
-  const handleSubmit = async e => {
-    e.preventDefault()
+  const saveEntry = async (publishNow = false) => {
     if (!form.title || !form.body) {
       setError('Title and body are required.')
       return
@@ -201,22 +200,31 @@ export default function JournalForm() {
     setError('')
     setDraftSaved(false)
     try {
-      const body = { ...form, published: false } // always save as draft
-      let result
+      const body = {
+        ...form,
+        published: publishNow ? true : (isEdit ? form.published : false),
+      }
       if (isEdit) {
-        result = await updateJournalEntry(id, body)
-        setSavedId(result?.id || id)
+        await updateJournalEntry(id, body)
+        setSavedId(id)
       } else {
-        result = await createJournalEntry(body)
+        const result = await createJournalEntry(body)
         setSavedId(result?.id)
       }
-      setDraftSaved(true)
+      if (publishNow) {
+        navigate('/admin/journal')
+      } else {
+        setDraftSaved(true)
+      }
     } catch (err) {
       setError(err.message || 'Failed to save entry.')
     } finally {
       setSaving(false)
     }
   }
+
+  const handleSubmit = e => { e.preventDefault(); saveEntry(false) }
+  const handlePublishNow = () => saveEntry(true)
 
   if (loading) return (
     <p style={{ color: '#4a3520', fontStyle: 'italic', fontFamily: "'IM Fell English', serif" }}>Retrieving…</p>
@@ -225,9 +233,20 @@ export default function JournalForm() {
   return (
     <div>
       <div style={{ marginBottom: '2rem' }}>
-        <p style={{ color: '#4a3520', fontSize: '0.6rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
-          ✦ &nbsp; {isEdit ? 'Revise Entry' : 'New Entry'} &nbsp; ✦
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.6rem' }}>
+          <Link
+            to="/admin/journal"
+            style={{ color: '#4a3520', fontSize: '0.58rem', letterSpacing: '0.25em', textTransform: 'uppercase', fontFamily: "'Playfair Display', serif", textDecoration: 'none', transition: 'color 0.2s' }}
+            onMouseEnter={e => (e.target.style.color = '#8a6d2f')}
+            onMouseLeave={e => (e.target.style.color = '#4a3520')}
+          >
+            ← Journal
+          </Link>
+          <span style={{ color: '#2a1e0a', fontSize: '0.58rem' }}>/</span>
+          <span style={{ color: '#6b5a3e', fontSize: '0.58rem', letterSpacing: '0.25em', textTransform: 'uppercase', fontFamily: "'Playfair Display', serif" }}>
+            {isEdit ? (form.title || 'Edit') : 'New'}
+          </span>
+        </div>
         <h1 style={{ fontFamily: "'Playfair Display', serif", color: '#f0e6c8', fontSize: '2.2rem', fontStyle: 'italic' }}>
           {isEdit ? 'Edit Entry' : 'New Journal Entry'}
         </h1>
@@ -284,36 +303,53 @@ export default function JournalForm() {
             className="btn-gold"
             style={{ opacity: saving ? 0.5 : 1, cursor: saving ? 'not-allowed' : 'pointer' }}
           >
-            {saving ? 'Saving…' : isEdit ? 'Save Draft' : 'Save to Drafts'}
+            {saving ? 'Saving…' : isEdit ? 'Save' : 'Save to Drafts'}
+          </button>
+
+          <button
+            type="button"
+            onClick={handlePublishNow}
+            disabled={saving}
+            style={{
+              background: form.published && isEdit ? 'rgba(201,168,76,0.12)' : 'transparent',
+              border: '1px solid rgba(201,168,76,0.5)',
+              color: '#c9a84c',
+              padding: '10px 24px',
+              fontFamily: "'Playfair Display', serif",
+              fontSize: '0.62rem',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              cursor: saving ? 'not-allowed' : 'pointer',
+              opacity: saving ? 0.5 : 1,
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={e => { if (!saving) e.currentTarget.style.background = 'rgba(201,168,76,0.15)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = form.published && isEdit ? 'rgba(201,168,76,0.12)' : 'transparent' }}
+          >
+            {form.published && isEdit ? '✦ Live — Save' : 'Save & Publish →'}
           </button>
 
           {draftSaved && (
-            <button
-              type="button"
-              onClick={() => setShowPreview(true)}
-              style={{
-                background: 'transparent',
-                border: '1px solid rgba(201,168,76,0.4)',
-                color: '#c9a84c',
-                padding: '10px 24px',
-                fontFamily: "'Playfair Display', serif",
-                fontSize: '0.62rem',
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={e => { e.target.style.background = 'rgba(201,168,76,0.1)' }}
-              onMouseLeave={e => { e.target.style.background = 'transparent' }}
-            >
-              Preview →
-            </button>
-          )}
-
-          {draftSaved && (
-            <span style={{ color: '#8a6d2f', fontSize: '0.62rem', letterSpacing: '0.15em', fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>
-              Saved to drafts.
-            </span>
+            <>
+              <button
+                type="button"
+                onClick={() => setShowPreview(true)}
+                style={{
+                  background: 'transparent', border: '1px solid rgba(138,109,47,0.3)',
+                  color: '#6b5a3e', padding: '10px 20px',
+                  fontFamily: "'Playfair Display', serif", fontSize: '0.62rem',
+                  letterSpacing: '0.2em', textTransform: 'uppercase',
+                  cursor: 'pointer', transition: 'all 0.2s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(138,109,47,0.6)'; e.currentTarget.style.color = '#8a6d2f' }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(138,109,47,0.3)'; e.currentTarget.style.color = '#6b5a3e' }}
+              >
+                Preview
+              </button>
+              <span style={{ color: '#6b5a3e', fontSize: '0.62rem', letterSpacing: '0.15em', fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>
+                Saved.
+              </span>
+            </>
           )}
 
           <button

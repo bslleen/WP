@@ -1,5 +1,5 @@
-import { NavLink, useNavigate } from 'react-router-dom'
-import { apiLogout } from '../../data/api'
+import { NavLink, Link, useNavigate } from 'react-router-dom'
+import { logout } from '../../data/api'
 
 const NAV = [
   { to: '/admin', label: 'Dashboard', icon: '◈', end: true },
@@ -9,19 +9,20 @@ const NAV = [
   { to: '/admin/settings', label: 'Settings', icon: '⚙' },
 ]
 
-// Bottom tab bar shows 4 items on mobile
+// Bottom tab bar — all 5 sections on mobile
 const TAB_NAV = [
   { to: '/admin', label: 'Dash', icon: '◈', end: true },
   { to: '/admin/works', label: 'Works', icon: '✦' },
   { to: '/admin/journal', label: 'Journal', icon: '✒' },
+  { to: '/admin/about', label: 'About', icon: '☽' },
   { to: '/admin/settings', label: 'Settings', icon: '⚙' },
 ]
 
 export default function AdminLayout({ children }) {
   const navigate = useNavigate()
 
-  const logout = () => {
-    apiLogout()
+  const handleLogout = async () => {
+    await logout()
     navigate('/admin/login', { replace: true })
   }
 
@@ -40,10 +41,11 @@ export default function AdminLayout({ children }) {
         background: 'linear-gradient(180deg, #120d06 0%, #0d0a05 100%)',
       }}>
         {/* Logotype */}
-        <div style={{
-          padding: '1.75rem 1.5rem',
-          borderBottom: '1px solid rgba(201,168,76,0.12)',
-        }}>
+        <Link to="/" style={{ display: 'block', padding: '1.75rem 1.5rem', borderBottom: '1px solid rgba(201,168,76,0.12)', textDecoration: 'none', transition: 'opacity 0.2s' }}
+          onMouseEnter={e => (e.currentTarget.style.opacity = '0.75')}
+          onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+          title="Go to homepage"
+        >
           <svg viewBox="0 0 32 32" style={{ width: '22px', height: '22px', marginBottom: '0.6rem', display: 'block' }} fill="none">
             <path d="M28 2 Q22 4 18 10 Q14 16 10 28 Q14 24 16 20 Q18 16 20 14 Q24 8 28 2 Z" fill="#c9a84c" fillOpacity="0.18" stroke="#c9a84c" strokeWidth="0.7" />
             <path d="M10 28 Q10 22 14 18" stroke="#8a6d2f" strokeWidth="0.8" fill="none" />
@@ -63,7 +65,7 @@ export default function AdminLayout({ children }) {
           <p style={{ color: '#3d2b14', fontSize: '0.52rem', letterSpacing: '0.35em', textTransform: 'uppercase', fontFamily: "'Crimson Text', serif" }}>
             Admin Panel
           </p>
-        </div>
+        </Link>
 
         {/* Nav links */}
         <nav style={{ flex: 1, padding: '1.25rem 0' }}>
@@ -123,7 +125,7 @@ export default function AdminLayout({ children }) {
             View Site ↗
           </a>
           <button
-            onClick={logout}
+            onClick={handleLogout}
             style={{
               background: 'none',
               border: 'none',
@@ -171,8 +173,8 @@ export default function AdminLayout({ children }) {
             style={({ isActive }) => ({
               color: isActive ? '#c9a84c' : '#4a3520',
               textDecoration: 'none',
-              fontSize: '0.48rem',
-              letterSpacing: '0.2em',
+              fontSize: '0.42rem',
+              letterSpacing: '0.1em',
               textTransform: 'uppercase',
               fontFamily: "'Crimson Text', serif",
               borderTop: isActive ? '2px solid #c9a84c' : '2px solid transparent',

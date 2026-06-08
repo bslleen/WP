@@ -6,7 +6,6 @@ import manuscriptsImg from '../assets/photo_2026-06-02 17.41.58.jpeg'
 import journalImg     from '../assets/photo_2026-06-02 17.41.55.jpeg'
 import { fetchWorks } from '../data/api'
 import { normalizeWork } from '../data/normalize'
-import { works as mockWorks } from '../data/content'
 
 function BookCoverArt({ work }) {
   return (
@@ -196,12 +195,14 @@ function Ornament({ dark = false }) {
 }
 
 export default function Works() {
-  const [featured, setFeatured] = useState(mockWorks.slice(0, 4).map(normalizeWork))
+  const [featured, setFeatured] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetchWorks({ status: 'published' })
-      .then(data => { if (data.length > 0) setFeatured(data.slice(0, 4).map(normalizeWork)) })
+    fetchWorks()
+      .then(data => setFeatured(data.slice(0, 4).map(normalizeWork)))
       .catch(() => {})
+      .finally(() => setLoading(false))
   }, [])
 
   return (
@@ -338,9 +339,19 @@ export default function Works() {
           </div>
 
           {/* Responsive book card grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '1.25rem' }}>
-            {featured.map(work => <WorkCard key={work.id} work={work} />)}
-          </div>
+          {loading ? (
+            <p style={{ textAlign: 'center', fontFamily: "'Playfair Display', serif", fontSize: '0.62rem', letterSpacing: '0.3em', color: '#8a7a65', padding: '48px 0' }}>
+              Consulting the archive…
+            </p>
+          ) : featured.length === 0 ? (
+            <p style={{ textAlign: 'center', fontFamily: "'IM Fell English', serif", fontStyle: 'italic', color: '#8a7a65', fontSize: '1rem', padding: '48px 0', lineHeight: 1.8 }}>
+              The archive is being assembled.<br />Return soon.
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '1.25rem' }}>
+              {featured.map(work => <WorkCard key={work.id} work={work} />)}
+            </div>
+          )}
         </div>
       </section>
 

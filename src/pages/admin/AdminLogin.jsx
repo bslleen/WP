@@ -1,29 +1,39 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { login, getToken } from '../../data/api'
+import { login } from '../../data/api'
+import { auth } from '../../firebase'
 
 export default function AdminLogin() {
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [shake, setShake] = useState(false)
-  const inputRef = useRef(null)
+  const emailRef = useRef(null)
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (getToken()) navigate('/admin', { replace: true })
-    setTimeout(() => inputRef.current?.focus(), 100)
+    if (auth.currentUser) navigate('/admin', { replace: true })
+    setTimeout(() => emailRef.current?.focus(), 100)
   }, [])
 
   const handleSubmit = async () => {
-    if (!password || loading) return
+    if (!email || !password || loading) return
     setLoading(true)
     setError('')
     try {
-      await login(password)
+      await login(email, password)
       navigate('/admin', { replace: true })
-    } catch {
-      setError('The ink does not match.')
+    } catch (err) {
+      const code = err?.code || ''
+      let msg = 'The ink does not match.'
+      if (code === 'auth/operation-not-allowed') msg = 'Email/password sign-in is not enabled in Firebase.'
+      else if (code === 'auth/user-not-found' || code === 'auth/invalid-credential') msg = 'No account found, or wrong credentials.'
+      else if (code === 'auth/wrong-password') msg = 'Wrong passphrase.'
+      else if (code === 'auth/invalid-email') msg = 'That correspondence address is invalid.'
+      else if (code === 'auth/too-many-requests') msg = 'Too many attempts — try again later.'
+      else if (code === 'auth/network-request-failed') msg = 'Network error — check your connection.'
+      setError(msg)
       setShake(true)
       setTimeout(() => { setShake(false); setPassword('') }, 500)
     } finally {
@@ -73,7 +83,41 @@ export default function AdminLogin() {
           </p>
         </div>
 
-        {/* Field */}
+        {/* Correspondence (email) */}
+        <div style={{ marginBottom: '1.25rem' }}>
+          <label style={{
+            display: 'block',
+            color: '#8a6d2f',
+            fontSize: '0.6rem',
+            letterSpacing: '0.3em',
+            textTransform: 'uppercase',
+            fontFamily: "'Playfair Display', serif",
+            marginBottom: '0.6rem',
+          }}>
+            Correspondence
+          </label>
+          <input
+            ref={emailRef}
+            type="email"
+            value={email}
+            onChange={e => { setEmail(e.target.value); setError('') }}
+            onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+            placeholder="···"
+            style={{
+              width: '100%',
+              background: 'transparent',
+              border: 'none',
+              borderBottom: '1px solid rgba(138,109,47,0.5)',
+              outline: 'none',
+              padding: '0.6rem 0',
+              fontSize: '0.95rem',
+              color: '#f0e6c8',
+              fontFamily: "'IM Fell English', serif",
+            }}
+          />
+        </div>
+
+        {/* Passphrase (password) */}
         <div style={{ marginBottom: '1.25rem' }}>
           <label style={{
             display: 'block',
@@ -87,7 +131,6 @@ export default function AdminLogin() {
             Passphrase
           </label>
           <input
-            ref={inputRef}
             type="password"
             value={password}
             onChange={e => { setPassword(e.target.value); setError('') }}
@@ -124,12 +167,12 @@ export default function AdminLogin() {
 
         <button
           onClick={handleSubmit}
-          disabled={loading || !password}
+          disabled={loading || !email || !password}
           className="btn-gold"
           style={{
             width: '100%',
-            opacity: loading || !password ? 0.4 : 1,
-            cursor: loading || !password ? 'not-allowed' : 'pointer',
+            opacity: loading || !email || !password ? 0.4 : 1,
+            cursor: loading || !email || !password ? 'not-allowed' : 'pointer',
           }}
         >
           {loading ? 'Opening…' : 'Enter'}

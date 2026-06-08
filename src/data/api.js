@@ -1,178 +1,187 @@
-/**
- * API client for the Go backend.
- *
- * Set VITE_API_URL in your .env file to point at the backend:
- *   VITE_API_URL=http://localhost:8080
- *
- * When VITE_API_URL is not set the helpers fall back to the local
- * mock data in src/data/content.js — so the app runs without a server.
- */
-
-const BASE = import.meta.env.VITE_API_URL
-  ? `${import.meta.env.VITE_API_URL}/api/v1`
-  : null
-
-// ─── Auth token ──────────────────────────────────────────────────────────────
-
-export function getToken() {
-  return localStorage.getItem('api_token')
-}
-
-function authHeaders() {
-  const token = getToken()
-  return token ? { Authorization: `Bearer ${token}` } : {}
-}
-
-async function request(method, path, body) {
-  if (!BASE) throw new Error('No API URL configured')
-  const res = await fetch(`${BASE}${path}`, {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      ...authHeaders(),
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  })
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: res.statusText }))
-    throw new Error(err.error || res.statusText)
-  }
-  return res.json()
-}
+import { db, storage, auth } from '../firebase'
+import {
+  collection, doc, getDocs, getDoc,
+  addDoc, updateDoc, deleteDoc, setDoc,
+  query, where, orderBy, serverTimestamp
+} from 'firebase/firestore'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import {
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  updatePassword,
+} from 'firebase/auth'
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
-/**
- * Login with owner password. Stores JWT in localStorage.
- * @param {string} password
- */
-export async function login(password) {
-  const data = await request('POST', '/auth/login', { password })
-  localStorage.setItem('api_token', data.token)
-  return data
+export const login = (email, password) =>
+  signInWithEmailAndPassword(auth, email, password)
+
+export const logout = () => signOut(auth)
+
+export const onAuthChange = (cb) => onAuthStateChanged(auth, cb)
+
+export const getCurrentUser = () => auth.currentUser
+
+export async function changePassword(newPassword) {
+  const user = auth.currentUser
+  if (!user) throw new Error('Not authenticated.')
+  return updatePassword(user, newPassword)
 }
 
-export function apiLogout() {
-  localStorage.removeItem('api_token')
+// ─── Works — public reads (published only) ────────────────────────────────────
+
+export async function fetchWorks(category = null) {
+  let q = query(collection(db, 'works'), where('status', '==', 'published'))
+  if (category) {
+    q = query(collection(db, 'works'), where('status', '==', 'published'), where('category', '==', category))
+  }
+  const snap = await getDocs(q)
+  return snap.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => (b.createdAt?.toMillis?.() ?? 0) - (a.createdAt?.toMillis?.() ?? 0))
 }
 
-// ─── Works ────────────────────────────────────────────────────────────────────
+// ─── Works — admin reads (all) ────────────────────────────────────────────────
 
-/** Fetch all published works, optionally filtered by category */
-export async function getWorks({ category, status } = {}) {
-  const params = new URLSearchParams()
-  if (category) params.set('category', category)
-  if (status)   params.set('status', status)
-  return request('GET', `/works?${params}`)
+export async function fetchAllWorks() {
+  const snap = await getDocs(
+    query(collection(db, 'works'), orderBy('createdAt', 'desc'))
+  )
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }))
 }
 
-export async function getWork(id) {
-  return request('GET', `/works/${id}`)
+export async function fetchWork(id) {
+  const snap = await getDoc(doc(db, 'works', id))
+  return snap.exists() ? { id: snap.id, ...snap.data() } : null
 }
 
-/**
- * Create a work (protected)
- * @param {{ title, description, excerpt, category, year, pages, status, cover_image, accent_color }} body
- */
-export async function createWork(body) {
-  return request('POST', '/works', body)
+export async function createWork(data) {
+  return addDoc(collection(db, 'works'), {
+    ...data,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  })
 }
 
-export async function updateWork(id, body) {
-  return request('PUT', `/works/${id}`, body)
+export async function updateWork(id, data) {
+  return updateDoc(doc(db, 'works', id), {
+    ...data,
+    updatedAt: serverTimestamp(),
+  })
 }
 
 export async function deleteWork(id) {
-  return request('DELETE', `/works/${id}`)
+  return deleteDoc(doc(db, 'works', id))
 }
 
-// ─── Journal ──────────────────────────────────────────────────────────────────
+// ─── Journal — public reads (published only) ──────────────────────────────────
 
-export async function getJournalEntries() {
-  return request('GET', '/journal')
+export async function fetchJournal() {
+  const snap = await getDocs(
+    query(collection(db, 'journal'), where('published', '==', true))
+  )
+  return snap.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => (b.createdAt?.toMillis?.() ?? 0) - (a.createdAt?.toMillis?.() ?? 0))
 }
 
-export async function getJournalEntry(id) {
-  return request('GET', `/journal/${id}`)
+// ─── Journal — admin reads (all) ──────────────────────────────────────────────
+
+export async function fetchAllJournal() {
+  const snap = await getDocs(
+    query(collection(db, 'journal'), orderBy('createdAt', 'desc'))
+  )
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }))
 }
 
-export async function createJournalEntry(body) {
-  return request('POST', '/journal', body)
+export async function fetchJournalEntry(id) {
+  const snap = await getDoc(doc(db, 'journal', id))
+  return snap.exists() ? { id: snap.id, ...snap.data() } : null
 }
 
-export async function updateJournalEntry(id, body) {
-  return request('PUT', `/journal/${id}`, body)
+export async function createJournalEntry(data) {
+  return addDoc(collection(db, 'journal'), {
+    ...data,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  })
+}
+
+export async function updateJournalEntry(id, data) {
+  return updateDoc(doc(db, 'journal', id), {
+    ...data,
+    updatedAt: serverTimestamp(),
+  })
 }
 
 export async function deleteJournalEntry(id) {
-  return request('DELETE', `/journal/${id}`)
+  return deleteDoc(doc(db, 'journal', id))
+}
+
+// ─── Profile — single doc ─────────────────────────────────────────────────────
+
+export async function fetchProfile() {
+  const snap = await getDoc(doc(db, 'config', 'profile'))
+  return snap.exists() ? snap.data() : null
+}
+
+export async function updateProfile(data) {
+  return setDoc(doc(db, 'config', 'profile'), data, { merge: true })
+}
+
+// alias for About page
+export const fetchAbout = fetchProfile
+export const updateAbout = updateProfile
+
+// ─── Private journal — owner only ─────────────────────────────────────────────
+
+export async function fetchPrivateEntries() {
+  const snap = await getDocs(
+    query(collection(db, 'private'), orderBy('createdAt', 'desc'))
+  )
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }))
+}
+
+export async function createPrivateEntry(data) {
+  return addDoc(collection(db, 'private'), {
+    ...data,
+    createdAt: serverTimestamp(),
+  })
+}
+
+export async function updatePrivateEntry(id, data) {
+  return updateDoc(doc(db, 'private', id), data)
+}
+
+export async function deletePrivateEntry(id) {
+  return deleteDoc(doc(db, 'private', id))
+}
+
+// ─── Letters to the future — owner only ──────────────────────────────────────
+
+export async function fetchLetters() {
+  const snap = await getDocs(
+    query(collection(db, 'letters'), orderBy('createdAt', 'desc'))
+  )
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }))
+}
+
+export async function createLetter(data) {
+  return addDoc(collection(db, 'letters'), {
+    ...data,
+    createdAt: serverTimestamp(),
+  })
+}
+
+export async function deleteLetter(id) {
+  return deleteDoc(doc(db, 'letters', id))
 }
 
 // ─── Image upload ─────────────────────────────────────────────────────────────
 
-/**
- * Upload an image file to Cloudinary via the backend proxy
- * @param {File} file
- * @returns {{ url: string, public_id: string }}
- */
-export async function uploadImage(file) {
-  if (!BASE) throw new Error('No API URL configured')
-  const form = new FormData()
-  form.append('file', file)
-  const res = await fetch(`${BASE}/upload`, {
-    method: 'POST',
-    headers: authHeaders(),
-    body: form,
-  })
-  if (!res.ok) throw new Error('Upload failed')
-  return res.json()
-}
-
-// ─── Admin-only endpoints ─────────────────────────────────────────────────────
-
-/** Returns ALL journal entries regardless of published status (protected) */
-export async function getAllJournalEntries() {
-  return request('GET', '/admin/journal')
-}
-
-/**
- * Change the owner password (protected)
- * @param {string} newPassword
- */
-export async function changePassword(newPassword) {
-  return request('PUT', '/auth/password', { new_password: newPassword })
-}
-
-// ─── About ────────────────────────────────────────────────────────────────────
-
-export async function fetchAbout() {
-  if (!BASE) return null
-  return request('GET', '/about')
-}
-
-export async function updateAbout(body) {
-  return request('PUT', '/admin/about', body)
-}
-
-// ─── Convenience: use mock data when no API is configured ────────────────────
-
-import { works as mockWorks, journalEntries as mockJournal } from './content'
-
-/**
- * Returns works from the API if configured, otherwise from mock data.
- * This lets the frontend run standalone without any backend.
- */
-export async function fetchWorks(filters = {}) {
-  if (!BASE) {
-    let data = [...mockWorks]
-    if (filters.category) data = data.filter(w => w.category.toLowerCase() === filters.category)
-    if (filters.status)   data = data.filter(w => w.status.toLowerCase() === filters.status)
-    return data
-  }
-  return getWorks(filters)
-}
-
-export async function fetchJournal() {
-  if (!BASE) return [...mockJournal]
-  return getJournalEntries()
+export async function uploadImage(file, path = 'covers') {
+  const storageRef = ref(storage, `${path}/${Date.now()}_${file.name}`)
+  await uploadBytes(storageRef, file)
+  return getDownloadURL(storageRef)
 }

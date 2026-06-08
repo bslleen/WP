@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { getWorks, updateWork, deleteWork } from '../../data/api'
+import { fetchAllWorks, updateWork, deleteWork } from '../../data/api'
 import { OrnateDivider } from '../../components/OrnateElements'
 
 // ── Publish popover ───────────────────────────────────────────────────────────
@@ -122,7 +122,7 @@ export default function AdminWorks() {
   const [deletingId, setDeletingId] = useState(null)
 
   useEffect(() => {
-    getWorks()
+    fetchAllWorks()
       .then(w => setWorks(w || []))
       .catch(() => {})
       .finally(() => setLoading(false))
@@ -131,8 +131,8 @@ export default function AdminWorks() {
   const handleToggle = async (work, nextStatus) => {
     setTogglingId(work.id)
     try {
-      const updated = await updateWork(work.id, { status: nextStatus })
-      setWorks(ws => ws.map(w => w.id === work.id ? { ...w, status: updated.status } : w))
+      await updateWork(work.id, { status: nextStatus })
+      setWorks(ws => ws.map(w => w.id === work.id ? { ...w, status: nextStatus } : w))
     } catch {} finally {
       setTogglingId(null)
     }
@@ -241,7 +241,19 @@ export default function AdminWorks() {
               />
 
               {/* Actions */}
-              <div style={{ display: 'flex', gap: '1rem', flexShrink: 0 }}>
+              <div style={{ display: 'flex', gap: '1rem', flexShrink: 0, alignItems: 'center' }}>
+                {work.status === 'published' && (
+                  <a
+                    href="/works"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ color: '#4a3520', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none', transition: 'color 0.2s' }}
+                    onMouseEnter={e => (e.target.style.color = '#8a6d2f')}
+                    onMouseLeave={e => (e.target.style.color = '#4a3520')}
+                  >
+                    View ↗
+                  </a>
+                )}
                 <Link
                   to={`/admin/works/${work.id}/edit`}
                   style={{ color: '#8a6d2f', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none' }}

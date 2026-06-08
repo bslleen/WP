@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { getWork, createWork, updateWork, uploadImage } from '../../data/api'
+import { useNavigate, useParams, Link } from 'react-router-dom'
+import { fetchWork, createWork, updateWork, uploadImage } from '../../data/api'
 import { OrnateDivider } from '../../components/OrnateElements'
 
 const CATEGORIES = ['novel', 'poetry', 'short story']
@@ -194,7 +194,7 @@ export default function WorkForm() {
 
   useEffect(() => {
     if (!isEdit) return
-    getWork(id)
+    fetchWork(id)
       .then(w => {
         setForm({
           title: w.title || '',
@@ -220,7 +220,7 @@ export default function WorkForm() {
     if (!file) return
     setUploading(true)
     try {
-      const { url } = await uploadImage(file)
+      const url = await uploadImage(file)
       setForm(f => ({ ...f, cover_image: url }))
     } catch {
       setError('Image upload failed.')
@@ -229,8 +229,7 @@ export default function WorkForm() {
     }
   }
 
-  const handleSubmit = async e => {
-    e.preventDefault()
+  const saveWork = async (publishNow = false) => {
     if (!form.title || !form.description || !form.category) {
       setError('Title, description, and category are required.')
       return
@@ -242,23 +241,29 @@ export default function WorkForm() {
       const body = {
         ...form,
         pages: form.pages ? parseInt(form.pages, 10) : 0,
-        status: 'in progress', // always save as draft
+        status: publishNow ? 'published' : (isEdit ? form.status : 'in progress'),
       }
-      let result
       if (isEdit) {
-        result = await updateWork(id, body)
-        setSavedId(result.id || id)
+        await updateWork(id, body)
+        setSavedId(id)
       } else {
-        result = await createWork(body)
+        const result = await createWork(body)
         setSavedId(result.id)
       }
-      setDraftSaved(true)
+      if (publishNow) {
+        navigate('/admin/works')
+      } else {
+        setDraftSaved(true)
+      }
     } catch (err) {
       setError(err.message || 'Failed to save.')
     } finally {
       setSaving(false)
     }
   }
+
+  const handleSubmit = e => { e.preventDefault(); saveWork(false) }
+  const handlePublishNow = () => saveWork(true)
 
   if (loading) {
     return <p style={{ color: '#4a3520', fontStyle: 'italic', fontFamily: "'IM Fell English', serif" }}>Retrieving…</p>
@@ -267,9 +272,20 @@ export default function WorkForm() {
   return (
     <div>
       <div style={{ marginBottom: '2rem' }}>
-        <p style={{ color: '#4a3520', fontSize: '0.6rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
-          ✦ &nbsp; {isEdit ? 'Revise Entry' : 'New Entry'} &nbsp; ✦
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.6rem' }}>
+          <Link
+            to="/admin/works"
+            style={{ color: '#4a3520', fontSize: '0.58rem', letterSpacing: '0.25em', textTransform: 'uppercase', fontFamily: "'Playfair Display', serif", textDecoration: 'none', transition: 'color 0.2s' }}
+            onMouseEnter={e => (e.target.style.color = '#8a6d2f')}
+            onMouseLeave={e => (e.target.style.color = '#4a3520')}
+          >
+            ← Works
+          </Link>
+          <span style={{ color: '#2a1e0a', fontSize: '0.58rem' }}>/</span>
+          <span style={{ color: '#6b5a3e', fontSize: '0.58rem', letterSpacing: '0.25em', textTransform: 'uppercase', fontFamily: "'Playfair Display', serif" }}>
+            {isEdit ? (form.title || 'Edit') : 'New'}
+          </span>
+        </div>
         <h1 style={{ fontFamily: "'Playfair Display', serif", color: '#f0e6c8', fontSize: '2.2rem', fontStyle: 'italic' }}>
           {isEdit ? 'Edit Work' : 'New Work'}
         </h1>
@@ -404,36 +420,53 @@ export default function WorkForm() {
             className="btn-gold"
             style={{ opacity: saving ? 0.5 : 1, cursor: saving ? 'not-allowed' : 'pointer' }}
           >
-            {saving ? 'Saving…' : isEdit ? 'Save Draft' : 'Save to Drafts'}
+            {saving ? 'Saving…' : isEdit ? 'Save' : 'Save to Drafts'}
+          </button>
+
+          <button
+            type="button"
+            onClick={handlePublishNow}
+            disabled={saving}
+            style={{
+              background: form.status === 'published' && isEdit ? 'rgba(201,168,76,0.12)' : 'transparent',
+              border: '1px solid rgba(201,168,76,0.5)',
+              color: '#c9a84c',
+              padding: '10px 24px',
+              fontFamily: "'Playfair Display', serif",
+              fontSize: '0.62rem',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              cursor: saving ? 'not-allowed' : 'pointer',
+              opacity: saving ? 0.5 : 1,
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={e => { if (!saving) e.currentTarget.style.background = 'rgba(201,168,76,0.15)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = form.status === 'published' && isEdit ? 'rgba(201,168,76,0.12)' : 'transparent' }}
+          >
+            {form.status === 'published' && isEdit ? '✦ Live — Save' : 'Save & Publish →'}
           </button>
 
           {draftSaved && (
-            <button
-              type="button"
-              onClick={() => setShowPreview(true)}
-              style={{
-                background: 'transparent',
-                border: '1px solid rgba(201,168,76,0.4)',
-                color: '#c9a84c',
-                padding: '10px 24px',
-                fontFamily: "'Playfair Display', serif",
-                fontSize: '0.62rem',
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={e => { e.target.style.background = 'rgba(201,168,76,0.1)' }}
-              onMouseLeave={e => { e.target.style.background = 'transparent' }}
-            >
-              Preview →
-            </button>
-          )}
-
-          {draftSaved && (
-            <span style={{ color: '#8a6d2f', fontSize: '0.62rem', letterSpacing: '0.15em', fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>
-              Saved to drafts.
-            </span>
+            <>
+              <button
+                type="button"
+                onClick={() => setShowPreview(true)}
+                style={{
+                  background: 'transparent', border: '1px solid rgba(138,109,47,0.3)',
+                  color: '#6b5a3e', padding: '10px 20px',
+                  fontFamily: "'Playfair Display', serif", fontSize: '0.62rem',
+                  letterSpacing: '0.2em', textTransform: 'uppercase',
+                  cursor: 'pointer', transition: 'all 0.2s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(138,109,47,0.6)'; e.currentTarget.style.color = '#8a6d2f' }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(138,109,47,0.3)'; e.currentTarget.style.color = '#6b5a3e' }}
+              >
+                Preview
+              </button>
+              <span style={{ color: '#6b5a3e', fontSize: '0.62rem', letterSpacing: '0.15em', fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>
+                Saved.
+              </span>
+            </>
           )}
 
           <button

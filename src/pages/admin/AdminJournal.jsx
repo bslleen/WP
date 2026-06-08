@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { getAllJournalEntries, updateJournalEntry, deleteJournalEntry } from '../../data/api'
+import { fetchAllJournal, updateJournalEntry, deleteJournalEntry } from '../../data/api'
 import { OrnateDivider } from '../../components/OrnateElements'
 
 // ── Publish popover ───────────────────────────────────────────────────────────
@@ -122,7 +122,7 @@ export default function AdminJournal() {
   const [deletingId, setDeletingId] = useState(null)
 
   useEffect(() => {
-    getAllJournalEntries()
+    fetchAllJournal()
       .then(e => setEntries(e || []))
       .catch(() => {})
       .finally(() => setLoading(false))
@@ -131,8 +131,8 @@ export default function AdminJournal() {
   const handleToggle = async (entry, nextPublished) => {
     setTogglingId(entry.id)
     try {
-      const updated = await updateJournalEntry(entry.id, { published: nextPublished })
-      setEntries(es => es.map(e => e.id === entry.id ? { ...e, published: updated.published } : e))
+      await updateJournalEntry(entry.id, { published: nextPublished })
+      setEntries(es => es.map(e => e.id === entry.id ? { ...e, published: nextPublished } : e))
     } catch {} finally {
       setTogglingId(null)
     }
@@ -223,7 +223,19 @@ export default function AdminJournal() {
               />
 
               {/* Actions */}
-              <div style={{ display: 'flex', gap: '1rem', flexShrink: 0 }}>
+              <div style={{ display: 'flex', gap: '1rem', flexShrink: 0, alignItems: 'center' }}>
+                {entry.published && (
+                  <a
+                    href="/journal"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ color: '#4a3520', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none', transition: 'color 0.2s' }}
+                    onMouseEnter={e => (e.target.style.color = '#8a6d2f')}
+                    onMouseLeave={e => (e.target.style.color = '#4a3520')}
+                  >
+                    View ↗
+                  </a>
+                )}
                 <Link
                   to={`/admin/journal/${entry.id}/edit`}
                   style={{ color: '#8a6d2f', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none' }}

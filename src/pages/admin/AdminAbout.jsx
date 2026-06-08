@@ -14,6 +14,7 @@ const field = (label, value, onChange, opts = {}) => (
         value={value}
         onChange={e => onChange(e.target.value)}
         rows={opts.rows || 5}
+        className="aa-input"
         style={inputStyle}
       />
     ) : (
@@ -21,6 +22,7 @@ const field = (label, value, onChange, opts = {}) => (
         type="text"
         value={value}
         onChange={e => onChange(e.target.value)}
+        className="aa-input"
         style={inputStyle}
       />
     )}
@@ -31,7 +33,7 @@ const inputStyle = {
   width: '100%',
   background: 'rgba(26,18,9,0.6)',
   border: '1px solid rgba(138,109,47,0.3)',
-  color: '#f0e6c8',
+  color: '#d4c49a',
   padding: '0.6rem 0.85rem',
   fontSize: '0.9rem',
   fontFamily: "'Crimson Text', serif",
@@ -92,10 +94,10 @@ export default function AdminAbout() {
     if (!file) return
     setUploading(true)
     try {
-      const res = await uploadImage(file)
-      setForm(f => ({ ...f, photo_url: res.url }))
+      const url = await uploadImage(file)
+      setForm(f => ({ ...f, photo_url: url }))
     } catch {
-      alert('Upload failed — check Cloudinary config or paste a URL manually.')
+      alert('Upload failed. Try again or paste an image URL directly.')
     } finally {
       setUploading(false)
     }
@@ -115,7 +117,8 @@ export default function AdminAbout() {
   }
 
   return (
-    <div>
+    <div style={{ paddingLeft: '24px' }}>
+      <style>{`.aa-input::placeholder { color: rgba(138, 109, 47, 0.5); }`}</style>
       <div style={{ marginBottom: '2rem' }}>
         <p style={{ color: '#4a3520', fontSize: '0.6rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
           ✦ &nbsp; Profile &nbsp; ✦
@@ -146,6 +149,8 @@ export default function AdminAbout() {
             value={form.photo_url}
             onChange={e => setForm(f => ({ ...f, photo_url: e.target.value }))}
             placeholder="https://… or upload below"
+            autoComplete="off"
+            className="aa-input"
             style={{ ...inputStyle, flex: 1 }}
           />
           <label style={{
@@ -168,20 +173,22 @@ export default function AdminAbout() {
       <section style={{ marginBottom: '2.5rem' }}>
         <h2 style={sectionHead}>Stats</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
-          {form.stats.map((s, i) => (
+          {(['Published Works', 'Awards', 'Residencies', 'Countries Written In']).map((labelPlaceholder, i) => (
             <div key={i} style={{ display: 'flex', gap: '0.5rem' }}>
               <input
                 type="text"
-                value={s.num}
+                value={form.stats[i]?.num ?? ''}
                 onChange={e => setStat(i, 'num')(e.target.value)}
-                placeholder="6"
+                placeholder="0"
+                className="aa-input"
                 style={{ ...inputStyle, width: '60px', flexShrink: 0, textAlign: 'center' }}
               />
               <input
                 type="text"
-                value={s.label}
+                value={form.stats[i]?.label ?? ''}
                 onChange={e => setStat(i, 'label')(e.target.value)}
-                placeholder="Published Works"
+                placeholder={labelPlaceholder}
+                className="aa-input"
                 style={{ ...inputStyle, flex: 1 }}
               />
             </div>
@@ -199,6 +206,7 @@ export default function AdminAbout() {
               value={b.heading}
               onChange={e => setBio(i, 'heading')(e.target.value)}
               placeholder={`Section ${i + 1} heading`}
+              className="aa-input"
               style={{ ...inputStyle, marginBottom: '0.5rem', fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}
             />
             <textarea
@@ -206,6 +214,7 @@ export default function AdminAbout() {
               onChange={e => setBio(i, 'text')(e.target.value)}
               rows={4}
               placeholder="Write this section…"
+              className="aa-input"
               style={{ ...inputStyle, width: '100%' }}
             />
           </div>
