@@ -51,6 +51,7 @@ export default function AmbientAudio() {
     <>
       <audio ref={audioRef} loop preload="none" src="/music/moonlight.mp3" />
       <button
+        className="music-toggle"
         onClick={toggleAudio}
         style={{
           position: 'fixed',
@@ -59,7 +60,7 @@ export default function AmbientAudio() {
           zIndex: 9999,
           background: 'none',
           border: 'none',
-          color: isPlaying ? '#c9a84c' : '#3d2b14',
+          color: isPlaying ? 'var(--accent)' : 'var(--text-faint)',
           fontSize: '12px',
           cursor: 'pointer',
           letterSpacing: '0.2em',

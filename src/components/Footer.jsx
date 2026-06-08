@@ -6,9 +6,9 @@ export default function Footer() {
     <footer
       className="py-16 px-4 md:px-6"
       style={{
-        backgroundColor: '#0a0806',
+        backgroundColor: 'var(--bg-primary)',
         backgroundImage: 'none',
-        borderTop: '1px solid rgba(138, 109, 47, 0.15)',
+        borderTop: '1px solid var(--border)',
       }}
     >
       <div className="max-w-4xl mx-auto">
@@ -18,18 +18,18 @@ export default function Footer() {
           <div>
             <p
               className="text-xl italic mb-2"
-              style={{ fontFamily: "'Playfair Display', serif", color: '#f0e6c8' }}
+              style={{ fontFamily: "var(--font-heading)", color: 'var(--text-primary)' }}
             >
               E. Ashworth
             </p>
-            <p className="text-sm" style={{ color: '#4a3520' }}>
+            <p className="text-sm" style={{ color: 'var(--text-faint)' }}>
               Author & Poet<br />
               Est. MMXXIV
             </p>
           </div>
 
           <div>
-            <p className="text-xs tracking-widest uppercase mb-4" style={{ color: '#8a6d2f' }}>
+            <p className="text-xs tracking-widest uppercase mb-4" style={{ color: 'var(--accent-dim)' }}>
               Navigation
             </p>
             <div className="space-y-2">
@@ -38,7 +38,7 @@ export default function Footer() {
                   <Link
                     to={to}
                     className="text-sm transition-colors duration-300 hover:text-gold"
-                    style={{ color: '#4a3520' }}
+                    style={{ color: 'var(--text-faint)' }}
                   >
                     {label}
                   </Link>
@@ -48,17 +48,17 @@ export default function Footer() {
           </div>
 
           <div>
-            <p className="text-xs tracking-widest uppercase mb-4" style={{ color: '#8a6d2f' }}>
+            <p className="text-xs tracking-widest uppercase mb-4" style={{ color: 'var(--accent-dim)' }}>
               Correspondence
             </p>
             <a
               href="mailto:eleanor@ashworthwrites.com"
               className="text-sm transition-colors duration-300 hover:text-gold"
-              style={{ color: '#4a3520', display: 'block', marginBottom: '8px' }}
+              style={{ color: 'var(--text-faint)', display: 'block', marginBottom: '8px' }}
             >
               eleanor@ashworthwrites.com
             </a>
-            <p className="text-xs" style={{ color: '#3d2b14' }}>
+            <p className="text-xs" style={{ color: 'var(--text-faint)' }}>
               For inquiries, speaking,<br />
               and correspondence
             </p>
@@ -67,14 +67,14 @@ export default function Footer() {
 
         <div
           className="pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-center"
-          style={{ borderTop: '1px solid rgba(138,109,47,0.1)' }}
+          style={{ borderTop: '1px solid var(--border)' }}
         >
-          <p className="text-xs tracking-widest" style={{ color: '#2a1f0e' }}>
+          <p className="text-xs tracking-widest" style={{ color: 'var(--text-faint)' }}>
             © {new Date().getFullYear()} Eleanor Ashworth. All rights reserved.
           </p>
           <p
             className="text-xs italic"
-            style={{ color: '#2a1f0e', fontFamily: "'IM Fell English', serif" }}
+            style={{ color: 'var(--text-faint)', fontFamily: "var(--font-accent)" }}
           >
             "Write well, write honestly, write always."
           </p>

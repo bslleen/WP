@@ -11,7 +11,7 @@ const motes = Array.from({ length: 18 }, (_, i) => ({
 
 export default function DustMotes() {
   return (
-    <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 10, overflow: 'hidden' }}>
+    <div className="ornate-particles" style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 10, overflow: 'hidden' }}>
       {motes.map(m => (
         <div
           key={m.id}
@@ -22,7 +22,7 @@ export default function DustMotes() {
             width: m.size,
             height: m.size,
             borderRadius: '50%',
-            background: '#c9a85c',
+            background: 'var(--accent)',
             opacity: m.opacity,
             animation: `floatMote ${m.duration}s ${m.delay}s infinite ease-in-out`,
           }}

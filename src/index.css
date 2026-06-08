@@ -1,8 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&family=IM+Fell+English:ital@0;1&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap');
 @import "tailwindcss";
+@import './themes/parchment.css';
 
 :root {
-  --deep-black: #100d07;
+  /* Semantic theme variables — castle mode defaults (overridden by ThemeContext JS) */
+  --bg-primary: #0d0a05;
+  --bg-secondary: #1a1209;
+  --bg-tertiary: #2a1f0e;
+  --text-primary: #f0e6c8;
+  --text-secondary: #a89060;
+  --text-muted: #6b5a3e;
+  --text-faint: #3d2b14;
+  --accent: #c9a84c;
+  --accent-dim: #8a6d2f;
+  --accent-faint: rgba(201,168,76,0.1);
+  --border: rgba(138,109,47,0.3);
+  --border-strong: rgba(201,168,76,0.5);
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: 'Crimson Text', Georgia, serif;
+  --font-accent: 'IM Fell English', Georgia, serif;
+  --card-shadow: 0 8px 40px rgba(0,0,0,0.7);
+  --nav-bg: rgba(13,10,5,0.97);
+  --overlay: rgba(0,0,0,0.85);
+
+  /* Legacy aliases */
+  --deep-black: #0d0a05;
   --dark-brown: #1a1209;
   --medium-brown: #2a1f0e;
   --warm-brown: #3d2b14;
@@ -22,19 +44,18 @@ html { scroll-behavior: smooth; }
 /* ─── Body ─────────────────────────────────────────────────────────────────── */
 
 body {
-  background-color: var(--deep-black);
-  /* Damask tile — visible at a proper opacity */
+  background-color: var(--bg-primary);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 4 L76 40 L40 76 L4 40 Z' fill='none' stroke='%23c9a84c' stroke-width='1' opacity='0.18'/%3E%3Cpath d='M40 20 L60 40 L40 60 L20 40 Z' fill='none' stroke='%23c9a84c' stroke-width='0.6' opacity='0.1'/%3E%3Ccircle cx='40' cy='40' r='2.5' fill='%23c9a84c' opacity='0.09'/%3E%3C/svg%3E");
   background-size: 80px 80px;
-  color: var(--parchment);
-  font-family: 'Crimson Text', Georgia, serif;
+  color: var(--text-primary);
+  font-family: var(--font-body);
   font-size: 17px;
   letter-spacing: 0.01em;
   line-height: 1.7;
   overflow-x: hidden;
 }
 
-/* Grain — coarser, more visible */
+/* Grain */
 body::before {
   content: '';
   position: fixed;
@@ -49,33 +70,31 @@ body::before {
 /* ─── Scrollbar ─────────────────────────────────────────────────────────────── */
 
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--deep-black); }
-::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
-::selection { background: var(--gold-dim); color: var(--parchment); }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--accent-dim); border-radius: 3px; }
+::selection { background: var(--accent-dim); color: var(--text-primary); }
 
 /* ─── Headings ──────────────────────────────────────────────────────────────── */
 
 h1, h2, h3, h4 {
-  font-family: 'Playfair Display', Georgia, serif;
-  color: var(--parchment);
+  font-family: var(--font-heading);
+  color: var(--text-primary);
   letter-spacing: 0.01em;
   font-style: italic;
 }
 
 /* ─── Prose utilities ───────────────────────────────────────────────────────── */
 
-/* Old-book paragraph indent — skip the first paragraph */
 .prose-dark p + p {
   text-indent: 1.5em;
 }
 
-/* Dropcap for journal body text */
 .dropcap::first-letter {
   float: left;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: 4.2em;
   line-height: 0.78;
-  color: var(--gold);
+  color: var(--accent);
   margin-right: 0.07em;
   margin-top: 0.06em;
   font-style: italic;
@@ -118,8 +137,8 @@ h1, h2, h3, h4 {
 }
 
 @keyframes glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(201,168,76,0.3); }
-  50%       { box-shadow: 0 0 40px rgba(201,168,76,0.6); }
+  0%, 100% { box-shadow: 0 0 20px var(--accent-faint); }
+  50%       { box-shadow: 0 0 40px var(--accent-faint); }
 }
 
 @keyframes ruleSlideIn {
@@ -142,15 +161,15 @@ h1, h2, h3, h4 {
 
 /* ─── Colour utilities ──────────────────────────────────────────────────────── */
 
-.text-gold      { color: var(--gold); }
-.text-parchment { color: var(--parchment); }
-.text-mist      { color: var(--mist); }
+.text-gold      { color: var(--accent); }
+.text-parchment { color: var(--text-primary); }
+.text-mist      { color: var(--text-muted); }
 
 /* ─── Ornate border ─────────────────────────────────────────────────────────── */
 
 .ornate-border {
-  border: 1px solid rgba(201, 168, 76, 0.35);
-  box-shadow: 0 0 12px rgba(201, 168, 76, 0.07), inset 0 0 20px rgba(0,0,0,0.4);
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 0 12px var(--accent-faint), inset 0 0 20px rgba(0,0,0,0.4);
 }
 
 /* ─── Aged card top edge ────────────────────────────────────────────────────── */
@@ -163,12 +182,12 @@ h1, h2, h3, h4 {
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.4), transparent);
+  background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
   z-index: 1;
   pointer-events: none;
 }
 .card-aged:hover {
-  box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(201,168,76,0.08) !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px var(--accent-faint) !important;
   transform: translateY(-4px);
   transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
@@ -177,10 +196,10 @@ h1, h2, h3, h4 {
 
 .btn-gold {
   background: transparent;
-  border: 1px solid var(--gold);
-  color: var(--gold);
+  border: 1px solid var(--accent);
+  color: var(--accent);
   padding: 10px 28px;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: 13px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -190,19 +209,17 @@ h1, h2, h3, h4 {
   overflow: hidden;
 }
 
-/* Gradient fill on hover — slide in from left */
 .btn-gold::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, #c9a84c 0%, #a8823a 100%);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dim) 100%);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.3s ease;
   z-index: -1;
 }
 
-/* Subtle diamond watermark stamp */
 .btn-gold::after {
   content: '';
   position: absolute;
@@ -216,8 +233,8 @@ h1, h2, h3, h4 {
 }
 
 .btn-gold:hover {
-  color: var(--deep-black);
-  box-shadow: 0 4px 20px rgba(201,168,76,0.35);
+  color: var(--bg-primary);
+  box-shadow: 0 4px 20px var(--accent-faint);
 }
 .btn-gold:hover::before { transform: scaleX(1); }
 
@@ -226,34 +243,35 @@ h1, h2, h3, h4 {
 .admin-input,
 .admin-input-area {
   width: 100%;
-  background: rgba(26, 18, 9, 0.6);
+  background: var(--bg-secondary);
   border: none;
-  border-bottom: 1px solid rgba(138, 109, 47, 0.4);
+  border-bottom: 1px solid var(--border);
   border-radius: 0;
   padding: 10px 4px;
-  color: #d4c49a;
-  font-family: 'Crimson Text', serif;
+  color: var(--text-primary);
+  font-family: var(--font-body);
   font-size: 16px;
   outline: none;
   transition: border-bottom-color 0.2s, background 0.2s, box-shadow 0.2s;
 }
 .admin-input::placeholder,
 .admin-input-area::placeholder {
-  color: rgba(138, 109, 47, 0.5);
+  color: var(--text-muted);
 }
 .admin-input:focus,
 .admin-input-area:focus {
-  border-bottom-color: #c9a84c;
-  box-shadow: 0 2px 0 0 rgba(201,168,76,0.3);
-  background: rgba(30, 22, 12, 0.8);
+  border-bottom-color: var(--accent);
+  box-shadow: 0 2px 0 0 var(--accent-faint);
+  background: var(--bg-tertiary);
   outline: none;
 }
 .admin-label {
   display: block;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: 11px;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: #8a6d2f;
+  color: var(--accent-dim);
   margin-bottom: 0.4rem;
 }
+

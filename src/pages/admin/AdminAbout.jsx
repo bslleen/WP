@@ -5,7 +5,7 @@ import { OrnateDivider } from '../../components/OrnateElements'
 const field = (label, value, onChange, opts = {}) => (
   <div style={{ marginBottom: '1.25rem' }}>
     <label style={{
-      display: 'block', color: '#6b5a3e', fontSize: '0.58rem',
+      display: 'block', color: 'var(--text-muted)', fontSize: '0.58rem',
       letterSpacing: '0.3em', textTransform: 'uppercase',
       fontFamily: "'Playfair Display', serif", marginBottom: '0.4rem',
     }}>{label}</label>
@@ -31,9 +31,9 @@ const field = (label, value, onChange, opts = {}) => (
 
 const inputStyle = {
   width: '100%',
-  background: 'rgba(26,18,9,0.6)',
-  border: '1px solid rgba(138,109,47,0.3)',
-  color: '#d4c49a',
+  background: 'var(--bg-secondary)',
+  border: '1px solid var(--border)',
+  color: 'var(--text-primary)',
   padding: '0.6rem 0.85rem',
   fontSize: '0.9rem',
   fontFamily: "'Crimson Text', serif",
@@ -118,12 +118,12 @@ export default function AdminAbout() {
 
   return (
     <div style={{ paddingLeft: '24px' }}>
-      <style>{`.aa-input::placeholder { color: rgba(138, 109, 47, 0.5); }`}</style>
+      <style>{`.aa-input::placeholder { color: var(--border-strong); }`}</style>
       <div style={{ marginBottom: '2rem' }}>
-        <p style={{ color: '#4a3520', fontSize: '0.6rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
+        <p style={{ color: 'var(--text-faint)', fontSize: '0.6rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
           ✦ &nbsp; Profile &nbsp; ✦
         </p>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", color: '#f0e6c8', fontSize: '2.2rem', fontStyle: 'italic' }}>
+        <h1 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)', fontSize: '2.2rem', fontStyle: 'italic' }}>
           About the Writer
         </h1>
       </div>
@@ -140,7 +140,7 @@ export default function AdminAbout() {
         {field('Contact email', form.email, set('email'))}
 
         {/* Photo */}
-        <label style={{ display: 'block', color: '#6b5a3e', fontSize: '0.58rem', letterSpacing: '0.3em', textTransform: 'uppercase', fontFamily: "'Playfair Display', serif", marginBottom: '0.4rem' }}>
+        <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.58rem', letterSpacing: '0.3em', textTransform: 'uppercase', fontFamily: "'Playfair Display', serif", marginBottom: '0.4rem' }}>
           Portrait photo
         </label>
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', marginBottom: '1.25rem' }}>
@@ -154,8 +154,8 @@ export default function AdminAbout() {
             style={{ ...inputStyle, flex: 1 }}
           />
           <label style={{
-            padding: '0.6rem 1rem', border: '1px solid rgba(138,109,47,0.4)',
-            color: '#8a6d2f', fontSize: '0.65rem', letterSpacing: '0.2em',
+            padding: '0.6rem 1rem', border: '1px solid var(--border-strong)',
+            color: 'var(--accent-dim)', fontSize: '0.65rem', letterSpacing: '0.2em',
             textTransform: 'uppercase', cursor: 'pointer', whiteSpace: 'nowrap',
             fontFamily: "'Playfair Display', serif",
             opacity: uploading ? 0.5 : 1,
@@ -165,7 +165,7 @@ export default function AdminAbout() {
           </label>
         </div>
         {form.photo_url && (
-          <img src={form.photo_url} alt="preview" style={{ height: '120px', objectFit: 'cover', border: '1px solid rgba(138,109,47,0.3)', marginBottom: '1rem' }} />
+          <img src={form.photo_url} alt="preview" style={{ height: '120px', objectFit: 'cover', border: '1px solid var(--border)', marginBottom: '1rem' }} />
         )}
       </section>
 
@@ -200,7 +200,7 @@ export default function AdminAbout() {
       <section style={{ marginBottom: '2.5rem' }}>
         <h2 style={sectionHead}>Biography</h2>
         {form.bio.map((b, i) => (
-          <div key={i} style={{ marginBottom: '1.5rem', paddingBottom: '1.5rem', borderBottom: i < form.bio.length - 1 ? '1px solid rgba(138,109,47,0.1)' : 'none' }}>
+          <div key={i} style={{ marginBottom: '1.5rem', paddingBottom: '1.5rem', borderBottom: i < form.bio.length - 1 ? '1px solid var(--border)' : 'none' }}>
             <input
               type="text"
               value={b.heading}
@@ -232,7 +232,7 @@ export default function AdminAbout() {
           {saving ? 'Saving…' : 'Save Profile'}
         </button>
         {saved && (
-          <span style={{ color: '#c9a84c', fontSize: '0.7rem', letterSpacing: '0.15em', fontFamily: "'IM Fell English', serif", fontStyle: 'italic' }}>
+          <span style={{ color: 'var(--accent)', fontSize: '0.7rem', letterSpacing: '0.15em', fontFamily: "'IM Fell English', serif", fontStyle: 'italic' }}>
             ✦ Saved
           </span>
         )}
@@ -243,7 +243,7 @@ export default function AdminAbout() {
 
 const sectionHead = {
   fontFamily: "'Playfair Display', serif",
-  color: '#c9a84c',
+  color: 'var(--accent)',
   fontSize: '1rem',
   fontStyle: 'italic',
   marginBottom: '1rem',

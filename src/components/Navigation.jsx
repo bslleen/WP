@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { CandleIcon, BookIcon } from './OrnateElements'
+import { useTheme } from '../themes/ThemeContext'
 
 export default function Navigation({ onCandleClick }) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
+  const { mode, toggle } = useTheme()
 
   // Draggable candle state
   const [candlePos, setCandlePos] = useState(null) // null = pinned in nav
@@ -62,21 +64,21 @@ export default function Navigation({ onCandleClick }) {
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
       style={{
         background: scrolled
-          ? 'rgba(13, 10, 5, 0.97)'
+          ? 'var(--nav-bg)'
           : 'linear-gradient(to bottom, rgba(13,10,5,0.9), transparent)',
-        borderBottom: scrolled ? '1px solid rgba(138, 109, 47, 0.3)' : 'none',
+        borderBottom: scrolled ? '1px solid var(--border)' : 'none',
         backdropFilter: scrolled ? 'blur(8px)' : 'none',
       }}
     >
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-4 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex flex-col items-start group">
-          <span className="text-xs tracking-[0.4em] uppercase" style={{ color: '#8a6d2f' }}>
+        <Link to="/" className="nav-logo flex flex-col items-start group">
+          <span className="text-xs tracking-[0.4em] uppercase" style={{ color: 'var(--accent-dim)' }}>
             ✦ &nbsp; Est. MMXXIV
           </span>
           <span
             className="text-xl italic group-hover:text-gold transition-colors"
-            style={{ fontFamily: "'Playfair Display', serif", color: '#f0e6c8' }}
+            style={{ fontFamily: "var(--font-heading)", color: 'var(--text-primary)' }}
           >
             E. Ashworth
           </span>
@@ -90,28 +92,51 @@ export default function Navigation({ onCandleClick }) {
               to={to}
               className="relative text-sm tracking-[0.2em] uppercase transition-colors duration-300 group"
               style={{
-                color: location.pathname === to ? '#c9a84c' : '#a89060',
-                fontFamily: "'Crimson Text', serif",
+                color: location.pathname === to ? 'var(--accent)' : 'var(--text-secondary)',
+                fontFamily: "var(--font-body)",
               }}
             >
               {label}
               <span
                 className="absolute -bottom-1 left-0 h-px transition-all duration-300"
                 style={{
-                  background: '#c9a84c',
+                  background: 'var(--accent)',
                   width: location.pathname === to ? '100%' : '0%',
                 }}
               />
               <span
                 className="absolute -bottom-1 left-0 h-px w-0 group-hover:w-full transition-all duration-300"
-                style={{ background: '#c9a84c' }}
+                style={{ background: 'var(--accent)' }}
               />
             </Link>
           ))}
         </div>
 
-        {/* Right side: book icon + candle + hamburger */}
+        {/* Right side: theme toggle + book icon + candle + hamburger */}
         <div className="flex items-center gap-3">
+          {/* Theme toggle */}
+          <button
+            className="theme-toggle"
+            onClick={toggle}
+            style={{
+              display: 'none',
+              background: 'none',
+              border: '1px solid var(--border)',
+              color: 'var(--text-muted)',
+              fontSize: '10px',
+              letterSpacing: '0.2em',
+              padding: '4px 10px',
+              cursor: 'pointer',
+              fontFamily: 'var(--font-body)',
+              textTransform: 'uppercase',
+              transition: 'all 0.3s ease',
+            }}
+            onMouseEnter={e => (e.target.style.color = 'var(--accent)')}
+            onMouseLeave={e => (e.target.style.color = 'var(--text-muted)')}
+          >
+            {mode === 'castle' ? '☽ Castle' : '○ Parchment'}
+          </button>
+
           <Link
             to="/admin/login"
             title="The Inner Study"
@@ -145,7 +170,7 @@ export default function Navigation({ onCandleClick }) {
               className="block transition-all duration-300"
               style={{
                 width: '22px', height: '2px',
-                background: '#c9a84c',
+                background: 'var(--accent)',
                 transformOrigin: 'center',
                 transform: menuOpen ? 'translateY(7px) rotate(45deg)' : 'none',
               }}
@@ -154,7 +179,7 @@ export default function Navigation({ onCandleClick }) {
               className="block transition-all duration-300"
               style={{
                 width: '22px', height: '2px',
-                background: '#c9a84c',
+                background: 'var(--accent)',
                 opacity: menuOpen ? 0 : 1,
               }}
             />
@@ -162,7 +187,7 @@ export default function Navigation({ onCandleClick }) {
               className="block transition-all duration-300"
               style={{
                 width: '22px', height: '2px',
-                background: '#c9a84c',
+                background: 'var(--accent)',
                 transformOrigin: 'center',
                 transform: menuOpen ? 'translateY(-7px) rotate(-45deg)' : 'none',
               }}
@@ -176,7 +201,7 @@ export default function Navigation({ onCandleClick }) {
     {menuOpen && (
       <div
         className="fixed inset-0 z-40 flex flex-col items-center justify-center md:hidden"
-        style={{ background: '#0d0a05' }}
+        style={{ background: 'var(--bg-primary)' }}
       >
         <nav className="flex flex-col items-center gap-10">
           {links.map(({ to, label }) => (
@@ -186,8 +211,8 @@ export default function Navigation({ onCandleClick }) {
               onClick={() => setMenuOpen(false)}
               className="text-4xl italic transition-colors duration-300"
               style={{
-                fontFamily: "'Playfair Display', serif",
-                color: location.pathname === to ? '#c9a84c' : '#f0e6c8',
+                fontFamily: "var(--font-heading)",
+                color: location.pathname === to ? 'var(--accent)' : 'var(--text-primary)',
                 textDecoration: 'none',
                 letterSpacing: '0.02em',
               }}
@@ -196,10 +221,10 @@ export default function Navigation({ onCandleClick }) {
             </Link>
           ))}
         </nav>
-        <div style={{ marginTop: '3rem', width: '40px', height: '0.5px', background: '#2a1e0a' }} />
+        <div style={{ marginTop: '3rem', width: '40px', height: '0.5px', background: 'var(--bg-tertiary)' }} />
         <p
           className="mt-6 text-xs tracking-[0.35em] uppercase"
-          style={{ color: '#3a2e1a', fontFamily: "'Cinzel', serif" }}
+          style={{ color: 'var(--text-faint)', fontFamily: "'Cinzel', serif" }}
         >
           Est. MMXXIV
         </p>

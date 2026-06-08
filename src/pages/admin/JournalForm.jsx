@@ -5,11 +5,11 @@ import { OrnateDivider } from '../../components/OrnateElements'
 
 const field = {
   width: '100%',
-  background: 'rgba(13,10,5,0.5)',
-  border: '1px solid rgba(138,109,47,0.2)',
+  background: 'var(--bg-primary)',
+  border: '1px solid var(--border)',
   outline: 'none',
   padding: '0.7rem 1rem',
-  color: '#d4c49a',
+  color: 'var(--text-primary)',
   fontFamily: "'IM Fell English', serif",
   fontSize: '0.95rem',
   resize: 'vertical',
@@ -17,7 +17,7 @@ const field = {
 
 const labelStyle = {
   display: 'block',
-  color: '#8a6d2f',
+  color: 'var(--accent-dim)',
   fontSize: '0.6rem',
   letterSpacing: '0.3em',
   textTransform: 'uppercase',
@@ -29,30 +29,30 @@ const labelStyle = {
 function PreviewCard({ entry }) {
   return (
     <div style={{
-      background: 'rgba(13,10,5,0.7)',
-      border: '0.5px solid #3a2e1a',
+      background: 'var(--bg-secondary)',
+      border: '0.5px solid var(--text-faint)',
       padding: '2rem',
       maxWidth: '420px',
     }}>
-      <p style={{ fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.3em', color: '#5a4a2a', marginBottom: 6, textTransform: 'uppercase' }}>
+      <p style={{ fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.3em', color: 'var(--text-muted)', marginBottom: 6, textTransform: 'uppercase' }}>
         {entry.category || 'Journal'}
       </p>
-      <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontStyle: 'italic', fontWeight: 300, color: '#e8dcc0', marginBottom: 10, lineHeight: 1.2 }}>
+      <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontStyle: 'italic', fontWeight: 300, color: 'var(--text-primary)', marginBottom: 10, lineHeight: 1.2 }}>
         {entry.title || 'Untitled'}
       </h2>
       {entry.read_time && (
-        <p style={{ fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.2em', color: '#2a2010', marginBottom: 16, textTransform: 'uppercase' }}>
+        <p style={{ fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.2em', color: 'var(--text-faint)', marginBottom: 16, textTransform: 'uppercase' }}>
           {entry.read_time} READ
         </p>
       )}
-      <div style={{ height: '0.5px', background: '#1a1410', marginBottom: 20 }} />
-      <div style={{ fontSize: 15, lineHeight: 1.85, color: '#8a7a5a', maxHeight: '200px', overflow: 'hidden' }}>
+      <div style={{ height: '0.5px', background: 'var(--border)', marginBottom: 20 }} />
+      <div style={{ fontSize: 15, lineHeight: 1.85, color: 'var(--text-secondary)', maxHeight: '200px', overflow: 'hidden' }}>
         {(entry.body || entry.excerpt || '').split('\n\n').slice(0, 3).map((p, i) => (
           <p key={i} style={{ marginBottom: '1em' }}>{p}</p>
         ))}
       </div>
       {(entry.body || '').split('\n\n').length > 3 && (
-        <p style={{ color: '#3a2e1a', fontSize: 11, fontStyle: 'italic', marginTop: 8 }}>… continues</p>
+        <p style={{ color: 'var(--text-faint)', fontSize: 11, fontStyle: 'italic', marginTop: 8 }}>… continues</p>
       )}
     </div>
   )
@@ -78,15 +78,15 @@ function PreviewModal({ entry, savedId, onClose, onPublished }) {
     <div
       style={{
         position: 'fixed', inset: 0, zIndex: 100,
-        background: 'rgba(0,0,0,0.88)',
+        background: 'var(--overlay)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         padding: '24px',
       }}
       onClick={e => e.target === e.currentTarget && onClose()}
     >
       <div style={{
-        background: 'linear-gradient(160deg, #1a1209, #0d0a05)',
-        border: '1px solid #3a2e1a',
+        background: 'linear-gradient(160deg, var(--bg-secondary), var(--bg-primary))',
+        border: '1px solid var(--text-faint)',
         padding: '2.5rem',
         width: '100%', maxWidth: '520px',
         position: 'relative',
@@ -97,20 +97,20 @@ function PreviewModal({ entry, savedId, onClose, onPublished }) {
           style={{
             position: 'absolute', top: 16, right: 20,
             background: 'none', border: 'none',
-            color: '#4a3520', cursor: 'pointer',
+            color: 'var(--text-faint)', cursor: 'pointer',
             fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.2em',
             transition: 'color 0.2s',
           }}
-          onMouseEnter={e => (e.target.style.color = '#c9a84c')}
-          onMouseLeave={e => (e.target.style.color = '#4a3520')}
+          onMouseEnter={e => (e.target.style.color = 'var(--accent)')}
+          onMouseLeave={e => (e.target.style.color = 'var(--text-faint)')}
         >
           ✕ CLOSE
         </button>
 
-        <p style={{ color: '#4a3520', fontSize: '0.55rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.4rem' }}>
+        <p style={{ color: 'var(--text-faint)', fontSize: '0.55rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.4rem' }}>
           Preview
         </p>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", color: '#f0e6c8', fontSize: '1.5rem', fontStyle: 'italic', marginBottom: '1.5rem' }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)', fontSize: '1.5rem', fontStyle: 'italic', marginBottom: '1.5rem' }}>
           How it will appear
         </h2>
 
@@ -118,10 +118,10 @@ function PreviewModal({ entry, savedId, onClose, onPublished }) {
           <PreviewCard entry={entry} />
         </div>
 
-        <div style={{ borderTop: '0.5px solid #2a1e0a', paddingTop: '1.5rem' }}>
+        <div style={{ borderTop: '0.5px solid var(--border)', paddingTop: '1.5rem' }}>
           {published ? (
             <p style={{
-              textAlign: 'center', color: '#c9a84c',
+              textAlign: 'center', color: 'var(--accent)',
               fontFamily: "'Playfair Display', serif", fontStyle: 'italic',
               fontSize: '1rem',
             }}>
@@ -133,9 +133,9 @@ function PreviewModal({ entry, savedId, onClose, onPublished }) {
               disabled={publishing}
               style={{
                 width: '100%', padding: '14px 0',
-                background: publishing ? 'rgba(201,168,76,0.3)' : '#c9a84c',
-                border: '1px solid #c9a84c',
-                color: publishing ? '#c9a84c' : '#0d0a05',
+                background: publishing ? 'rgba(201,168,76,0.3)' : 'var(--accent)',
+                border: '1px solid var(--accent)',
+                color: publishing ? 'var(--accent)' : 'var(--bg-primary)',
                 fontFamily: "'Playfair Display', serif",
                 fontSize: '0.68rem', letterSpacing: '0.25em',
                 textTransform: 'uppercase', cursor: publishing ? 'wait' : 'pointer',
@@ -227,7 +227,7 @@ export default function JournalForm() {
   const handlePublishNow = () => saveEntry(true)
 
   if (loading) return (
-    <p style={{ color: '#4a3520', fontStyle: 'italic', fontFamily: "'IM Fell English', serif" }}>Retrieving…</p>
+    <p style={{ color: 'var(--text-faint)', fontStyle: 'italic', fontFamily: "'IM Fell English', serif" }}>Retrieving…</p>
   )
 
   return (
@@ -236,18 +236,18 @@ export default function JournalForm() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.6rem' }}>
           <Link
             to="/admin/journal"
-            style={{ color: '#4a3520', fontSize: '0.58rem', letterSpacing: '0.25em', textTransform: 'uppercase', fontFamily: "'Playfair Display', serif", textDecoration: 'none', transition: 'color 0.2s' }}
-            onMouseEnter={e => (e.target.style.color = '#8a6d2f')}
-            onMouseLeave={e => (e.target.style.color = '#4a3520')}
+            style={{ color: 'var(--text-faint)', fontSize: '0.58rem', letterSpacing: '0.25em', textTransform: 'uppercase', fontFamily: "'Playfair Display', serif", textDecoration: 'none', transition: 'color 0.2s' }}
+            onMouseEnter={e => (e.target.style.color = 'var(--accent-dim)')}
+            onMouseLeave={e => (e.target.style.color = 'var(--text-faint)')}
           >
             ← Journal
           </Link>
-          <span style={{ color: '#2a1e0a', fontSize: '0.58rem' }}>/</span>
-          <span style={{ color: '#6b5a3e', fontSize: '0.58rem', letterSpacing: '0.25em', textTransform: 'uppercase', fontFamily: "'Playfair Display', serif" }}>
+          <span style={{ color: 'var(--border)', fontSize: '0.58rem' }}>/</span>
+          <span style={{ color: 'var(--text-muted)', fontSize: '0.58rem', letterSpacing: '0.25em', textTransform: 'uppercase', fontFamily: "'Playfair Display', serif" }}>
             {isEdit ? (form.title || 'Edit') : 'New'}
           </span>
         </div>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", color: '#f0e6c8', fontSize: '2.2rem', fontStyle: 'italic' }}>
+        <h1 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)', fontSize: '2.2rem', fontStyle: 'italic' }}>
           {isEdit ? 'Edit Entry' : 'New Journal Entry'}
         </h1>
       </div>
@@ -293,7 +293,7 @@ export default function JournalForm() {
         </div>
 
         {error && (
-          <p style={{ color: '#c9a84c', opacity: 0.75, fontSize: '0.75rem', marginBottom: '1rem' }}>{error}</p>
+          <p style={{ color: 'var(--accent)', opacity: 0.75, fontSize: '0.75rem', marginBottom: '1rem' }}>{error}</p>
         )}
 
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -312,8 +312,8 @@ export default function JournalForm() {
             disabled={saving}
             style={{
               background: form.published && isEdit ? 'rgba(201,168,76,0.12)' : 'transparent',
-              border: '1px solid rgba(201,168,76,0.5)',
-              color: '#c9a84c',
+              border: '1px solid var(--border-strong)',
+              color: 'var(--accent)',
               padding: '10px 24px',
               fontFamily: "'Playfair Display', serif",
               fontSize: '0.62rem',
@@ -335,18 +335,18 @@ export default function JournalForm() {
                 type="button"
                 onClick={() => setShowPreview(true)}
                 style={{
-                  background: 'transparent', border: '1px solid rgba(138,109,47,0.3)',
-                  color: '#6b5a3e', padding: '10px 20px',
+                  background: 'transparent', border: '1px solid var(--border)',
+                  color: 'var(--text-muted)', padding: '10px 20px',
                   fontFamily: "'Playfair Display', serif", fontSize: '0.62rem',
                   letterSpacing: '0.2em', textTransform: 'uppercase',
                   cursor: 'pointer', transition: 'all 0.2s',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(138,109,47,0.6)'; e.currentTarget.style.color = '#8a6d2f' }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(138,109,47,0.3)'; e.currentTarget.style.color = '#6b5a3e' }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--border-strong)'; e.currentTarget.style.color = 'var(--accent-dim)' }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-muted)' }}
               >
                 Preview
               </button>
-              <span style={{ color: '#6b5a3e', fontSize: '0.62rem', letterSpacing: '0.15em', fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>
+              <span style={{ color: 'var(--text-muted)', fontSize: '0.62rem', letterSpacing: '0.15em', fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>
                 Saved.
               </span>
             </>
@@ -356,7 +356,7 @@ export default function JournalForm() {
             type="button"
             onClick={() => navigate('/admin/journal')}
             style={{
-              background: 'none', border: 'none', color: '#4a3520',
+              background: 'none', border: 'none', color: 'var(--text-faint)',
               fontSize: '0.62rem', letterSpacing: '0.2em', textTransform: 'uppercase',
               cursor: 'pointer', fontFamily: "'Playfair Display', serif",
             }}

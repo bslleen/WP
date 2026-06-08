@@ -45,15 +45,15 @@ export default function PasswordModal({ isOpen, onClose, onSuccess }) {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center"
+      className="password-modal-overlay fixed inset-0 z-[100] flex items-center justify-center"
       style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(6px)' }}
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
-        className={`relative w-full max-w-sm mx-4 p-8 transition-all ${shake ? 'animate-shake' : ''}`}
+        className={`password-modal-box relative w-full max-w-sm mx-4 p-8 transition-all ${shake ? 'animate-shake' : ''}`}
         style={{
-          background: 'linear-gradient(135deg, #1a1209, #0d0a05)',
-          border: '1px solid #8a6d2f',
+          background: 'linear-gradient(135deg, var(--bg-secondary), var(--bg-primary))',
+          border: '1px solid var(--accent-dim)',
           boxShadow: '0 0 60px rgba(201, 168, 76, 0.15), inset 0 0 40px rgba(0,0,0,0.5)',
           marginBottom: 'env(safe-area-inset-bottom, 0px)',
         }}
@@ -62,7 +62,7 @@ export default function PasswordModal({ isOpen, onClose, onSuccess }) {
         <button
           onClick={onClose}
           className="absolute top-3 right-4 text-xs tracking-widest"
-          style={{ color: '#6b5a3e', fontFamily: "'Crimson Text', serif" }}
+          style={{ color: 'var(--text-muted)', fontFamily: "'Crimson Text', serif" }}
         >
           ✕
         </button>
@@ -70,25 +70,25 @@ export default function PasswordModal({ isOpen, onClose, onSuccess }) {
         <div className="text-center mb-6">
           {/* Keyhole SVG */}
           <svg viewBox="0 0 40 56" className="w-8 h-10 mx-auto mb-4" fill="none">
-            <circle cx="20" cy="16" r="10" stroke="#c9a84c" strokeWidth="1.5" fill="none" />
-            <circle cx="20" cy="16" r="4" fill="#c9a84c" opacity="0.3" />
-            <path d="M15 24 L12 48 L28 48 L25 24" stroke="#c9a84c" strokeWidth="1.5" fill="none" />
-            <path d="M15 24 L12 48 L28 48 L25 24 Z" fill="#c9a84c" opacity="0.1" />
+            <circle cx="20" cy="16" r="10" stroke="var(--accent)" strokeWidth="1.5" fill="none" />
+            <circle cx="20" cy="16" r="4" fill="var(--accent)" opacity="0.3" />
+            <path d="M15 24 L12 48 L28 48 L25 24" stroke="var(--accent)" strokeWidth="1.5" fill="none" />
+            <path d="M15 24 L12 48 L28 48 L25 24 Z" fill="var(--accent)" opacity="0.1" />
           </svg>
           <h3
             className="text-2xl italic mb-1"
-            style={{ fontFamily: "'Playfair Display', serif", color: '#f0e6c8' }}
+            style={{ fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)' }}
           >
             Speak the Word
           </h3>
-          <p className="text-xs tracking-widest uppercase" style={{ color: '#6b5a3e' }}>
+          <p className="text-xs tracking-widest uppercase" style={{ color: 'var(--text-muted)' }}>
             Private Chambers
           </p>
         </div>
 
         {/* Correspondence (email) */}
         <div className="mb-3">
-          <label className="block text-xs tracking-widest uppercase mb-1" style={{ color: '#6b5a3e', fontFamily: "'Cinzel', serif" }}>
+          <label className="block text-xs tracking-widest uppercase mb-1" style={{ color: 'var(--text-muted)', fontFamily: "'Cinzel', serif" }}>
             Correspondence
           </label>
           <input
@@ -100,8 +100,8 @@ export default function PasswordModal({ isOpen, onClose, onSuccess }) {
             placeholder="..."
             className="w-full bg-transparent py-2 outline-none border-b"
             style={{
-              borderColor: '#8a6d2f',
-              color: '#f0e6c8',
+              borderColor: 'var(--accent-dim)',
+              color: 'var(--text-primary)',
               fontFamily: "'IM Fell English', serif",
               fontSize: '0.95rem',
             }}
@@ -110,7 +110,7 @@ export default function PasswordModal({ isOpen, onClose, onSuccess }) {
 
         {/* Passphrase (password) */}
         <div className="mb-4">
-          <label className="block text-xs tracking-widest uppercase mb-1" style={{ color: '#6b5a3e', fontFamily: "'Cinzel', serif" }}>
+          <label className="block text-xs tracking-widest uppercase mb-1" style={{ color: 'var(--text-muted)', fontFamily: "'Cinzel', serif" }}>
             Passphrase
           </label>
           <input
@@ -121,8 +121,8 @@ export default function PasswordModal({ isOpen, onClose, onSuccess }) {
             placeholder="..."
             className="w-full bg-transparent text-center text-lg py-3 outline-none border-b"
             style={{
-              borderColor: '#8a6d2f',
-              color: '#f0e6c8',
+              borderColor: 'var(--accent-dim)',
+              color: 'var(--text-primary)',
               fontFamily: "'IM Fell English', serif",
               letterSpacing: '0.3em',
             }}
@@ -130,7 +130,7 @@ export default function PasswordModal({ isOpen, onClose, onSuccess }) {
         </div>
 
         {error && (
-          <p className="text-center text-xs mb-4 tracking-widest" style={{ color: '#c9a84c', opacity: 0.7 }}>
+          <p className="text-center text-xs mb-4 tracking-widest" style={{ color: 'var(--accent)', opacity: 0.7 }}>
             {error}
           </p>
         )}
@@ -141,14 +141,14 @@ export default function PasswordModal({ isOpen, onClose, onSuccess }) {
           className="w-full py-3 text-xs tracking-[0.3em] uppercase transition-all duration-300"
           style={{
             background: 'transparent',
-            border: '1px solid #8a6d2f',
-            color: '#c9a84c',
+            border: '1px solid var(--accent-dim)',
+            color: 'var(--accent)',
             fontFamily: "'Playfair Display', serif",
             opacity: loading ? 0.5 : 1,
             cursor: loading ? 'wait' : 'pointer',
           }}
-          onMouseEnter={(e) => { if (!loading) { e.target.style.background = '#c9a84c'; e.target.style.color = '#0d0a05' } }}
-          onMouseLeave={(e) => { e.target.style.background = 'transparent'; e.target.style.color = '#c9a84c' }}
+          onMouseEnter={(e) => { if (!loading) { e.target.style.background = 'var(--accent)'; e.target.style.color = 'var(--bg-primary)' } }}
+          onMouseLeave={(e) => { e.target.style.background = 'transparent'; e.target.style.color = 'var(--accent)' }}
         >
           {loading ? '…' : 'Enter'}
         </button>

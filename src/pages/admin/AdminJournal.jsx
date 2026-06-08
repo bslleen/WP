@@ -22,15 +22,15 @@ function PublishPopover({ isPublished, onConfirm, onCancel }) {
         position: 'absolute',
         right: 0, top: '110%',
         zIndex: 20,
-        background: '#1a1209',
-        border: '1px solid rgba(201,168,76,0.25)',
+        background: 'var(--bg-secondary)',
+        border: '1px solid var(--border-strong)',
         padding: '1rem 1.25rem',
         minWidth: '210px',
         boxShadow: '0 8px 32px rgba(0,0,0,0.7)',
       }}
     >
       <p style={{
-        color: '#a89060',
+        color: 'var(--text-secondary)',
         fontSize: '0.72rem',
         lineHeight: 1.5,
         marginBottom: '0.9rem',
@@ -44,8 +44,8 @@ function PublishPopover({ isPublished, onConfirm, onCancel }) {
         <button
           onClick={onConfirm}
           style={{
-            background: '#c9a84c', border: 'none',
-            color: '#0d0a05', padding: '5px 14px',
+            background: 'var(--accent)', border: 'none',
+            color: 'var(--bg-primary)', padding: '5px 14px',
             fontSize: '0.56rem', letterSpacing: '0.2em',
             textTransform: 'uppercase', cursor: 'pointer',
             fontFamily: "'Playfair Display', serif",
@@ -56,8 +56,8 @@ function PublishPopover({ isPublished, onConfirm, onCancel }) {
         <button
           onClick={onCancel}
           style={{
-            background: 'none', border: '1px solid rgba(138,109,47,0.3)',
-            color: '#6b5a3e', padding: '5px 14px',
+            background: 'none', border: '1px solid var(--border)',
+            color: 'var(--text-muted)', padding: '5px 14px',
             fontSize: '0.56rem', letterSpacing: '0.2em',
             textTransform: 'uppercase', cursor: 'pointer',
             fontFamily: "'Playfair Display', serif",
@@ -87,9 +87,9 @@ function PublishToggle({ entry, onToggle, toggling }) {
         disabled={toggling}
         title={isLive ? 'Currently live — click to draft' : 'Currently draft — click to publish'}
         style={{
-          background: isLive ? '#c9a84c' : 'transparent',
-          border: `1px solid ${isLive ? '#c9a84c' : 'rgba(138,109,47,0.4)'}`,
-          color: isLive ? '#0d0a05' : '#6b5a3e',
+          background: isLive ? 'var(--accent)' : 'transparent',
+          border: `1px solid ${isLive ? 'var(--accent)' : 'var(--border-strong)'}`,
+          color: isLive ? 'var(--bg-primary)' : 'var(--text-muted)',
           fontSize: '0.52rem',
           letterSpacing: '0.22em',
           textTransform: 'uppercase',
@@ -153,10 +153,10 @@ export default function AdminJournal() {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2rem' }}>
         <div>
-          <p style={{ color: '#4a3520', fontSize: '0.6rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
+          <p style={{ color: 'var(--text-faint)', fontSize: '0.6rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
             ✦ &nbsp; Chronicle &nbsp; ✦
           </p>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", color: '#f0e6c8', fontSize: '2.2rem', fontStyle: 'italic' }}>
+          <h1 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)', fontSize: '2.2rem', fontStyle: 'italic' }}>
             Journal
           </h1>
         </div>
@@ -168,15 +168,15 @@ export default function AdminJournal() {
       <OrnateDivider className="mb-8" />
 
       {loading ? (
-        <p style={{ color: '#4a3520', fontStyle: 'italic', fontFamily: "'IM Fell English', serif" }}>
+        <p style={{ color: 'var(--text-faint)', fontStyle: 'italic', fontFamily: "'IM Fell English', serif" }}>
           Consulting the archives…
         </p>
       ) : entries.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '4rem 0' }}>
-          <p style={{ color: '#4a3520', fontStyle: 'italic', fontFamily: "'IM Fell English', serif", fontSize: '1.1rem' }}>
+          <p style={{ color: 'var(--text-faint)', fontStyle: 'italic', fontFamily: "'IM Fell English', serif", fontSize: '1.1rem' }}>
             The chronicle is empty.
           </p>
-          <Link to="/admin/journal/new" style={{ color: '#8a6d2f', fontSize: '0.7rem', letterSpacing: '0.2em', textTransform: 'uppercase', textDecoration: 'none', display: 'block', marginTop: '1rem' }}>
+          <Link to="/admin/journal/new" style={{ color: 'var(--accent-dim)', fontSize: '0.7rem', letterSpacing: '0.2em', textTransform: 'uppercase', textDecoration: 'none', display: 'block', marginTop: '1rem' }}>
             Write the first entry →
           </Link>
         </div>
@@ -190,18 +190,18 @@ export default function AdminJournal() {
                 alignItems: 'center',
                 gap: '1rem',
                 padding: '1rem 1.25rem',
-                border: '1px solid rgba(138,109,47,0.2)',
-                background: 'rgba(26,18,9,0.4)',
+                border: '1px solid var(--border)',
+                background: 'var(--bg-secondary)',
                 transition: 'border-color 0.2s',
               }}
-              onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(138,109,47,0.4)')}
-              onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(138,109,47,0.2)')}
+              onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--border-strong)')}
+              onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}
             >
               {/* Info */}
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p style={{
                   fontFamily: "'Playfair Display', serif",
-                  color: '#d4c49a',
+                  color: 'var(--text-primary)',
                   fontStyle: 'italic',
                   fontSize: '1rem',
                   whiteSpace: 'nowrap',
@@ -210,7 +210,7 @@ export default function AdminJournal() {
                 }}>
                   {entry.title}
                 </p>
-                <p style={{ color: '#4a3520', fontSize: '0.62rem', marginTop: '2px' }}>
+                <p style={{ color: 'var(--text-faint)', fontSize: '0.62rem', marginTop: '2px' }}>
                   {[entry.category, entry.read_time].filter(Boolean).join(' · ')}
                 </p>
               </div>
@@ -229,16 +229,16 @@ export default function AdminJournal() {
                     href="/journal"
                     target="_blank"
                     rel="noreferrer"
-                    style={{ color: '#4a3520', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none', transition: 'color 0.2s' }}
-                    onMouseEnter={e => (e.target.style.color = '#8a6d2f')}
-                    onMouseLeave={e => (e.target.style.color = '#4a3520')}
+                    style={{ color: 'var(--text-faint)', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none', transition: 'color 0.2s' }}
+                    onMouseEnter={e => (e.target.style.color = 'var(--accent-dim)')}
+                    onMouseLeave={e => (e.target.style.color = 'var(--text-faint)')}
                   >
                     View ↗
                   </a>
                 )}
                 <Link
                   to={`/admin/journal/${entry.id}/edit`}
-                  style={{ color: '#8a6d2f', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none' }}
+                  style={{ color: 'var(--accent-dim)', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none' }}
                 >
                   Edit
                 </Link>
@@ -247,14 +247,14 @@ export default function AdminJournal() {
                   disabled={deletingId === entry.id}
                   style={{
                     background: 'none', border: 'none',
-                    color: '#4a3520', fontSize: '0.62rem',
+                    color: 'var(--text-faint)', fontSize: '0.62rem',
                     letterSpacing: '0.15em', textTransform: 'uppercase',
                     cursor: 'pointer', padding: 0,
                     opacity: deletingId === entry.id ? 0.4 : 1,
                     transition: 'color 0.2s',
                   }}
-                  onMouseEnter={e => (e.target.style.color = '#8a3520')}
-                  onMouseLeave={e => (e.target.style.color = '#4a3520')}
+                  onMouseEnter={e => (e.target.style.color = 'var(--accent-dim)')}
+                  onMouseLeave={e => (e.target.style.color = 'var(--text-faint)')}
                 >
                   Delete
                 </button>

@@ -4,20 +4,20 @@ import { fetchAllWorks, fetchAllJournal } from '../../data/api'
 import { OrnateDivider } from '../../components/OrnateElements'
 
 const STATUS_COLORS = {
-  published: '#c9a84c',
-  'in progress': '#8a6d2f',
-  archived: '#4a3520',
+  published: 'var(--accent)',
+  'in progress': 'var(--accent-dim)',
+  archived: 'var(--text-faint)',
 }
 
 function StatCard({ label, value, note }) {
   return (
-    <div style={{
+    <div className="admin-stat-card" style={{
       padding: '1.5rem',
-      border: '1px solid rgba(138,109,47,0.2)',
-      background: 'rgba(26,18,9,0.5)',
+      border: '1px solid var(--border)',
+      background: 'var(--bg-secondary)',
     }}>
-      <p style={{
-        color: '#4a3520',
+      <p className="admin-stat-label" style={{
+        color: 'var(--text-faint)',
         fontSize: '0.58rem',
         letterSpacing: '0.3em',
         textTransform: 'uppercase',
@@ -26,9 +26,9 @@ function StatCard({ label, value, note }) {
       }}>
         {label}
       </p>
-      <p style={{
+      <p className="admin-stat-number" style={{
         fontFamily: "'Playfair Display', serif",
-        color: '#c9a84c',
+        color: 'var(--accent)',
         fontSize: '2.4rem',
         fontStyle: 'italic',
         lineHeight: 1,
@@ -36,7 +36,7 @@ function StatCard({ label, value, note }) {
         {value}
       </p>
       {note && (
-        <p style={{ color: '#3d2b14', fontSize: '0.62rem', marginTop: '0.3rem' }}>{note}</p>
+        <p style={{ color: 'var(--text-faint)', fontSize: '0.62rem', marginTop: '0.3rem' }}>{note}</p>
       )}
     </div>
   )
@@ -49,13 +49,13 @@ function RecentRow({ title, sub, statusLabel, statusColor, editTo }) {
       justifyContent: 'space-between',
       alignItems: 'center',
       padding: '0.75rem 1rem',
-      border: '1px solid rgba(138,109,47,0.15)',
-      background: 'rgba(13,10,5,0.4)',
+      border: '1px solid var(--border)',
+      background: 'var(--bg-primary)',
     }}>
       <div style={{ minWidth: 0, flex: 1 }}>
         <p style={{
           fontFamily: "'Playfair Display', serif",
-          color: '#d4c49a',
+          color: 'var(--text-primary)',
           fontStyle: 'italic',
           fontSize: '0.95rem',
           whiteSpace: 'nowrap',
@@ -64,21 +64,24 @@ function RecentRow({ title, sub, statusLabel, statusColor, editTo }) {
         }}>
           {title}
         </p>
-        <p style={{ color: '#4a3520', fontSize: '0.62rem', marginTop: '2px' }}>{sub}</p>
+        <p style={{ color: 'var(--text-faint)', fontSize: '0.62rem', marginTop: '2px' }}>{sub}</p>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0, marginLeft: '1rem' }}>
-        <span style={{
-          fontSize: '0.58rem',
-          letterSpacing: '0.2em',
-          textTransform: 'uppercase',
-          color: statusColor,
-          border: `1px solid ${statusColor}44`,
-          padding: '2px 8px',
-          whiteSpace: 'nowrap',
-        }}>
+        <span
+          className={statusColor === 'var(--accent)' ? 'published-badge' : 'draft-badge'}
+          style={{
+            fontSize: '0.58rem',
+            letterSpacing: '0.2em',
+            textTransform: 'uppercase',
+            color: statusColor,
+            border: `1px solid ${statusColor}44`,
+            padding: '2px 8px',
+            whiteSpace: 'nowrap',
+          }}
+        >
           {statusLabel}
         </span>
-        <Link to={editTo} style={{ color: '#6b5a3e', fontSize: '0.62rem', textDecoration: 'none', letterSpacing: '0.1em' }}>
+        <Link to={editTo} style={{ color: 'var(--text-muted)', fontSize: '0.62rem', textDecoration: 'none', letterSpacing: '0.1em' }}>
           Edit
         </Link>
       </div>
@@ -106,12 +109,12 @@ export default function AdminDashboard() {
     <div className="">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <p style={{ color: '#4a3520', fontSize: '0.6rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
+          <p style={{ color: 'var(--text-faint)', fontSize: '0.6rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
             ✦ &nbsp; Overview &nbsp; ✦
           </p>
           <h1 style={{
             fontFamily: "'Playfair Display', serif",
-            color: '#f0e6c8',
+            color: 'var(--text-primary)',
             fontSize: '2.2rem',
             fontStyle: 'italic',
           }}>
@@ -131,16 +134,16 @@ export default function AdminDashboard() {
             style={{
               textDecoration: 'none',
               padding: '10px 20px',
-              border: '1px solid rgba(138,109,47,0.4)',
-              color: '#8a6d2f',
+              border: '1px solid var(--border-strong)',
+              color: 'var(--accent-dim)',
               fontFamily: "'Playfair Display', serif",
               fontSize: '0.6rem',
               letterSpacing: '0.2em',
               textTransform: 'uppercase',
               transition: 'all 0.2s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(138,109,47,0.7)'; e.currentTarget.style.color = '#c9a84c' }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(138,109,47,0.4)'; e.currentTarget.style.color = '#8a6d2f' }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent-dim)'; e.currentTarget.style.color = 'var(--accent)' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-strong)'; e.currentTarget.style.color = 'var(--accent-dim)' }}
           >
             + New Entry
           </Link>
@@ -150,7 +153,7 @@ export default function AdminDashboard() {
       <OrnateDivider className="mb-8" />
 
       {loading ? (
-        <p style={{ color: '#4a3520', fontStyle: 'italic', fontFamily: "'IM Fell English', serif" }}>
+        <p style={{ color: 'var(--text-faint)', fontStyle: 'italic', fontFamily: "'IM Fell English', serif" }}>
           Consulting the archives…
         </p>
       ) : (
@@ -170,15 +173,15 @@ export default function AdminDashboard() {
           {/* Recent works */}
           <div style={{ marginBottom: '2.5rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1rem' }}>
-              <h2 style={{ fontFamily: "'Playfair Display', serif", color: '#c9a84c', fontSize: '1.1rem', fontStyle: 'italic' }}>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--accent)', fontSize: '1.1rem', fontStyle: 'italic' }}>
                 Recent Works
               </h2>
-              <Link to="/admin/works" style={{ color: '#6b5a3e', fontSize: '0.62rem', letterSpacing: '0.2em', textTransform: 'uppercase', textDecoration: 'none' }}>
+              <Link to="/admin/works" style={{ color: 'var(--text-muted)', fontSize: '0.62rem', letterSpacing: '0.2em', textTransform: 'uppercase', textDecoration: 'none' }}>
                 All works →
               </Link>
             </div>
             {works.length === 0 ? (
-              <p style={{ color: '#3d2b14', fontStyle: 'italic', fontSize: '0.9rem' }}>The shelves are empty.</p>
+              <p style={{ color: 'var(--text-faint)', fontStyle: 'italic', fontSize: '0.9rem' }}>The shelves are empty.</p>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 {works.slice(0, 5).map(w => (
@@ -187,7 +190,7 @@ export default function AdminDashboard() {
                     title={w.title}
                     sub={[w.category, w.year].filter(Boolean).join(' · ')}
                     statusLabel={w.status}
-                    statusColor={STATUS_COLORS[w.status] || '#6b5a3e'}
+                    statusColor={STATUS_COLORS[w.status] || 'var(--text-muted)'}
                     editTo={`/admin/works/${w.id}/edit`}
                   />
                 ))}
@@ -198,15 +201,15 @@ export default function AdminDashboard() {
           {/* Recent journal */}
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1rem' }}>
-              <h2 style={{ fontFamily: "'Playfair Display', serif", color: '#c9a84c', fontSize: '1.1rem', fontStyle: 'italic' }}>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--accent)', fontSize: '1.1rem', fontStyle: 'italic' }}>
                 Recent Journal
               </h2>
-              <Link to="/admin/journal" style={{ color: '#6b5a3e', fontSize: '0.62rem', letterSpacing: '0.2em', textTransform: 'uppercase', textDecoration: 'none' }}>
+              <Link to="/admin/journal" style={{ color: 'var(--text-muted)', fontSize: '0.62rem', letterSpacing: '0.2em', textTransform: 'uppercase', textDecoration: 'none' }}>
                 All entries →
               </Link>
             </div>
             {journal.length === 0 ? (
-              <p style={{ color: '#3d2b14', fontStyle: 'italic', fontSize: '0.9rem' }}>The chronicle is empty.</p>
+              <p style={{ color: 'var(--text-faint)', fontStyle: 'italic', fontSize: '0.9rem' }}>The chronicle is empty.</p>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 {journal.slice(0, 5).map(e => (
@@ -215,7 +218,7 @@ export default function AdminDashboard() {
                     title={e.title}
                     sub={[e.category, e.read_time].filter(Boolean).join(' · ')}
                     statusLabel={e.published ? 'Published' : 'Draft'}
-                    statusColor={e.published ? '#c9a84c' : '#6b5a3e'}
+                    statusColor={e.published ? 'var(--accent)' : 'var(--text-muted)'}
                     editTo={`/admin/journal/${e.id}/edit`}
                   />
                 ))}

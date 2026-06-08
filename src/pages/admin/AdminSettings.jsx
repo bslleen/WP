@@ -4,18 +4,18 @@ import { OrnateDivider } from '../../components/OrnateElements'
 
 const field = {
   width: '100%',
-  background: 'rgba(13,10,5,0.5)',
-  border: '1px solid rgba(138,109,47,0.2)',
+  background: 'var(--bg-primary)',
+  border: '1px solid var(--border)',
   outline: 'none',
   padding: '0.7rem 1rem',
-  color: '#d4c49a',
+  color: 'var(--text-primary)',
   fontFamily: "'IM Fell English', serif",
   fontSize: '0.95rem',
 }
 
 const label = {
   display: 'block',
-  color: '#8a6d2f',
+  color: 'var(--accent-dim)',
   fontSize: '0.6rem',
   letterSpacing: '0.3em',
   textTransform: 'uppercase',
@@ -27,13 +27,13 @@ function Card({ title, children }) {
   return (
     <div style={{
       padding: '2rem',
-      border: '1px solid rgba(138,109,47,0.2)',
-      background: 'rgba(26,18,9,0.5)',
+      border: '1px solid var(--border)',
+      background: 'var(--bg-secondary)',
       marginBottom: '1.5rem',
     }}>
       <h2 style={{
         fontFamily: "'Playfair Display', serif",
-        color: '#c9a84c',
+        color: 'var(--accent)',
         fontSize: '1.1rem',
         fontStyle: 'italic',
         marginBottom: '1.5rem',
@@ -46,7 +46,6 @@ function Card({ title, children }) {
 }
 
 export default function AdminSettings() {
-  // Password change state
   const [pwCurrent, setPwCurrent] = useState('')
   const [pwNew, setPwNew]         = useState('')
   const [pwConfirm, setPwConfirm] = useState('')
@@ -54,7 +53,6 @@ export default function AdminSettings() {
   const [pwSuccess, setPwSuccess] = useState(false)
   const [pwError, setPwError]     = useState('')
 
-  // Email change state
   const [emCurrent, setEmCurrent] = useState('')
   const [emNew, setEmNew]         = useState('')
   const [emSaving, setEmSaving]   = useState(false)
@@ -113,10 +111,10 @@ export default function AdminSettings() {
   return (
     <div>
       <div style={{ marginBottom: '2rem' }}>
-        <p style={{ color: '#4a3520', fontSize: '0.6rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
+        <p style={{ color: 'var(--text-faint)', fontSize: '0.6rem', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
           ✦ &nbsp; Configuration &nbsp; ✦
         </p>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", color: '#f0e6c8', fontSize: '2.2rem', fontStyle: 'italic' }}>
+        <h1 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)', fontSize: '2.2rem', fontStyle: 'italic' }}>
           Settings
         </h1>
       </div>
@@ -153,12 +151,12 @@ export default function AdminSettings() {
             </div>
 
             {emError && (
-              <p style={{ color: '#c9a84c', opacity: 0.75, fontSize: '0.75rem', marginBottom: '1rem', letterSpacing: '0.05em' }}>
+              <p style={{ color: 'var(--accent)', opacity: 0.75, fontSize: '0.75rem', marginBottom: '1rem', letterSpacing: '0.05em' }}>
                 {emError}
               </p>
             )}
             {emSuccess && (
-              <p style={{ color: '#c9a84c', fontSize: '0.75rem', marginBottom: '1rem', letterSpacing: '0.05em' }}>
+              <p style={{ color: 'var(--accent)', fontSize: '0.75rem', marginBottom: '1rem', letterSpacing: '0.05em' }}>
                 ✦ Email updated successfully.
               </p>
             )}
@@ -214,12 +212,12 @@ export default function AdminSettings() {
             </div>
 
             {pwError && (
-              <p style={{ color: '#c9a84c', opacity: 0.75, fontSize: '0.75rem', marginBottom: '1rem', letterSpacing: '0.05em' }}>
+              <p style={{ color: 'var(--accent)', opacity: 0.75, fontSize: '0.75rem', marginBottom: '1rem', letterSpacing: '0.05em' }}>
                 {pwError}
               </p>
             )}
             {pwSuccess && (
-              <p style={{ color: '#c9a84c', fontSize: '0.75rem', marginBottom: '1rem', letterSpacing: '0.05em' }}>
+              <p style={{ color: 'var(--accent)', fontSize: '0.75rem', marginBottom: '1rem', letterSpacing: '0.05em' }}>
                 ✦ Passphrase updated successfully.
               </p>
             )}

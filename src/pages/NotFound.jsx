@@ -4,7 +4,7 @@ export default function NotFound() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#0d0a05',
+      background: 'var(--bg-primary)',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -16,7 +16,7 @@ export default function NotFound() {
         fontFamily: "'Cinzel', serif",
         fontSize: '0.58rem',
         letterSpacing: '0.55em',
-        color: '#3a2e1a',
+        color: 'var(--text-faint)',
         marginBottom: '2rem',
         textTransform: 'uppercase',
       }}>
@@ -25,7 +25,7 @@ export default function NotFound() {
 
       <h1 style={{
         fontFamily: "'Cormorant Garamond', serif",
-        color: '#e8dcc0',
+        color: 'var(--text-primary)',
         fontSize: 'clamp(2rem, 7vw, 3.8rem)',
         fontStyle: 'italic',
         fontWeight: 300,
@@ -36,11 +36,11 @@ export default function NotFound() {
         This page was<br />never written.
       </h1>
 
-      <div style={{ width: '40px', height: '0.5px', background: '#3a2e1a', margin: '0 auto 1.5rem' }} />
+      <div style={{ width: '40px', height: '0.5px', background: 'var(--text-faint)', margin: '0 auto 1.5rem' }} />
 
       <p style={{
         fontFamily: "'IM Fell English', serif",
-        color: '#5a4a2a',
+        color: 'var(--text-muted)',
         fontSize: '1rem',
         fontStyle: 'italic',
         lineHeight: 1.85,
@@ -55,18 +55,18 @@ export default function NotFound() {
         to="/"
         style={{
           fontFamily: "'Playfair Display', serif",
-          color: '#c9a84c',
+          color: 'var(--accent)',
           fontSize: '0.65rem',
           letterSpacing: '0.3em',
           textTransform: 'uppercase',
           textDecoration: 'none',
-          border: '1px solid rgba(201,168,76,0.4)',
+          border: '1px solid var(--border-strong)',
           padding: '13px 36px',
           display: 'inline-block',
           transition: 'all 0.3s',
         }}
-        onMouseEnter={e => { e.currentTarget.style.background = '#c9a84c'; e.currentTarget.style.color = '#0d0a05' }}
-        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#c9a84c' }}
+        onMouseEnter={e => { e.currentTarget.style.background = 'var(--accent)'; e.currentTarget.style.color = 'var(--bg-primary)' }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--accent)' }}
       >
         Return to the Archive
       </Link>
