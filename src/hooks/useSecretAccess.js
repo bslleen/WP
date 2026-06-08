@@ -1,9 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { login, logout, onAuthChange } from '../data/api'
 
-const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown',
-  'ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a']
-
 export function useSecretAccess() {
   const [showModal, setShowModal] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -18,20 +15,20 @@ export function useSecretAccess() {
   }, [])
 
   useEffect(() => {
-    let progress = 0
-    const onKey = (e) => {
-      if (e.key === KONAMI[progress]) {
-        progress++
-        if (progress === KONAMI.length) {
-          progress = 0
-          setShowModal(true)
-        }
+    let count = 0
+    let timer = null
+    const onKey = () => {
+      count++
+      clearTimeout(timer)
+      if (count >= 5) {
+        count = 0
+        setShowModal(true)
       } else {
-        progress = e.key === KONAMI[0] ? 1 : 0
+        timer = setTimeout(() => { count = 0 }, 1500)
       }
     }
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    return () => { window.removeEventListener('keydown', onKey); clearTimeout(timer) }
   }, [])
 
   const tryPassword = useCallback(async (email, password) => {
