@@ -6,178 +6,9 @@ import manuscriptsImg from '../assets/photo_2026-06-02 17.41.58.jpeg'
 import journalImg     from '../assets/photo_2026-06-02 17.41.55.jpeg'
 import { fetchWorks } from '../data/api'
 import { normalizeWork } from '../data/normalize'
+import WorkCard, { StoneWall } from '../components/WorkCard'
 
-function BookCoverArt({ work }) {
-  return (
-    <div style={{
-      width: '100%',
-      height: '100%',
-      background: `linear-gradient(150deg, ${work.coverColor} 0%, #080604 100%)`,
-      position: 'relative',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '22px 18px',
-      overflow: 'hidden',
-    }}>
-      <div style={{
-        position: 'absolute', inset: '10px',
-        border: `1px solid ${work.accentColor}44`,
-        pointerEvents: 'none',
-      }} />
-      {[['top:6px;left:6px', 'M1 10 L1 1 L10 1'], ['top:6px;right:6px', 'M15 10 L15 1 L6 1'], ['bottom:6px;left:6px', 'M1 6 L1 15 L10 15'], ['bottom:6px;right:6px', 'M15 6 L15 15 L6 15']].map(([pos, d], i) => (
-        <svg key={i} viewBox="0 0 16 16" fill="none"
-          style={{ position: 'absolute', width: '16px', height: '16px', ...Object.fromEntries(pos.split(';').map(p => p.split(':'))) }}>
-          <path d={d} stroke={work.accentColor} strokeWidth="1" opacity="0.5" />
-        </svg>
-      ))}
-
-      <p style={{
-        color: work.accentColor,
-        fontSize: '0.5rem',
-        letterSpacing: '0.3em',
-        textTransform: 'uppercase',
-        fontFamily: "'Crimson Text', serif",
-        opacity: 0.75,
-        zIndex: 1,
-      }}>
-        Eleanor Ashworth
-      </p>
-
-      <div style={{ textAlign: 'center', zIndex: 1, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
-        <div style={{ width: '55%', height: '1px', background: `linear-gradient(90deg, transparent, ${work.accentColor}99, transparent)` }} />
-        <svg viewBox="0 0 24 12" style={{ width: '32px' }} fill="none">
-          <path d="M12 1 L20 6 L12 11 L4 6 Z" stroke={work.accentColor} strokeWidth="0.7" opacity="0.6" fill={work.accentColor} fillOpacity="0.08" />
-          <circle cx="12" cy="6" r="1.5" fill={work.accentColor} opacity="0.5" />
-        </svg>
-        <p style={{
-          fontFamily: "'Playfair Display', serif",
-          color: '#f0e6c8',
-          fontSize: work.title.length > 22 ? '0.85rem' : '1rem',
-          fontStyle: 'italic',
-          textAlign: 'center',
-          lineHeight: 1.35,
-          letterSpacing: '0.01em',
-        }}>
-          {work.title}
-        </p>
-        <div style={{ width: '35%', height: '1px', background: `linear-gradient(90deg, transparent, ${work.accentColor}77, transparent)` }} />
-      </div>
-
-      <p style={{
-        color: work.accentColor,
-        fontSize: '0.48rem',
-        letterSpacing: '0.28em',
-        textTransform: 'uppercase',
-        fontFamily: "'Crimson Text', serif",
-        opacity: 0.6,
-        zIndex: 1,
-      }}>
-        {work.category}
-      </p>
-    </div>
-  )
-}
-
-function WorkCard({ work }) {
-  return (
-    <div
-      className="card-aged"
-      style={{
-        border: '1px solid rgba(201,168,76,0.25)',
-        background: '#f0e8d8',
-        cursor: 'pointer',
-        transition: 'transform 0.4s ease, box-shadow 0.4s ease',
-        boxShadow: '0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.2), inset 0 0 30px rgba(0,0,0,0.3)',
-      }}
-      onMouseEnter={e => {
-        e.currentTarget.style.transform = 'translateY(-6px)'
-        e.currentTarget.style.boxShadow = '0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(201,168,76,0.08)'
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.transform = 'translateY(0)'
-        e.currentTarget.style.boxShadow = '0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.2), inset 0 0 30px rgba(0,0,0,0.3)'
-      }}
-    >
-      <div style={{ position: 'relative', height: '280px', overflow: 'hidden' }}>
-        {work.cover_image
-          ? <img src={work.cover_image} alt={work.title}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'sepia(20%) brightness(0.9)' }} />
-          : <BookCoverArt work={work} />
-        }
-
-        <button
-          onClick={e => e.stopPropagation()}
-          style={{
-            position: 'absolute', top: '10px', right: '10px',
-            width: '28px', height: '28px',
-            background: 'rgba(255,255,255,0.12)',
-            border: '1px solid rgba(255,255,255,0.35)',
-            backdropFilter: 'blur(4px)',
-            color: '#f0e6c8',
-            fontSize: '1.1rem',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer',
-            lineHeight: 1,
-            transition: 'background 0.2s',
-            fontWeight: 300,
-          }}
-          onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.28)')}
-          onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.12)')}
-        >
-          +
-        </button>
-
-        {work.status === 'In Progress' && (
-          <div style={{
-            position: 'absolute', bottom: '10px', left: '10px',
-            background: 'rgba(13,10,5,0.75)',
-            color: work.accentColor,
-            fontSize: '0.5rem',
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
-            padding: '3px 9px',
-            border: `1px solid ${work.accentColor}44`,
-            fontFamily: "'Playfair Display', serif",
-          }}>
-            In Progress
-          </div>
-        )}
-      </div>
-
-      <div style={{ padding: '14px 16px 18px', borderTop: '1px solid #c8b89a' }}>
-        <p style={{
-          fontFamily: "'Playfair Display', serif",
-          color: '#1c140a',
-          fontSize: '0.95rem',
-          fontWeight: 400,
-          lineHeight: 1.3,
-          marginBottom: '4px',
-        }}>
-          {work.title}
-        </p>
-        <p style={{
-          fontFamily: "'Crimson Text', serif",
-          fontStyle: 'italic',
-          color: '#7a6548',
-          fontSize: '0.85rem',
-          marginBottom: '5px',
-        }}>
-          {work.category} · {work.year}
-        </p>
-        <p style={{
-          fontFamily: "'Crimson Text', serif",
-          color: '#1c140a',
-          fontSize: '0.85rem',
-          fontWeight: 400,
-        }}>
-          {work.pages > 0 ? `${work.pages} pages` : 'Coming Soon'}
-        </p>
-      </div>
-    </div>
-  )
-}
+const CATEGORIES = ['All', 'Novel', 'Poetry', 'Short Story']
 
 function Ornament({ dark = false }) {
   const color = dark ? '#8a7a65' : '#8a7a65'
@@ -195,15 +26,20 @@ function Ornament({ dark = false }) {
 }
 
 export default function Works() {
-  const [featured, setFeatured] = useState([])
+  const [works,   setWorks]   = useState([])
   const [loading, setLoading] = useState(true)
+  const [filter,  setFilter]  = useState('All')
 
   useEffect(() => {
     fetchWorks()
-      .then(data => setFeatured(data.slice(0, 4).map(normalizeWork)))
+      .then(data => setWorks(data.map(normalizeWork)))
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
+
+  const filtered = filter === 'All'
+    ? works
+    : works.filter(w => w.category?.toLowerCase() === filter.toLowerCase())
 
   return (
     <div style={{ background: '#0d0a05' }}>
@@ -291,68 +127,107 @@ export default function Works() {
         </div>
       </section>
 
-      {/* ════ FEATURED WORKS ════ */}
-      <section style={{ background: '#e8dcc8' }} className="px-4 md:px-12 py-20">
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      {/* ════ GALLERY ════ */}
+      <section style={{
+        background: '#0d0a05',
+        position: 'relative',
+        overflow: 'hidden',
+        padding: '80px 40px',
+      }}>
+        <StoneWall />
 
-          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <h2 style={{
-              fontFamily: "'Playfair Display', serif",
-              color: '#1c140a',
-              fontSize: '0.72rem',
-              letterSpacing: '0.4em',
-              textTransform: 'uppercase',
-              fontWeight: 400,
-              marginBottom: '2px',
-            }}>
-              FEATURED WORKS
-            </h2>
-            <Ornament />
-            <p style={{
-              fontFamily: "'Crimson Text', serif",
-              fontStyle: 'italic',
-              color: '#7a6548',
-              fontSize: '1.05rem',
-            }}>
-              From the current collection.
-            </p>
-          </div>
+        {/* Warm top glow */}
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: 'radial-gradient(ellipse 80% 40% at 50% 0%, rgba(201,168,76,0.05) 0%, transparent 70%)',
+        }} />
 
-          <div className="flex justify-end mb-7">
-            <Link
-              to="/works/all"
-              style={{
-                fontFamily: "'Playfair Display', serif",
-                color: '#1c140a',
-                fontSize: '0.68rem',
-                letterSpacing: '0.18em',
-                textTransform: 'uppercase',
-                textDecoration: 'underline',
-                textUnderlineOffset: '3px',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.3rem',
-              }}
-            >
-              VIEW ALL WORKS →
-            </Link>
-          </div>
-
-          {/* Responsive book card grid */}
-          {loading ? (
-            <p style={{ textAlign: 'center', fontFamily: "'Playfair Display', serif", fontSize: '0.62rem', letterSpacing: '0.3em', color: '#8a7a65', padding: '48px 0' }}>
-              Consulting the archive…
-            </p>
-          ) : featured.length === 0 ? (
-            <p style={{ textAlign: 'center', fontFamily: "'IM Fell English', serif", fontStyle: 'italic', color: '#8a7a65', fontSize: '1rem', padding: '48px 0', lineHeight: 1.8 }}>
-              The archive is being assembled.<br />Return soon.
-            </p>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '1.25rem' }}>
-              {featured.map(work => <WorkCard key={work.id} work={work} />)}
-            </div>
-          )}
+        {/* Section title */}
+        <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', marginBottom: '40px' }}>
+          <p style={{
+            fontFamily: "'Cinzel', serif", fontSize: 9,
+            letterSpacing: '0.35em', color: '#5a4a2a',
+            marginBottom: 8, textTransform: 'uppercase',
+          }}>
+            THE COLLECTION
+          </p>
+          <h2 style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: 36, fontWeight: 400,
+            color: '#f0e6c8', lineHeight: 1,
+          }}>
+            The Archive
+          </h2>
+          <p style={{
+            fontFamily: "'EB Garamond', serif", fontStyle: 'italic',
+            fontSize: 15, color: '#6a5a3a', marginTop: 6,
+          }}>
+            From the current collection.
+          </p>
         </div>
+
+        {/* Category filters */}
+        <div style={{
+          position: 'relative', zIndex: 1,
+          display: 'flex', justifyContent: 'center',
+          gap: '12px', flexWrap: 'wrap',
+          marginBottom: '52px',
+        }}>
+          {CATEGORIES.map(cat => (
+            <button
+              key={cat}
+              onClick={() => setFilter(cat)}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: filter === cat ? '#c9a84c' : '#3d2b14',
+                fontFamily: "'Cinzel', serif",
+                letterSpacing: '0.3em',
+                textTransform: 'uppercase',
+                fontSize: '10px',
+                padding: '4px 0',
+                cursor: 'pointer',
+                transition: 'color 0.2s ease',
+              }}
+              onMouseEnter={e => { if (filter !== cat) e.currentTarget.style.color = '#8a6d2f' }}
+              onMouseLeave={e => { if (filter !== cat) e.currentTarget.style.color = '#3d2b14' }}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Cards */}
+        {loading ? (
+          <p style={{
+            position: 'relative', zIndex: 1, textAlign: 'center',
+            fontFamily: "'Cinzel', serif", fontSize: 9,
+            letterSpacing: '0.3em', color: '#8a7a5a', padding: '48px 0',
+          }}>
+            Consulting the archive…
+          </p>
+        ) : filtered.length === 0 ? (
+          <p style={{
+            position: 'relative', zIndex: 1, textAlign: 'center',
+            fontFamily: "'IM Fell English', serif", fontStyle: 'italic',
+            color: '#4a3a20', fontSize: '1rem', padding: '64px 0', lineHeight: 1.9,
+          }}>
+            No works in this category yet.<br />The archive is being assembled.
+          </p>
+        ) : (
+          <div style={{
+            position: 'relative', zIndex: 1,
+            display: 'flex', flexWrap: 'wrap',
+            gap: '32px', justifyContent: 'center',
+            paddingTop: '28px',
+          }}>
+            {filtered.map(work => (
+              <Link key={work.id} to="/works" style={{ textDecoration: 'none' }}>
+                <WorkCard work={work} />
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* ════ BOTTOM PANELS ════ */}
