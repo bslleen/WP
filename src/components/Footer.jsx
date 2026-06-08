@@ -1,7 +1,17 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { OrnateDivider } from './OrnateElements'
+import { fetchProfile } from '../data/api'
 
 export default function Footer() {
+  const [email, setEmail] = useState('eleanor@ashworthwrites.com')
+
+  useEffect(() => {
+    fetchProfile().then(profile => {
+      if (profile?.email) setEmail(profile.email)
+    }).catch(() => {})
+  }, [])
+
   return (
     <footer
       className="py-16 px-4 md:px-6"
@@ -52,11 +62,11 @@ export default function Footer() {
               Correspondence
             </p>
             <a
-              href="mailto:eleanor@ashworthwrites.com"
+              href={`mailto:${email}`}
               className="text-sm transition-colors duration-300 hover:text-gold"
               style={{ color: 'var(--text-faint)', display: 'block', marginBottom: '8px' }}
             >
-              eleanor@ashworthwrites.com
+              {email}
             </a>
             <p className="text-xs" style={{ color: 'var(--text-faint)' }}>
               For inquiries, speaking,<br />

@@ -56,6 +56,20 @@ export default function ChapterReader() {
     </div>
   )
 
+  if (!chapter) return (
+    <div style={{
+      minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+      background: 'var(--bg-primary)', flexDirection: 'column', gap: '16px',
+    }}>
+      <p style={{ color: 'var(--text-muted)', letterSpacing: '0.3em', fontSize: '11px' }}>
+        CHAPTER NOT FOUND
+      </p>
+      <Link to={`/works/${workId}`} style={{ color: 'var(--accent)', fontSize: '12px', letterSpacing: '0.2em', textDecoration: 'none' }}>
+        ← Return to contents
+      </Link>
+    </div>
+  )
+
   const currentIndex = chapters.findIndex(c => c.id === chapterId)
   const prevChapter = currentIndex > 0 ? chapters[currentIndex - 1] : null
   const nextChapter = currentIndex < chapters.length - 1 ? chapters[currentIndex + 1] : null

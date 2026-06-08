@@ -7,10 +7,10 @@ service cloud.firestore {
       allow read: if resource.data.status == 'published';
       allow read, write: if request.auth != null;
 
-      // Chapters — public reads allowed (client filters to published only)
+      // Chapters — only published chapters are publicly readable
       match /chapters/{chapterId} {
-        allow read: if true;
-        allow write: if request.auth != null;
+        allow read: if resource.data.status == 'published';
+        allow read, write: if request.auth != null;
       }
     }
 

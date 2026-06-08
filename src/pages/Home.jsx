@@ -240,7 +240,7 @@ export default function Home() {
             fontSize: 17, lineHeight: 1.8, color: 'var(--text-secondary)',
             maxWidth: 380, marginBottom: 36,
           }}>
-            Edmund Ashworth wrote novels, poems, and stories that lived
+            E. Ashworth wrote novels, poems, and stories that lived
             in the borderlands between the known and the vanished. The archive
             was discovered in 1923. The candle was still warm.
           </p>

@@ -87,6 +87,8 @@ export async function updateWork(id, data) {
 }
 
 export async function deleteWork(id) {
+  const chaptersSnap = await getDocs(collection(db, 'works', id, 'chapters'))
+  await Promise.all(chaptersSnap.docs.map(d => deleteDoc(d.ref)))
   return deleteDoc(doc(db, 'works', id))
 }
 

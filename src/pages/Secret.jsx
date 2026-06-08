@@ -190,7 +190,6 @@ function PrivateJournal() {
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
   const [editingId, setEditingId] = useState(null)
-  const [viewEntry, setViewEntry] = useState(null)
   const [readEntry, setReadEntry] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -231,7 +230,6 @@ function PrivateJournal() {
     try {
       await deletePrivateEntry(id)
       setEntries(prev => prev.filter(e => e.id !== id))
-      if (viewEntry?.id === id) setViewEntry(null)
     } catch {}
   }
 
@@ -239,7 +237,6 @@ function PrivateJournal() {
     setTitle(entry.title === 'Untitled' ? '' : entry.title)
     setBody(entry.body)
     setEditingId(entry.id)
-    setViewEntry(null)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
@@ -336,92 +333,49 @@ function PrivateJournal() {
             Private Archive — {entries.length} {entries.length === 1 ? 'entry' : 'entries'}
           </p>
           {entries.map((entry) => (
-            <div key={entry.id}>
-              {viewEntry?.id === entry.id ? (
-                <div
-                  className="p-6"
-                  style={{
-                    background: 'var(--bg-secondary)',
-                    border: '1px solid var(--border-strong)',
-                  }}
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h4
-                        className="text-xl italic"
-                        style={{ fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)' }}
-                      >
-                        {entry.title}
-                      </h4>
-                      <p className="text-xs mt-1" style={{ color: 'var(--text-faint)' }}>
-                        {entry.date} &nbsp;·&nbsp; {entry.time}
-                        {entry.edited && ` (edited ${entry.edited})`}
-                      </p>
-                    </div>
-                    <button onClick={() => setViewEntry(null)} style={{ color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px' }}>
-                      ✕
-                    </button>
-                  </div>
+            <div
+              key={entry.id}
+              className="w-full text-left p-5 transition-all duration-300"
+              onClick={() => setReadEntry(entry)}
+              style={{
+                background: 'var(--bg-primary)',
+                border: '1px solid var(--border)',
+                cursor: 'pointer',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--border-strong)'}
+              onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
+            >
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                <div>
                   <p
-                    className="text-base leading-relaxed whitespace-pre-wrap"
-                    style={{ color: 'var(--text-secondary)', fontFamily: "'IM Fell English', serif" }}
+                    className="italic text-base"
+                    style={{ fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)' }}
                   >
-                    {entry.body}
+                    {entry.title}
                   </p>
-                  <div className="flex gap-4 mt-6">
-                    <button onClick={() => edit(entry)} className="text-xs tracking-widest uppercase" style={{ color: 'var(--accent-dim)', background: 'none', border: 'none', cursor: 'pointer' }}>
-                      Edit
-                    </button>
-                    <button onClick={() => del(entry.id)} className="text-xs tracking-widest uppercase" style={{ color: 'var(--text-faint)', background: 'none', border: 'none', cursor: 'pointer' }}>
-                      Delete
-                    </button>
-                  </div>
+                  <p className="text-xs mt-1" style={{ color: 'var(--text-faint)' }}>{entry.date}</p>
+                  <p className="text-xs mt-1 line-clamp-1" style={{ color: 'var(--text-muted)' }}>
+                    {entry.body.substring(0, 60)}...
+                  </p>
                 </div>
-              ) : (
-                <div
-                  className="w-full text-left p-5 transition-all duration-300"
-                  onClick={() => setReadEntry(entry)}
-                  style={{
-                    background: 'var(--bg-primary)',
-                    border: '1px solid var(--border)',
-                    cursor: 'pointer',
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--border-strong)'}
-                  onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
-                >
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
-                    <div>
-                      <p
-                        className="italic text-base"
-                        style={{ fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)' }}
-                      >
-                        {entry.title}
-                      </p>
-                      <p className="text-xs mt-1" style={{ color: 'var(--text-faint)' }}>{entry.date}</p>
-                      <p className="text-xs mt-1 line-clamp-1" style={{ color: 'var(--text-muted)' }}>
-                        {entry.body.substring(0, 60)}...
-                      </p>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
-                      <p className="hidden sm:block text-xs" style={{ color: 'var(--text-faint)' }}>{entry.date}</p>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); edit(entry) }}
-                        className="text-xs tracking-widest uppercase"
-                        style={{ color: 'var(--accent-dim)', background: 'none', border: 'none', cursor: 'pointer' }}
-                      >
-                        EDIT
-                      </button>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); del(entry.id) }}
-                        className="text-xs tracking-widest uppercase"
-                        style={{ color: 'var(--text-faint)', background: 'none', border: 'none', cursor: 'pointer' }}
-                      >
-                        DELETE
-                      </button>
-                    </div>
-                  </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
+                  <p className="hidden sm:block text-xs" style={{ color: 'var(--text-faint)' }}>{entry.date}</p>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); edit(entry) }}
+                    className="text-xs tracking-widest uppercase"
+                    style={{ color: 'var(--accent-dim)', background: 'none', border: 'none', cursor: 'pointer' }}
+                  >
+                    EDIT
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); del(entry.id) }}
+                    className="text-xs tracking-widest uppercase"
+                    style={{ color: 'var(--text-faint)', background: 'none', border: 'none', cursor: 'pointer' }}
+                  >
+                    DELETE
+                  </button>
                 </div>
-              )}
+              </div>
             </div>
           ))}
         </div>

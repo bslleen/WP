@@ -48,6 +48,7 @@ function AppInner() {
     showPasswordModal,
     setShowPasswordModal,
     isAuthenticated,
+    loading,
     tryPassword,
     triggerCandle,
     logout,
@@ -183,7 +184,7 @@ function AppInner() {
               <PageTransition><Journal /></PageTransition>
             } />
             <Route path="/secret" element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <ProtectedRoute isAuthenticated={isAuthenticated} loading={loading}>
                 <PageTransition><Secret onLogout={logout} /></PageTransition>
               </ProtectedRoute>
             } />
