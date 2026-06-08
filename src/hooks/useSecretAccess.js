@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { login, logout, onAuthChange } from '../data/api'
 
 export function useSecretAccess() {
@@ -6,9 +6,15 @@ export function useSecretAccess() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [loading, setLoading] = useState(true)
 
+  // Ref so the click handler always reads the latest auth state
+  // without needing to re-register the listener
+  const isAuthRef = useRef(false)
+
   useEffect(() => {
     const unsub = onAuthChange((user) => {
-      setIsAuthenticated(!!user)
+      const authed = !!user
+      isAuthRef.current = authed
+      setIsAuthenticated(authed)
       setLoading(false)
     })
     return unsub
@@ -27,10 +33,11 @@ export function useSecretAccess() {
 
   const doLogout = useCallback(async () => {
     await logout()
+    isAuthRef.current = false
     setIsAuthenticated(false)
   }, [])
 
-  // 3 clicks anywhere → open modal (unauthenticated) or logout (authenticated)
+  // Runs once on mount. Uses isAuthRef so it never needs to re-register.
   useEffect(() => {
     let count = 0
     let timer = null
@@ -39,7 +46,7 @@ export function useSecretAccess() {
       clearTimeout(timer)
       if (count >= 3) {
         count = 0
-        if (isAuthenticated) {
+        if (isAuthRef.current) {
           doLogout()
         } else {
           setShowModal(true)
@@ -48,10 +55,9 @@ export function useSecretAccess() {
         timer = setTimeout(() => { count = 0 }, 1500)
       }
     }
-    // capture:true fires before React synthetic events and before any stopPropagation
     document.addEventListener('click', onClick, true)
     return () => { document.removeEventListener('click', onClick, true); clearTimeout(timer) }
-  }, [isAuthenticated, doLogout])
+  }, [doLogout]) // doLogout is stable (useCallback []), effectively runs once
 
   return {
     showPasswordModal: showModal,
