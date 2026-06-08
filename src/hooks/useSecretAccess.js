@@ -48,8 +48,9 @@ export function useSecretAccess() {
         timer = setTimeout(() => { count = 0 }, 1500)
       }
     }
-    window.addEventListener('click', onClick)
-    return () => { window.removeEventListener('click', onClick); clearTimeout(timer) }
+    // capture:true fires before React synthetic events and before any stopPropagation
+    document.addEventListener('click', onClick, true)
+    return () => { document.removeEventListener('click', onClick, true); clearTimeout(timer) }
   }, [isAuthenticated, doLogout])
 
   return {
