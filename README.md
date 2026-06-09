@@ -125,7 +125,7 @@ letters/           Secret page — letters to the future (auth-only)
 
 | Route | Page |
 |---|---|
-| `/` | Home — hanging gallery of featured works + recent journal entries |
+| `/` | Home — hanging gallery of featured works, daily literary quote, + recent journal entries |
 | `/works` | Filtered works gallery (All · Novel · Poetry · Short Story) |
 | `/works/:workId` | Work detail — cover, tags, description, chapter list |
 | `/works/:workId/chapter/:chapterId` | Full-screen chapter reader |
@@ -133,7 +133,7 @@ letters/           Secret page — letters to the future (auth-only)
 | `/journal` | Journal entries |
 | `/secret` | Hidden page (password-protected) |
 
-The chapter reader has its own fixed top bar and hides the main navigation automatically.
+The chapter reader has its own fixed top bar and hides the main navigation automatically. The reader also has a background theme picker (Dark / Parchment / White) under the size controls — the chapter title and body text colour both follow the selected theme.
 
 ---
 
@@ -189,6 +189,17 @@ Change it in `src/hooks/useSecretAccess.js`.
 Features:
 - **Private Journal** — entries saved to Firestore (`private/` collection), auth-only
 - **Letters to the Future** — seal a message with a reveal date; stays locked until that date
+
+---
+
+## Daily Quote (Today's Ink)
+
+The hero section displays a rotating literary quote sourced live from [ZenQuotes](https://zenquotes.io) via a Vercel serverless proxy at `/api/quote.js`. The proxy handles the request server-side so there are no browser CORS restrictions.
+
+- Quote is cached in `sessionStorage` — same quote for the full browser session, fresh one on next visit
+- If the API is unavailable, one of 22 curated literary quotes is shown silently as fallback (keyed to day-of-year so it still rotates daily)
+- Serverless function: `api/quote.js`
+- Component: `DailyQuote` in `src/pages/Home.jsx`
 
 ---
 
