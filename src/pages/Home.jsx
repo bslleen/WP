@@ -820,7 +820,7 @@ export default function Home() {
       </section>
 
       {/* ── JOURNAL ───────────────────────────────────────────────────────── */}
-      <section style={{ background: 'var(--bg-primary)' }} className="px-4 md:px-10 py-20">
+      <section style={{ background: 'var(--bg-primary)', paddingTop: '24px' }} className="px-4 md:px-10 py-20">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
           <FadeIn delay={0}>
           <div>
@@ -854,9 +854,11 @@ export default function Home() {
             <FadeIn key={entry.id} delay={0.15 * i}>
             <div style={{
               padding: 32,
-              borderRight: i === 0 ? '0.5px solid var(--border)' : 'none',
+              minHeight: 120,
+              borderRight: i === 0 && journal.length > 1 ? '0.5px solid var(--border)' : 'none',
               borderBottom: i === 0 ? '0.5px solid var(--border)' : 'none',
               display: 'flex', flexDirection: 'column', gap: 12,
+              gridColumn: journal.length === 1 ? '1 / -1' : 'auto',
             }}
             className="journal-preview-card md:[&]:border-b-0">
               <p style={{
@@ -909,7 +911,7 @@ export default function Home() {
         textAlign: 'center',
         borderTop: '0.5px solid var(--border)',
         borderBottom: '0.5px solid var(--border)',
-      }} className="closing-quote-section px-4 py-16">
+      }} className="closing-quote-section px-4 py-8">
         <FadeIn delay={0}>
         <div style={{
           fontFamily: "'Cinzel', serif", fontSize: 9,
@@ -922,7 +924,21 @@ export default function Home() {
           A NOTE
           <span style={{ fontSize: 8, color: 'var(--accent)' }}>✦</span>
         </div>
-        <ClosingQuote />
+        <blockquote style={{
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: 'clamp(1.4rem, 4vw, 2rem)', fontStyle: 'italic', fontWeight: 300,
+          color: 'var(--accent)', lineHeight: 1.4,
+          maxWidth: 600, margin: '0 auto 16px',
+        }}>
+          "Every good sentence is a small room with light coming in from the right."
+        </blockquote>
+        <p style={{
+          fontFamily: "'Cinzel', serif", fontSize: 9,
+          letterSpacing: '0.3em', textTransform: 'uppercase',
+          color: 'var(--text-faint)', marginBottom: 28,
+        }}>
+          — attributed to no one, found everywhere
+        </p>
         <Ornament />
         </FadeIn>
       </section>
