@@ -30,6 +30,101 @@ function Ornament() {
   )
 }
 
+function DailyQuote() {
+  const [quote, setQuote] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  const FALLBACKS = [
+    { content: "There is no greater agony than bearing an untold story inside you.", author: "Maya Angelou" },
+    { content: "A writer only begins a book. A reader finishes it.", author: "Samuel Johnson" },
+    { content: "Fill your paper with the breathings of your heart.", author: "William Wordsworth" },
+    { content: "The purpose of a writer is to keep civilization from destroying itself.", author: "Albert Camus" },
+    { content: "You can always edit a bad page. You can't edit a blank page.", author: "Jodi Picoult" },
+  ]
+
+  useEffect(() => {
+    const cached = sessionStorage.getItem('daily_quote')
+    if (cached) {
+      setQuote(JSON.parse(cached))
+      setLoading(false)
+      return
+    }
+
+    fetch('https://api.quotable.io/random?tags=literature|writing|books&minLength=60&maxLength=180')
+      .then(r => r.json())
+      .then(data => {
+        if (data.content && data.author) {
+          const q = { content: data.content, author: data.author }
+          sessionStorage.setItem('daily_quote', JSON.stringify(q))
+          setQuote(q)
+        } else {
+          setQuote(FALLBACKS[Math.floor(Math.random() * FALLBACKS.length)])
+        }
+      })
+      .catch(() => {
+        setQuote(FALLBACKS[Math.floor(Math.random() * FALLBACKS.length)])
+      })
+      .finally(() => setLoading(false))
+  }, [])
+
+  return (
+    <div style={{
+      border: '1px solid rgba(138,109,47,0.4)',
+      padding: '28px 32px',
+      background: 'rgba(26,18,9,0.6)',
+      backdropFilter: 'blur(4px)',
+      position: 'relative',
+      minHeight: '140px',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    }}>
+      <p style={{
+        fontSize: '9px',
+        letterSpacing: '0.45em',
+        textTransform: 'uppercase',
+        color: '#8a6d2f',
+        marginBottom: '16px',
+      }}>
+        ✦ &nbsp; Today's Ink &nbsp; ✦
+      </p>
+
+      {loading ? (
+        <p style={{
+          fontFamily: "'IM Fell English', serif",
+          fontSize: '1rem',
+          fontStyle: 'italic',
+          color: 'rgba(138,109,47,0.4)',
+          letterSpacing: '0.05em',
+        }}>
+          Consulting the archive...
+        </p>
+      ) : (
+        <div style={{ animation: 'fadeIn 0.8s ease forwards' }}>
+          <p style={{
+            fontFamily: "'IM Fell English', serif",
+            fontSize: '1.05rem',
+            fontStyle: 'italic',
+            color: '#d4c49a',
+            lineHeight: '1.75',
+            marginBottom: '14px',
+          }}>
+            "{quote?.content}"
+          </p>
+          <p style={{
+            fontSize: '10px',
+            letterSpacing: '0.3em',
+            textTransform: 'uppercase',
+            color: '#8a6d2f',
+          }}>
+            — {quote?.author}
+          </p>
+        </div>
+      )}
+    </div>
+  )
+}
+
 /* ── Castle Gallery Components ───────────────────────────────────────────── */
 
 function AtmosphericSVG({ category, accentColor }) {
@@ -267,33 +362,7 @@ export default function Home() {
 
         {/* Right — hidden on mobile */}
         <div className="hidden lg:flex flex-col gap-4" style={{ position: 'relative', zIndex: 1 }}>
-          <div className="hero-pull-quote" style={{
-            border: '0.5px solid var(--text-faint)', padding: '28px 32px',
-            background: 'rgba(255,255,255,0.02)',
-          }}>
-            <p style={{
-              fontFamily: "'Cinzel', serif", fontSize: 9,
-              letterSpacing: '0.35em', color: 'var(--text-muted)', marginBottom: 16,
-              textTransform: 'uppercase',
-            }}>
-              From the Archive
-            </p>
-            <p style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: 20, fontStyle: 'italic', fontWeight: 300,
-              color: 'var(--text-primary)', lineHeight: 1.6, marginBottom: 20,
-            }}>
-              "The light came not from any star, but from something older —
-              something that had learned, long ago, to imitate the sky."
-            </p>
-            <div className="attribution" style={{
-              fontFamily: "'Cinzel', serif", fontSize: 9,
-              letterSpacing: '0.25em', color: 'var(--text-faint)',
-              borderTop: '0.5px solid var(--text-faint)', paddingTop: 14,
-            }}>
-              THE AMBER MERIDIAN, 1889
-            </div>
-          </div>
+          <DailyQuote />
 
           <div className="hero-tagline-box" style={{
             border: '0.5px solid var(--text-faint)', padding: '14px 20px',
