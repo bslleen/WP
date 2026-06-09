@@ -14,6 +14,12 @@ const SIZES = [
   { name: 'L', value: '22px' },
 ]
 
+const BG_THEMES = [
+  { name: 'Dark',      bg: '#130e07', text: '#e8d5a3' },
+  { name: 'Parchment', bg: '#f0e6c8', text: '#3d2b1f' },
+  { name: 'White',     bg: '#ffffff', text: '#1a1a1a' },
+]
+
 export default function ChapterReader() {
   const { workId, chapterId } = useParams()
   const [work, setWork] = useState(null)
@@ -22,6 +28,7 @@ export default function ChapterReader() {
   const [loading, setLoading] = useState(true)
   const [font, setFont] = useState(FONTS[0].value)
   const [size, setSize] = useState(SIZES[1].value)
+  const [bgTheme, setBgTheme] = useState(BG_THEMES[0])
   const [showControls, setShowControls] = useState(false)
 
   useEffect(() => {
@@ -75,7 +82,7 @@ export default function ChapterReader() {
   const nextChapter = currentIndex < chapters.length - 1 ? chapters[currentIndex + 1] : null
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg-primary)' }}>
+    <div style={{ minHeight: '100vh', background: bgTheme.bg }}>
 
       {/* Reader top bar */}
       <div style={{
@@ -181,6 +188,33 @@ export default function ChapterReader() {
               </button>
             ))}
           </div>
+
+          <p style={{
+            fontSize: '10px', letterSpacing: '0.3em', textTransform: 'uppercase',
+            color: 'var(--text-muted)', marginBottom: '12px', marginTop: '20px',
+          }}>
+            Background
+          </p>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            {BG_THEMES.map(t => (
+              <button
+                key={t.name}
+                onClick={() => setBgTheme(t)}
+                title={t.name}
+                style={{
+                  width: '32px', height: '32px',
+                  borderRadius: '50%',
+                  background: t.bg,
+                  border: bgTheme.name === t.name
+                    ? '2px solid var(--accent)'
+                    : '2px solid var(--border)',
+                  cursor: 'pointer',
+                  transition: 'border-color 0.2s',
+                  flexShrink: 0,
+                }}
+              />
+            ))}
+          </div>
         </div>
       )}
 
@@ -220,7 +254,7 @@ export default function ChapterReader() {
         <div style={{
           fontFamily: font,
           fontSize: size,
-          color: 'var(--text-primary)',
+          color: bgTheme.text,
           lineHeight: '1.9',
           letterSpacing: '0.01em',
         }}>
