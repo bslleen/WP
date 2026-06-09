@@ -413,6 +413,49 @@ function CenterFrameSVG() {
   )
 }
 
+function ClosingQuote() {
+  const [quote, setQuote] = useState(null)
+
+  useEffect(() => {
+    const cached = sessionStorage.getItem('closing_quote')
+    if (cached) { setQuote(JSON.parse(cached)); return }
+
+    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000)
+    const fallback = DAILY_QUOTES[(dayOfYear + 11) % DAILY_QUOTES.length]
+
+    fetch('/api/quote')
+      .then(r => r.json())
+      .then(data => {
+        const q = (data.content && data.author) ? data : fallback
+        sessionStorage.setItem('closing_quote', JSON.stringify(q))
+        setQuote(q)
+      })
+      .catch(() => setQuote(fallback))
+  }, [])
+
+  if (!quote) return null
+
+  return (
+    <>
+      <blockquote style={{
+        fontFamily: "'Cormorant Garamond', serif",
+        fontSize: 'clamp(1.4rem, 4vw, 2rem)', fontStyle: 'italic', fontWeight: 300,
+        color: 'var(--accent)', lineHeight: 1.4,
+        maxWidth: 600, margin: '0 auto 16px',
+      }}>
+        "{quote.content}"
+      </blockquote>
+      <p style={{
+        fontFamily: "'Cinzel', serif", fontSize: 9,
+        letterSpacing: '0.3em', textTransform: 'uppercase',
+        color: 'var(--text-faint)', marginBottom: 28,
+      }}>
+        — {quote.author}
+      </p>
+    </>
+  )
+}
+
 /* ── Home ──────────────────────────────────────────────────────────────────── */
 
 export default function Home() {
@@ -879,14 +922,7 @@ export default function Home() {
           A NOTE
           <span style={{ fontSize: 8, color: 'var(--accent)' }}>✦</span>
         </div>
-        <blockquote style={{
-          fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 'clamp(1.4rem, 4vw, 2rem)', fontStyle: 'italic', fontWeight: 300,
-          color: 'var(--accent)', lineHeight: 1.4,
-          maxWidth: 600, margin: '0 auto 28px',
-        }}>
-          "Every good sentence is a small room with light coming in from the right."
-        </blockquote>
+        <ClosingQuote />
         <Ornament />
         </FadeIn>
       </section>
