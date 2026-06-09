@@ -177,19 +177,6 @@ Works are containers for ordered chapters. Each chapter is a Firestore subcollec
 
 ---
 
-## Themes
-
-Toggle via the sun/moon icon in the navigation.
-
-| Token | Castle (dark) | Parchment (light) |
-|---|---|---|
-| `--bg-primary` | `#0d0a05` | `#faf8f4` |
-| `--bg-secondary` | `#1a1209` | `#f0ece3` |
-| `--accent` | `#c9a84c` | `#8b6914` |
-| `--text-primary` | `#f0e6c8` | `#1c1410` |
-| `--font-heading` | Playfair Display | Playfair Display |
-
----
 
 ## Secret Page
 
