@@ -40,23 +40,30 @@ export function useSecretAccess() {
   // Runs once on mount. Uses isAuthRef so it never needs to re-register.
   useEffect(() => {
     let count = 0
+    let lastKey = null
     let timer = null
-    const onClick = () => {
-      count++
+    const onKeyDown = (e) => {
+      if (e.key !== lastKey) {
+        count = 1
+        lastKey = e.key
+      } else {
+        count++
+      }
       clearTimeout(timer)
       if (count >= 3) {
         count = 0
+        lastKey = null
         if (isAuthRef.current) {
           doLogout()
         } else {
           setShowModal(true)
         }
       } else {
-        timer = setTimeout(() => { count = 0 }, 400)
+        timer = setTimeout(() => { count = 0; lastKey = null }, 400)
       }
     }
-    document.addEventListener('click', onClick, true)
-    return () => { document.removeEventListener('click', onClick, true); clearTimeout(timer) }
+    document.addEventListener('keydown', onKeyDown)
+    return () => { document.removeEventListener('keydown', onKeyDown); clearTimeout(timer) }
   }, [doLogout]) // doLogout is stable (useCallback []), effectively runs once
 
   return {
