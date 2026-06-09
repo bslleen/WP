@@ -1,0 +1,13 @@
+{
+  "name": "E. Ashworth — Author & Poet",
+  "short_name": "E. Ashworth",
+  "description": "The literary portfolio of E. Ashworth",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d0a05",
+  "theme_color": "#c9a84c",
+  "icons": [
+    { "src": "/favicon-32x32.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
