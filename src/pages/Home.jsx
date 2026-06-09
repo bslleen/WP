@@ -58,12 +58,88 @@ const DAILY_QUOTES = [
 function DailyQuote() {
   const [quote, setQuote] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [visible, setVisible] = useState(false)
+  const [words, setWords] = useState([])
+  const [tone, setTone] = useState('neutral')
+
+  const FALLBACKS = [
+    { content: "There is no greater agony than bearing an untold story inside you.", author: "Maya Angelou" },
+    { content: "A writer only begins a book. A reader finishes it.", author: "Samuel Johnson" },
+    { content: "Fill your paper with the breathings of your heart.", author: "William Wordsworth" },
+    { content: "The purpose of a writer is to keep civilization from destroying itself.", author: "Albert Camus" },
+    { content: "You can always edit a bad page. You can't edit a blank page.", author: "Jodi Picoult" },
+    { content: "One must always be careful of books, and what is inside them, for words have the power to change us.", author: "Cassandra Clare" },
+    { content: "We are all fools in love.", author: "Jane Austen" },
+    { content: "It is a truth universally acknowledged that a reader in possession of a good book must be in want of more.", author: "after Jane Austen" },
+  ]
+
+  function detectTone(text) {
+    const t = text.toLowerCase()
+    const dark = ['death', 'dark', 'shadow', 'grave', 'lost', 'alone', 'never', 'end', 'silence', 'void', 'night', 'grief', 'pain', 'cold', 'forgotten']
+    const warm = ['love', 'heart', 'warm', 'light', 'hope', 'joy', 'beauty', 'life', 'together', 'dream', 'golden', 'spring', 'sun', 'gentle']
+    const melancholic = ['time', 'memory', 'past', 'faded', 'old', 'gone', 'once', 'still', 'quiet', 'slow', 'linger', 'remain', 'always', 'waiting']
+
+    const darkScore = dark.filter(w => t.includes(w)).length
+    const warmScore = warm.filter(w => t.includes(w)).length
+    const melScore  = melancholic.filter(w => t.includes(w)).length
+
+    if (darkScore >= 2) return 'dark'
+    if (warmScore >= 2) return 'warm'
+    if (melScore  >= 2) return 'melancholic'
+    return 'neutral'
+  }
+
+  const TONE_STYLES = {
+    dark: {
+      accent: 'rgba(138, 109, 47, 0.6)',
+      bg: 'rgba(10, 7, 3, 0.85)',
+      textColor: '#b8a878',
+      label: "✦  Tonight's Ink  ✦",
+      animDuration: '0.6s',
+    },
+    warm: {
+      accent: 'rgba(201, 145, 60, 0.7)',
+      bg: 'rgba(40, 24, 8, 0.7)',
+      textColor: '#f0d9a8',
+      label: "✦  Today's Ink  ✦",
+      animDuration: '0.4s',
+    },
+    melancholic: {
+      accent: 'rgba(120, 100, 60, 0.5)',
+      bg: 'rgba(18, 13, 7, 0.8)',
+      textColor: '#c8b888',
+      label: '✦  From the Quiet  ✦',
+      animDuration: '0.9s',
+    },
+    neutral: {
+      accent: 'rgba(138, 109, 47, 0.4)',
+      bg: 'rgba(26, 18, 9, 0.6)',
+      textColor: '#d4c49a',
+      label: "✦  Today's Ink  ✦",
+      animDuration: '0.5s',
+    },
+  }
+
+  function getHistory() {
+    try { return JSON.parse(localStorage.getItem('quote_history') || '[]') } catch { return [] }
+  }
+  function addToHistory(content) {
+    const h = getHistory()
+    localStorage.setItem('quote_history', JSON.stringify([content, ...h].slice(0, 5)))
+  }
+  function wasSeenRecently(content) {
+    return getHistory().includes(content)
+  }
 
   useEffect(() => {
     const cached = sessionStorage.getItem('daily_quote')
     if (cached) {
-      setQuote(JSON.parse(cached))
+      const q = JSON.parse(cached)
+      setQuote(q)
+      setTone(detectTone(q.content))
+      setWords(q.content.split(' '))
       setLoading(false)
+      setTimeout(() => setVisible(true), 1200)
       return
     }
 
@@ -73,72 +149,140 @@ function DailyQuote() {
     fetch('/api/quote')
       .then(r => r.json())
       .then(data => {
-        if (data.content && data.author) {
-          sessionStorage.setItem('daily_quote', JSON.stringify(data))
-          setQuote(data)
+        let q
+        if (data.content && data.author && !wasSeenRecently(data.content)) {
+          q = { content: data.content, author: data.author }
         } else {
-          setQuote(fallback)
+          const unseen = FALLBACKS.filter(f => !wasSeenRecently(f.content))
+          q = unseen.length > 0
+            ? unseen[Math.floor(Math.random() * unseen.length)]
+            : fallback
         }
+        addToHistory(q.content)
+        sessionStorage.setItem('daily_quote', JSON.stringify(q))
+        setQuote(q)
+        setTone(detectTone(q.content))
+        setWords(q.content.split(' '))
       })
-      .catch(() => setQuote(fallback))
-      .finally(() => setLoading(false))
+      .catch(() => {
+        setQuote(fallback)
+        setTone(detectTone(fallback.content))
+        setWords(fallback.content.split(' '))
+      })
+      .finally(() => {
+        setLoading(false)
+        setTimeout(() => setVisible(true), 1200)
+      })
   }, [])
 
-  return (
-    <div style={{
-      border: '1px solid rgba(138,109,47,0.4)',
-      padding: '28px 32px',
-      background: 'rgba(26,18,9,0.6)',
-      backdropFilter: 'blur(4px)',
-      position: 'relative',
-      minHeight: '120px',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-    }}>
-      <p style={{
-        fontSize: '9px',
-        letterSpacing: '0.45em',
-        textTransform: 'uppercase',
-        color: '#8a6d2f',
-        marginBottom: '16px',
-      }}>
-        ✦ &nbsp; Today's Ink &nbsp; ✦
-      </p>
+  const style = TONE_STYLES[tone]
 
-      {loading ? (
+  return (
+    <>
+      <style>{`
+        @keyframes wordReveal {
+          from { opacity: 0; transform: translateY(4px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes quoteEntrance {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes breathe {
+          0%, 100% { line-height: 1.75; }
+          50%       { line-height: 1.82; }
+        }
+        .quote-word {
+          display: inline-block;
+          opacity: 0;
+          animation: wordReveal 0.35s ease forwards;
+        }
+        .quote-word:first-child::first-letter {
+          font-size: 2.2em;
+          line-height: 0.8;
+          float: left;
+          margin-right: 4px;
+          margin-top: 4px;
+          font-family: 'Playfair Display', serif;
+          color: var(--accent, #c9a84c);
+        }
+      `}</style>
+
+      <div style={{
+        border: `1px solid ${style.accent}`,
+        padding: '28px 32px',
+        background: style.bg,
+        backdropFilter: 'blur(4px)',
+        position: 'relative',
+        minHeight: '160px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        transition: 'background 1.5s ease, border-color 1.5s ease',
+        opacity: visible ? 1 : 0,
+        animation: visible ? 'quoteEntrance 0.8s ease forwards' : 'none',
+      }}>
         <p style={{
-          fontFamily: "'IM Fell English', serif",
-          fontSize: '1rem',
-          fontStyle: 'italic',
-          color: 'rgba(138,109,47,0.4)',
-          letterSpacing: '0.05em',
+          fontSize: '9px',
+          letterSpacing: '0.45em',
+          textTransform: 'uppercase',
+          color: style.accent,
+          marginBottom: '18px',
+          fontFamily: "'Crimson Text', serif",
         }}>
-          Consulting the archive...
+          {style.label}
         </p>
-      ) : (
-        <div>
+
+        {loading ? (
           <p style={{
             fontFamily: "'IM Fell English', serif",
-            fontSize: '1.05rem',
+            fontSize: '1rem',
             fontStyle: 'italic',
-            color: '#d4c49a',
-            lineHeight: '1.75',
-            marginBottom: '14px',
+            color: 'rgba(138,109,47,0.35)',
           }}>
-            "{quote?.content}"
+            Consulting the archive...
           </p>
-          <p style={{
-            fontSize: '10px',
-            letterSpacing: '0.3em',
-            textTransform: 'uppercase',
-            color: '#8a6d2f',
-          }}>
-            — {quote?.author}
-          </p>
-        </div>
-      )}
-    </div>
+        ) : (
+          <div>
+            <p style={{
+              fontFamily: "'IM Fell English', serif",
+              fontSize: '1.05rem',
+              fontStyle: 'italic',
+              color: style.textColor,
+              lineHeight: '1.78',
+              marginBottom: '16px',
+              animation: 'breathe 6s ease-in-out infinite',
+            }}>
+              "
+              {words.map((word, i) => (
+                <span
+                  key={i}
+                  className="quote-word"
+                  style={{ animationDelay: `${1.4 + i * 0.06}s`, marginRight: '0.25em' }}
+                >
+                  {word}
+                </span>
+              ))}
+              "
+            </p>
+
+            <p style={{
+              fontSize: '10px',
+              letterSpacing: '0.35em',
+              textTransform: 'uppercase',
+              color: style.accent,
+              textAlign: 'right',
+              fontVariant: 'small-caps',
+              opacity: 0,
+              animation: 'quoteEntrance 0.6s ease forwards',
+              animationDelay: `${1.4 + words.length * 0.06 + 0.3}s`,
+            }}>
+              — {quote?.author}
+            </p>
+          </div>
+        )}
+      </div>
+    </>
   )
 }
 
