@@ -30,42 +30,34 @@ function Ornament() {
   )
 }
 
+const DAILY_QUOTES = [
+  { content: "There is no greater agony than bearing an untold story inside you.", author: "Maya Angelou" },
+  { content: "Fill your paper with the breathings of your heart.", author: "William Wordsworth" },
+  { content: "The purpose of a writer is to keep civilization from destroying itself.", author: "Albert Camus" },
+  { content: "You can always edit a bad page. You can't edit a blank page.", author: "Jodi Picoult" },
+  { content: "A word after a word after a word is power.", author: "Margaret Atwood" },
+  { content: "Not all those who wander are lost.", author: "J.R.R. Tolkien" },
+  { content: "One must always be careful of books, and what is inside them, for words have the power to change us.", author: "Cassandra Clare" },
+  { content: "The most courageous act is still to think for yourself. Aloud.", author: "Coco Chanel" },
+  { content: "We are all of us stars, and we deserve to twinkle.", author: "Marilyn Monroe" },
+  { content: "If you only read the books that everyone else is reading, you can only think what everyone else is thinking.", author: "Haruki Murakami" },
+  { content: "I am not afraid of storms, for I am learning how to sail my ship.", author: "Louisa May Alcott" },
+  { content: "The world is a book, and those who do not travel read only one page.", author: "Saint Augustine" },
+  { content: "There is no friend as loyal as a book.", author: "Ernest Hemingway" },
+  { content: "A reader lives a thousand lives before he dies. The man who never reads lives only one.", author: "George R.R. Martin" },
+  { content: "Writing is the painting of the voice.", author: "Voltaire" },
+  { content: "You don't write because you want to say something; you write because you have something to say.", author: "F. Scott Fitzgerald" },
+  { content: "The road to hell is paved with adverbs.", author: "Stephen King" },
+  { content: "Start writing, no matter what. The water does not flow until the faucet is turned on.", author: "Louis L'Amour" },
+  { content: "Every secret of a writer's soul, every experience of his life, every quality of his mind, is written large in his works.", author: "Virginia Woolf" },
+  { content: "A story has no beginning or end; arbitrarily one chooses that moment of experience from which to look back or from which to look ahead.", author: "Graham Greene" },
+  { content: "Literature is the art of discovering something extraordinary about ordinary people, and saying with ordinary words something extraordinary.", author: "Boris Pasternak" },
+  { content: "The greatest part of a writer's time is spent in reading, in order to write.", author: "Samuel Johnson" },
+]
+
 function DailyQuote() {
-  const [quote, setQuote] = useState(null)
-  const [loading, setLoading] = useState(true)
-
-  const FALLBACKS = [
-    { content: "There is no greater agony than bearing an untold story inside you.", author: "Maya Angelou" },
-    { content: "A writer only begins a book. A reader finishes it.", author: "Samuel Johnson" },
-    { content: "Fill your paper with the breathings of your heart.", author: "William Wordsworth" },
-    { content: "The purpose of a writer is to keep civilization from destroying itself.", author: "Albert Camus" },
-    { content: "You can always edit a bad page. You can't edit a blank page.", author: "Jodi Picoult" },
-  ]
-
-  useEffect(() => {
-    const cached = sessionStorage.getItem('daily_quote')
-    if (cached) {
-      setQuote(JSON.parse(cached))
-      setLoading(false)
-      return
-    }
-
-    fetch('https://api.quotable.io/random?tags=literature|writing|books&minLength=60&maxLength=180')
-      .then(r => r.json())
-      .then(data => {
-        if (data.content && data.author) {
-          const q = { content: data.content, author: data.author }
-          sessionStorage.setItem('daily_quote', JSON.stringify(q))
-          setQuote(q)
-        } else {
-          setQuote(FALLBACKS[Math.floor(Math.random() * FALLBACKS.length)])
-        }
-      })
-      .catch(() => {
-        setQuote(FALLBACKS[Math.floor(Math.random() * FALLBACKS.length)])
-      })
-      .finally(() => setLoading(false))
-  }, [])
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000)
+  const quote = DAILY_QUOTES[dayOfYear % DAILY_QUOTES.length]
 
   return (
     <div style={{
@@ -74,7 +66,6 @@ function DailyQuote() {
       background: 'rgba(26,18,9,0.6)',
       backdropFilter: 'blur(4px)',
       position: 'relative',
-      minHeight: '140px',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
@@ -89,37 +80,26 @@ function DailyQuote() {
         ✦ &nbsp; Today's Ink &nbsp; ✦
       </p>
 
-      {loading ? (
+      <div>
         <p style={{
           fontFamily: "'IM Fell English', serif",
-          fontSize: '1rem',
+          fontSize: '1.05rem',
           fontStyle: 'italic',
-          color: 'rgba(138,109,47,0.4)',
-          letterSpacing: '0.05em',
+          color: '#d4c49a',
+          lineHeight: '1.75',
+          marginBottom: '14px',
         }}>
-          Consulting the archive...
+          "{quote.content}"
         </p>
-      ) : (
-        <div style={{ animation: 'fadeIn 0.8s ease forwards' }}>
-          <p style={{
-            fontFamily: "'IM Fell English', serif",
-            fontSize: '1.05rem',
-            fontStyle: 'italic',
-            color: '#d4c49a',
-            lineHeight: '1.75',
-            marginBottom: '14px',
-          }}>
-            "{quote?.content}"
-          </p>
-          <p style={{
-            fontSize: '10px',
-            letterSpacing: '0.3em',
-            textTransform: 'uppercase',
-            color: '#8a6d2f',
-          }}>
-            — {quote?.author}
-          </p>
-        </div>
+        <p style={{
+          fontSize: '10px',
+          letterSpacing: '0.3em',
+          textTransform: 'uppercase',
+          color: '#8a6d2f',
+        }}>
+          — {quote.author}
+        </p>
+      </div>
       )}
     </div>
   )
