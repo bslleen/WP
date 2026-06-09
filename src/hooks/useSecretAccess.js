@@ -43,6 +43,8 @@ export function useSecretAccess() {
     let lastKey = null
     let timer = null
     const onKeyDown = (e) => {
+      const tag = document.activeElement?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement?.isContentEditable) return
       if (e.key !== lastKey) {
         count = 1
         lastKey = e.key
