@@ -820,7 +820,7 @@ export default function Home() {
       </section>
 
       {/* ── JOURNAL ───────────────────────────────────────────────────────── */}
-      <section style={{ background: 'var(--bg-primary)', paddingTop: '24px' }} className="px-4 md:px-10 py-20">
+      <section style={{ background: 'var(--bg-primary)', paddingTop: '24px', paddingLeft: '24px', paddingRight: '24px' }} className="py-20">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
           <FadeIn delay={0}>
           <div>
@@ -883,8 +883,9 @@ export default function Home() {
                 alignSelf: 'flex-start',
                 borderBottom: '0.5px solid var(--border)', paddingBottom: 2,
                 textDecoration: 'none', minHeight: '44px', display: 'flex', alignItems: 'center',
+                marginTop: '8px',
               }}>
-                READ
+                Read entry →
               </Link>
             </div>
             </FadeIn>
