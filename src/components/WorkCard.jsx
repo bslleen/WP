@@ -10,7 +10,7 @@ function AtmosphericSVG({ category }) {
   if (cat.includes('novel')) {
     return (
       <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} viewBox="0 0 200 165" preserveAspectRatio="xMidYMid slice">
-        <ellipse cx="100" cy="0" rx="80" ry="40" fill="var(--accent-faint)" />
+        <ellipse cx="100" cy="0" rx="56" ry="28" fill="var(--accent-faint)" />
         {[0,1,2,3,4].map(i => (
           <rect key={i}
             x={44 + i * 2} y={62 - i * 14}
@@ -132,6 +132,8 @@ export default function WorkCard({ work }) {
         position: 'relative',
         display: 'inline-block',
         paddingTop: '28px',
+        maxWidth: '100%',
+        boxSizing: 'border-box',
         transform: hovered ? 'translateY(-6px)' : 'none',
         transition: 'transform 0.4s ease',
       }}
@@ -153,7 +155,7 @@ export default function WorkCard({ work }) {
       }} />
 
       {/* Card + frame overlay */}
-      <div style={{ position: 'relative', width: '200px' }}>
+      <div style={{ position: 'relative', width: '200px', maxWidth: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
         <div className="work-frame" style={{
           background: 'var(--bg-secondary)',
           overflow: 'hidden',
@@ -169,6 +171,7 @@ export default function WorkCard({ work }) {
               ? `url(${work.cover_image}) center/cover`
               : `linear-gradient(135deg, var(--bg-tertiary), var(--bg-primary))`,
             position: 'relative',
+            overflow: 'hidden',
           }}>
             <div style={{
               position: 'absolute', inset: 0,
