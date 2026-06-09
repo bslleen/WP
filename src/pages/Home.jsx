@@ -4,6 +4,7 @@ import { fetchWorks, fetchJournal } from '../data/api'
 import { normalizeWork, normalizeJournal } from '../data/normalize'
 import heroBg from '../assets/study.jpg'
 import FadeIn from '../components/FadeIn'
+import WorkCard, { StoneWall as WorkCardStoneWall } from '../components/WorkCard'
 
 function useFonts() {
   useEffect(() => {
@@ -286,133 +287,6 @@ function DailyQuote() {
   )
 }
 
-/* ── Castle Gallery Components ───────────────────────────────────────────── */
-
-function AtmosphericSVG({ category, accentColor }) {
-  const c = accentColor || 'var(--accent-dim)'
-  const cat = (category || '').toLowerCase()
-
-  if (cat.includes('novel')) {
-    return (
-      <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} viewBox="0 0 200 165" preserveAspectRatio="xMidYMid slice">
-        <ellipse cx="100" cy="100" rx="90" ry="55" fill={c} fillOpacity="0.07" />
-        {[0,1,2,3].map(i => (
-          <rect key={i} x={50 + i*3} y={55 - i*13} width={100 - i*6} height={11}
-            fill="none" stroke={c} strokeWidth="0.5" strokeOpacity={0.32 - i*0.06} />
-        ))}
-        <path d="M130 18 Q142 38 122 58 Q116 70 124 82"
-          fill="none" stroke={c} strokeWidth="0.7" strokeOpacity="0.22" />
-        <path d="M130 18 L124 30" fill="none" stroke={c} strokeWidth="0.4" strokeOpacity="0.18" />
-        <ellipse cx="100" cy="140" rx="50" ry="12" fill={c} fillOpacity="0.04" />
-      </svg>
-    )
-  }
-
-  if (cat.includes('poetry')) {
-    return (
-      <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} viewBox="0 0 200 165" preserveAspectRatio="xMidYMid slice">
-        {Array.from({ length: 22 }, (_, i) => (
-          <line key={i} x1={i * 10} y1={0} x2={i * 10 - 12} y2={100}
-            stroke={c} strokeWidth="0.35" strokeOpacity={0.12 + (i % 4) * 0.04} />
-        ))}
-        <path d="M0 110 Q25 82 55 95 Q80 105 100 82 Q122 60 155 76 Q178 88 200 70 L200 165 L0 165 Z"
-          fill={c} fillOpacity="0.10" />
-        <circle cx="158" cy="32" r="18" fill="none" stroke={c} strokeWidth="0.5" strokeOpacity="0.18" />
-        <circle cx="165" cy="30" r="15" fill="var(--bg-primary)" />
-      </svg>
-    )
-  }
-
-  return (
-    <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} viewBox="0 0 200 165" preserveAspectRatio="xMidYMid slice">
-      {[[38,38],[100,65],[162,45],[78,108],[132,96]].map(([x,y], i, arr) => (
-        <g key={i}>
-          <circle cx={x} cy={y} r="3.5" fill="none" stroke={c} strokeWidth="0.5" strokeOpacity="0.28" />
-          {i < arr.length - 1 && (
-            <line x1={x} y1={y} x2={arr[i+1][0]} y2={arr[i+1][1]}
-              stroke={c} strokeWidth="0.3" strokeOpacity="0.18" strokeDasharray="4 3" />
-          )}
-        </g>
-      ))}
-      <g transform="translate(158 118)">
-        <line x1="0" y1="-16" x2="0" y2="16" stroke={c} strokeWidth="0.4" strokeOpacity="0.22" />
-        <line x1="-16" y1="0" x2="16" y2="0" stroke={c} strokeWidth="0.4" strokeOpacity="0.22" />
-        <line x1="-10" y1="-10" x2="10" y2="10" stroke={c} strokeWidth="0.25" strokeOpacity="0.14" />
-        <line x1="10" y1="-10" x2="-10" y2="10" stroke={c} strokeWidth="0.25" strokeOpacity="0.14" />
-        <circle cx="0" cy="0" r="4" fill="none" stroke={c} strokeWidth="0.4" strokeOpacity="0.28" />
-      </g>
-    </svg>
-  )
-}
-
-function StoneWall() {
-  return (
-    <svg
-      className="stone-texture stone-wall-texture"
-      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
-      preserveAspectRatio="none"
-    >
-      <defs>
-        <pattern id="stonePattern" x="0" y="0" width="240" height="240" patternUnits="userSpaceOnUse">
-          <line x1="0" y1="0" x2="240" y2="0" stroke="var(--bg-secondary)" strokeWidth="0.5" />
-          <line x1="0" y1="120" x2="240" y2="120" stroke="var(--bg-secondary)" strokeWidth="0.5" />
-          <line x1="80" y1="0" x2="80" y2="120" stroke="var(--bg-secondary)" strokeWidth="0.5" />
-          <line x1="200" y1="0" x2="200" y2="120" stroke="var(--bg-secondary)" strokeWidth="0.5" />
-          <line x1="40" y1="120" x2="40" y2="240" stroke="var(--bg-secondary)" strokeWidth="0.5" />
-          <line x1="140" y1="120" x2="140" y2="240" stroke="var(--bg-secondary)" strokeWidth="0.5" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#stonePattern)" opacity="0.6" />
-    </svg>
-  )
-}
-
-function SideFrameSVG() {
-  return (
-    <svg className="frame-ornament" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 2 }} viewBox="0 0 200 280" preserveAspectRatio="none">
-      <rect x="0" y="0" width="200" height="280" fill="none" stroke="var(--accent-dim)" strokeWidth="1.5"/>
-      <rect x="6" y="6" width="188" height="268" fill="none" stroke="var(--accent)" strokeWidth="0.5"/>
-      <rect x="10" y="10" width="180" height="260" fill="none" stroke="var(--accent-dim)" strokeWidth="0.3"/>
-      <circle cx="0" cy="0" r="3" fill="var(--accent)"/>
-      <circle cx="200" cy="0" r="3" fill="var(--accent)"/>
-      <circle cx="0" cy="280" r="3" fill="var(--accent)"/>
-      <circle cx="200" cy="280" r="3" fill="var(--accent)"/>
-      <path d="M0 18 L0 0 L18 0" fill="none" stroke="var(--accent)" strokeWidth="1"/>
-      <path d="M200 18 L200 0 L182 0" fill="none" stroke="var(--accent)" strokeWidth="1"/>
-      <path d="M0 262 L0 280 L18 280" fill="none" stroke="var(--accent)" strokeWidth="1"/>
-      <path d="M200 262 L200 280 L182 280" fill="none" stroke="var(--accent)" strokeWidth="1"/>
-      <circle cx="100" cy="0" r="2" fill="var(--accent-dim)"/>
-      <circle cx="100" cy="280" r="2" fill="var(--accent-dim)"/>
-      <circle cx="0" cy="140" r="2" fill="var(--accent-dim)"/>
-      <circle cx="200" cy="140" r="2" fill="var(--accent-dim)"/>
-    </svg>
-  )
-}
-
-function CenterFrameSVG() {
-  return (
-    <svg className="frame-ornament" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 2 }} viewBox="0 0 220 308" preserveAspectRatio="none">
-      <rect x="0" y="0" width="220" height="308" fill="none" stroke="var(--accent)" strokeWidth="2"/>
-      <rect x="6" y="6" width="208" height="296" fill="none" stroke="var(--accent)" strokeWidth="0.5"/>
-      <rect x="10" y="10" width="200" height="288" fill="none" stroke="var(--accent-dim)" strokeWidth="0.3"/>
-      <circle cx="0" cy="0" r="4" fill="var(--accent)"/>
-      <circle cx="220" cy="0" r="4" fill="var(--accent)"/>
-      <circle cx="0" cy="308" r="4" fill="var(--accent)"/>
-      <circle cx="220" cy="308" r="4" fill="var(--accent)"/>
-      <path d="M0 18 L0 0 L18 0" fill="none" stroke="var(--accent)" strokeWidth="1"/>
-      <path d="M220 18 L220 0 L202 0" fill="none" stroke="var(--accent)" strokeWidth="1"/>
-      <path d="M0 290 L0 308 L18 308" fill="none" stroke="var(--accent)" strokeWidth="1"/>
-      <path d="M220 290 L220 308 L202 308" fill="none" stroke="var(--accent)" strokeWidth="1"/>
-      <circle cx="110" cy="0" r="2" fill="var(--accent-dim)"/>
-      <circle cx="110" cy="308" r="2" fill="var(--accent-dim)"/>
-      <circle cx="0" cy="154" r="2" fill="var(--accent-dim)"/>
-      <circle cx="220" cy="154" r="2" fill="var(--accent-dim)"/>
-      <path d="M106 0 L110 -4 L114 0 L110 4 Z" fill="var(--accent)"/>
-      <path d="M106 308 L110 304 L114 308 L110 312 Z" fill="var(--accent)"/>
-    </svg>
-  )
-}
-
 function ClosingQuote() {
   const [quote, setQuote] = useState(null)
 
@@ -464,7 +338,6 @@ export default function Home() {
   const [works,   setWorks]   = useState([])
   const [journal, setJournal] = useState([])
   const [loading, setLoading] = useState(true)
-  const [hoveredIdx, setHoveredIdx] = useState(null)
 
   useEffect(() => {
     fetchWorks()
@@ -599,16 +472,7 @@ export default function Home() {
         overflow: 'hidden',
         padding: '80px 40px',
       }}>
-        <style>{`
-          @media (max-width: 768px) {
-            .gallery-row { flex-direction: column !important; align-items: center !important; }
-            .work-frame  { margin-bottom: 56px !important; }
-            .work-frame-c{ margin-bottom: 56px !important; }
-            .frame-card  { width: calc(100vw - 80px) !important; max-width: 300px !important; }
-          }
-        `}</style>
-
-        <StoneWall />
+        <WorkCardStoneWall />
 
         {/* Warm top glow */}
         <div style={{
@@ -642,7 +506,7 @@ export default function Home() {
           </FadeIn>
         </div>
 
-        {/* Frames */}
+        {/* Cards */}
         {loading ? (
           <p style={{
             position: 'relative', zIndex: 1, textAlign: 'center',
@@ -652,156 +516,19 @@ export default function Home() {
             Consulting the archive…
           </p>
         ) : (
-          <div className="gallery-row" style={{
+          <div style={{
             position: 'relative', zIndex: 1,
-            display: 'flex', gap: '32px',
-            alignItems: 'flex-end',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
+            display: 'flex', flexWrap: 'wrap',
+            gap: '32px', justifyContent: 'center',
             paddingTop: '28px',
           }}>
-            {works.map((work, i) => {
-              const isCenter = i === 1
-              const w = isCenter ? 220 : 200
-              const imgH = isCenter ? 165 : 150
-              const accent = work.accentColor || 'var(--accent-dim)'
-
-              return (
-                <FadeIn key={work.id} delay={0.12 * i}>
-                  <Link to={`/works/${work.id}`} style={{ textDecoration: 'none' }}>
-                    <div
-                      className={isCenter ? 'work-frame work-frame-c' : 'work-frame'}
-                      style={{
-                        position: 'relative',
-                        display: 'inline-block',
-                        marginBottom: isCenter ? '14px' : '0',
-                        transform: hoveredIdx === i ? 'translateY(-6px)' : 'none',
-                        transition: 'transform 0.4s ease',
-                      }}
-                      onMouseEnter={() => setHoveredIdx(i)}
-                      onMouseLeave={() => setHoveredIdx(null)}
-                    >
-                      {/* Floor spotlight glow */}
-                      <div style={{
-                        position: 'absolute',
-                        bottom: isCenter ? '-38px' : '-32px',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        width: isCenter ? '180px' : '150px',
-                        height: isCenter ? '48px' : '38px',
-                        background: 'radial-gradient(ellipse at center, rgba(201,168,76,0.18) 0%, transparent 70%)',
-                        pointerEvents: 'none',
-                        zIndex: 0,
-                      }} />
-                      {/* Featured label */}
-                      <div style={{
-                        position: 'absolute',
-                        top: isCenter ? '-48px' : '-42px',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        whiteSpace: 'nowrap',
-                        fontFamily: "'Cinzel', serif",
-                        fontSize: '7px',
-                        letterSpacing: '0.3em',
-                        color: 'rgba(201,168,76,0.55)',
-                        textTransform: 'uppercase',
-                      }}>
-                        ✦ Featured
-                      </div>
-                      {/* Hanging wire */}
-                      <div className="frame-wire" style={{
-                        position: 'absolute', top: '-20px', left: '50%',
-                        transform: 'translateX(-50%)',
-                        width: '1px', height: '20px',
-                        background: 'linear-gradient(to bottom, transparent, var(--accent-dim))',
-                      }} />
-                      <div className="frame-wire" style={{
-                        position: 'absolute', top: '-22px', left: '50%',
-                        transform: 'translateX(-50%)',
-                        width: '6px', height: '6px', borderRadius: '50%',
-                        border: '1px solid var(--accent-dim)', background: 'transparent',
-                      }} />
-
-                      {/* Card wrapper — SVG frame overlays this */}
-                      <div style={{ position: 'relative', width: `${w}px` }}>
-
-                        {/* Painting card */}
-                        <div className="frame-card" style={{
-                          background: 'var(--bg-secondary)',
-                          overflow: 'hidden',
-                          boxShadow: hoveredIdx === i
-                            ? 'var(--card-shadow)'
-                            : '0 10px 50px rgba(0,0,0,0.5)',
-                          transition: 'box-shadow 0.4s ease',
-                        }}>
-                          {/* Image area */}
-                          <div style={{
-                            height: `${imgH}px`,
-                            background: work.cover_image
-                              ? `url(${work.cover_image}) center/cover`
-                              : `linear-gradient(135deg, var(--bg-tertiary), var(--bg-primary))`,
-                            position: 'relative',
-                          }}>
-                            <div style={{
-                              position: 'absolute', inset: 0,
-                              background: 'radial-gradient(ellipse at center, transparent 30%, var(--bg-primary) 100%)',
-                            }} />
-                            {!work.cover_image && (
-                              <AtmosphericSVG category={work.category} accentColor={accent} />
-                            )}
-                          </div>
-
-                          {/* Gold separator */}
-                          <div style={{
-                            height: '1px',
-                            background: 'linear-gradient(90deg, transparent, var(--border-strong), transparent)',
-                            margin: '0 12px',
-                          }} />
-
-                          {/* Text block */}
-                          <div style={{ padding: '14px 16px 16px' }}>
-                            <p style={{
-                              fontSize: '9px', letterSpacing: '0.35em',
-                              textTransform: 'uppercase', color: accent, marginBottom: '6px',
-                            }}>
-                              {work.category}
-                            </p>
-                            <h3 style={{
-                              fontFamily: "var(--font-heading)",
-                              fontSize: '16px', fontStyle: 'italic',
-                              color: 'var(--text-primary)', marginBottom: '6px', lineHeight: 1.3,
-                            }}>
-                              {work.title}
-                            </h3>
-                            <p style={{
-                              fontFamily: "var(--font-accent)",
-                              fontSize: '11px', fontStyle: 'italic',
-                              color: 'var(--accent-dim)', marginBottom: '10px', lineHeight: 1.5,
-                            }}>
-                              "{work.excerpt?.substring(0, 55)}…"
-                            </p>
-                            <div style={{
-                              display: 'flex', justifyContent: 'space-between',
-                              borderTop: '1px solid var(--border)', paddingTop: '8px',
-                            }}>
-                              <span style={{ fontSize: '9px', letterSpacing: '0.2em', color: 'var(--text-faint)', textTransform: 'uppercase' }}>
-                                {work.year}
-                              </span>
-                              <span style={{ fontSize: '9px', letterSpacing: '0.2em', color: 'var(--text-faint)', textTransform: 'uppercase' }}>
-                                {work.status || (work.pages > 0 ? `${work.pages} pp.` : 'In Progress')}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Ornate frame overlay */}
-                        {isCenter ? <CenterFrameSVG /> : <SideFrameSVG />}
-                      </div>
-                    </div>
-                  </Link>
-                </FadeIn>
-              )
-            })}
+            {works.map((work, i) => (
+              <FadeIn key={work.id} delay={0.12 * i}>
+                <Link to={`/works/${work.id}`} style={{ textDecoration: 'none' }}>
+                  <WorkCard work={work} />
+                </Link>
+              </FadeIn>
+            ))}
           </div>
         )}
 
