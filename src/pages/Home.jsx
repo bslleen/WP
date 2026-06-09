@@ -56,8 +56,40 @@ const DAILY_QUOTES = [
 ]
 
 function DailyQuote() {
-  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000)
-  const quote = DAILY_QUOTES[dayOfYear % DAILY_QUOTES.length]
+  const [quote, setQuote] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const cached = sessionStorage.getItem('daily_quote')
+    if (cached) {
+      setQuote(JSON.parse(cached))
+      setLoading(false)
+      return
+    }
+
+    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000)
+    const fallback = DAILY_QUOTES[dayOfYear % DAILY_QUOTES.length]
+
+    fetch('https://type.fit/api/quotes')
+      .then(r => r.json())
+      .then(data => {
+        const pool = data.filter(q =>
+          q.text && q.author &&
+          q.text.length >= 60 && q.text.length <= 220 &&
+          !q.author.includes('type.fit')
+        )
+        if (pool.length > 0) {
+          const picked = pool[Math.floor(Math.random() * pool.length)]
+          const q = { content: picked.text, author: picked.author }
+          sessionStorage.setItem('daily_quote', JSON.stringify(q))
+          setQuote(q)
+        } else {
+          setQuote(fallback)
+        }
+      })
+      .catch(() => setQuote(fallback))
+      .finally(() => setLoading(false))
+  }, [])
 
   return (
     <div style={{
@@ -66,6 +98,7 @@ function DailyQuote() {
       background: 'rgba(26,18,9,0.6)',
       backdropFilter: 'blur(4px)',
       position: 'relative',
+      minHeight: '120px',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
@@ -80,26 +113,37 @@ function DailyQuote() {
         ✦ &nbsp; Today's Ink &nbsp; ✦
       </p>
 
-      <div>
+      {loading ? (
         <p style={{
           fontFamily: "'IM Fell English', serif",
-          fontSize: '1.05rem',
+          fontSize: '1rem',
           fontStyle: 'italic',
-          color: '#d4c49a',
-          lineHeight: '1.75',
-          marginBottom: '14px',
+          color: 'rgba(138,109,47,0.4)',
+          letterSpacing: '0.05em',
         }}>
-          "{quote.content}"
+          Consulting the archive...
         </p>
-        <p style={{
-          fontSize: '10px',
-          letterSpacing: '0.3em',
-          textTransform: 'uppercase',
-          color: '#8a6d2f',
-        }}>
-          — {quote.author}
-        </p>
-      </div>
+      ) : (
+        <div>
+          <p style={{
+            fontFamily: "'IM Fell English', serif",
+            fontSize: '1.05rem',
+            fontStyle: 'italic',
+            color: '#d4c49a',
+            lineHeight: '1.75',
+            marginBottom: '14px',
+          }}>
+            "{quote?.content}"
+          </p>
+          <p style={{
+            fontSize: '10px',
+            letterSpacing: '0.3em',
+            textTransform: 'uppercase',
+            color: '#8a6d2f',
+          }}>
+            — {quote?.author}
+          </p>
+        </div>
       )}
     </div>
   )
