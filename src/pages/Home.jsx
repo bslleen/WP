@@ -70,19 +70,12 @@ function DailyQuote() {
     const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000)
     const fallback = DAILY_QUOTES[dayOfYear % DAILY_QUOTES.length]
 
-    fetch('https://type.fit/api/quotes')
+    fetch('/api/quote')
       .then(r => r.json())
       .then(data => {
-        const pool = data.filter(q =>
-          q.text && q.author &&
-          q.text.length >= 60 && q.text.length <= 220 &&
-          !q.author.includes('type.fit')
-        )
-        if (pool.length > 0) {
-          const picked = pool[Math.floor(Math.random() * pool.length)]
-          const q = { content: picked.text, author: picked.author }
-          sessionStorage.setItem('daily_quote', JSON.stringify(q))
-          setQuote(q)
+        if (data.content && data.author) {
+          sessionStorage.setItem('daily_quote', JSON.stringify(data))
+          setQuote(data)
         } else {
           setQuote(fallback)
         }
