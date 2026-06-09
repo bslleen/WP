@@ -52,7 +52,7 @@ export function useSecretAccess() {
           setShowModal(true)
         }
       } else {
-        timer = setTimeout(() => { count = 0 }, 1500)
+        timer = setTimeout(() => { count = 0 }, 400)
       }
     }
     document.addEventListener('click', onClick, true)
