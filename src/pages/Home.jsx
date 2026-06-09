@@ -891,17 +891,7 @@ export default function Home() {
           ))}
         </div>
 
-        <div style={{ textAlign: 'center', marginTop: 24 }}>
-          <Link to="/journal" style={{
-            fontFamily: "'Cinzel', serif", fontSize: 11,
-            letterSpacing: '0.2em', color: 'var(--accent)',
-            border: '0.5px solid var(--accent)', padding: '14px 28px',
-            textDecoration: 'none', display: 'inline-block',
-            background: 'transparent', minHeight: '44px',
-          }}>
-            READ THE JOURNAL
-          </Link>
-        </div>
+
       </section>
 
       {/* ── CLOSING QUOTE ─────────────────────────────────────────────────── */}
