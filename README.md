@@ -180,7 +180,7 @@ Works are containers for ordered chapters. Each chapter is a Firestore subcollec
 
 ## Secret Page
 
-Trigger via three rapid clicks anywhere on the site, or by clicking the candle icon in the navigation bar.
+Trigger via three rapid clicks on any keyboard letter anywhere on the site(except for writing spaces ), or by clicking the candle icon in the navigation bar.
 
 Default password: **`inkandashes`**
 
