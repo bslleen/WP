@@ -236,7 +236,7 @@ export default function ChapterReader() {
             fontFamily: 'var(--font-heading)',
             fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
             fontStyle: 'italic',
-            color: 'var(--text-primary)',
+            color: bgTheme.text,
             fontWeight: '400',
             lineHeight: 1.2,
             marginBottom: '32px',
