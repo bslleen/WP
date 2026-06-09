@@ -42,13 +42,16 @@ export default function AdminLogin() {
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: 'var(--bg-primary)',
-    }}>
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'var(--bg-primary)',
+      }}
+      onClick={(e) => e.target === e.currentTarget && navigate(-1)}
+    >
       <div
         className={shake ? 'admin-login-shake' : ''}
         style={{
