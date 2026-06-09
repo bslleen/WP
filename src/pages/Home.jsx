@@ -844,7 +844,7 @@ export default function Home() {
 
         <Ornament />
 
-        <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 1, border: '0.5px solid var(--border)' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2">
           {journal.length === 0 && (
             <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px 0', fontFamily: "'Cinzel', serif", fontSize: 9, letterSpacing: '0.3em', color: 'var(--text-faint)' }}>
               Consulting the archive…
@@ -853,14 +853,13 @@ export default function Home() {
           {journal.map((entry, i) => (
             <FadeIn key={entry.id} delay={0.15 * i}>
             <div style={{
-              padding: 32,
+              padding: '24px 0',
               minHeight: 120,
-              borderRight: i === 0 && journal.length > 1 ? '0.5px solid var(--border)' : 'none',
-              borderBottom: i === 0 ? '0.5px solid var(--border)' : 'none',
+              borderBottom: '1px solid rgba(138,109,47,0.15)',
               display: 'flex', flexDirection: 'column', gap: 12,
               gridColumn: journal.length === 1 ? '1 / -1' : 'auto',
             }}
-            className="journal-preview-card md:[&]:border-b-0">
+            className="journal-preview-card">
               <p style={{
                 fontFamily: "'Cinzel', serif", fontSize: 9,
                 letterSpacing: '0.3em', color: 'var(--text-muted)',
@@ -892,7 +891,7 @@ export default function Home() {
           ))}
         </div>
 
-        <div style={{ textAlign: 'center', marginTop: 40 }}>
+        <div style={{ textAlign: 'center', marginTop: 24 }}>
           <Link to="/journal" style={{
             fontFamily: "'Cinzel', serif", fontSize: 11,
             letterSpacing: '0.2em', color: 'var(--accent)',
