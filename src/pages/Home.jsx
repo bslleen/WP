@@ -820,7 +820,7 @@ export default function Home() {
       </section>
 
       {/* ── JOURNAL ───────────────────────────────────────────────────────── */}
-      <section style={{ background: 'var(--bg-primary)', paddingTop: '24px', paddingLeft: '24px', paddingRight: '24px' }} className="py-20">
+      <section style={{ background: 'var(--bg-primary)', padding: '80px 40px 40px' }}>
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
           <FadeIn delay={0}>
           <div>
@@ -901,7 +901,8 @@ export default function Home() {
         textAlign: 'center',
         borderTop: '0.5px solid var(--border)',
         borderBottom: '0.5px solid var(--border)',
-      }} className="closing-quote-section px-4 py-8">
+        padding: '40px',
+      }} className="closing-quote-section">
         <FadeIn delay={0}>
         <div style={{
           fontFamily: "'Cinzel', serif", fontSize: 9,
