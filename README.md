@@ -165,7 +165,7 @@ Works are containers for ordered chapters. Each chapter is a Firestore subcollec
 **Admin flow:**
 1. Create a work at `/admin/works/new` (title, description, tags, story status, cover, accent colour)
 2. Open the work dashboard at `/admin/works/:workId`
-3. Click **+ New Chapter** → full-screen editor with word count + auto-save (30s)
+3. Click **+ New Chapter** → full-screen editor with word count + auto-save
 4. Use **Save Draft** to keep it hidden, **Publish →** to make it live
 5. Toggle chapter visibility from the dashboard without opening the editor
 
@@ -182,9 +182,7 @@ Works are containers for ordered chapters. Each chapter is a Firestore subcollec
 
 Trigger via three rapid clicks on any keyboard letter anywhere on the site(except for writing spaces ), or by clicking the candle icon in the navigation bar.
 
-Default password: **`inkandashes`**
-
-Change it in `src/hooks/useSecretAccess.js`.
+Authentication via Firebase Auth — credentials managed in the Firebase console.
 
 Features:
 - **Private Journal** — entries saved to Firestore (`private/` collection), auth-only
