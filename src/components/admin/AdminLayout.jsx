@@ -151,6 +151,8 @@ export default function AdminLayout({ children }) {
         flex: 1,
         overflowY: 'auto',
         minHeight: '100vh',
+        paddingLeft: '32px',
+        paddingRight: '32px',
       }} className="admin-content p-6 md:p-14 pb-24 md:pb-14">
         {children}
       </main>

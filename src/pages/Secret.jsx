@@ -288,6 +288,7 @@ function PrivateJournal() {
             padding: '16px', fontFamily: "'EB Garamond', serif", fontSize: '16px',
             backgroundImage: 'repeating-linear-gradient(transparent, transparent 27px, rgba(42,30,10,0.15) 28px)',
             lineHeight: '28px',
+            minHeight: '280px',
           }}
         />
 
@@ -445,8 +446,8 @@ function PrivateJournal() {
 
 export default function Secret({ onLogout }) {
   return (
-    <div data-theme="castle" style={{ background: 'var(--bg-primary)', minHeight: '100vh', position: 'relative', overflow: 'hidden' }}>
-      <div className="max-w-2xl mx-auto px-4 md:px-12 pt-20 md:pt-[72px] pb-20">
+    <div data-theme="castle" style={{ background: 'var(--bg-primary)', minHeight: '100vh', position: 'relative', overflow: 'hidden', paddingTop: '100px' }}>
+      <div style={{ maxWidth: '860px', margin: '0 auto', padding: '0 32px 80px' }}>
         {/* Header */}
         <div className="text-center mb-12">
           <p className="text-xs tracking-[0.45em] uppercase mb-4" style={{ color: 'var(--text-faint)' }}>
@@ -462,7 +463,7 @@ export default function Secret({ onLogout }) {
         </div>
 
         {/* Candle ambience — large, dramatic */}
-        <div style={{ textAlign: 'center', marginBottom: '40px', position: 'relative' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', margin: '24px 0 32px', position: 'relative' }}>
           <div style={{
             position: 'absolute',
             left: '50%', top: '-20px',
@@ -489,7 +490,7 @@ export default function Secret({ onLogout }) {
 
         {/* Private Journal */}
         <div className="mb-4">
-          <h2 style={{ fontSize: '28px', fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', color: 'var(--accent)', marginBottom: '24px', marginTop: '56px' }}>
+          <h2 style={{ fontSize: '1.8rem', fontFamily: "'Playfair Display', serif", fontStyle: 'italic', color: 'var(--accent)', marginBottom: '16px', marginTop: '56px' }}>
             Private Journal
           </h2>
           <PrivateJournal />
@@ -499,7 +500,7 @@ export default function Secret({ onLogout }) {
 
         {/* Message to self */}
         <div>
-          <h2 style={{ fontSize: '28px', fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', color: 'var(--accent)', marginBottom: '24px', marginTop: '56px' }}>
+          <h2 style={{ fontSize: '1.8rem', fontFamily: "'Playfair Display', serif", fontStyle: 'italic', color: 'var(--accent)', marginBottom: '16px', marginTop: '56px' }}>
             Letters to the Future
           </h2>
           <MessageToSelf />
